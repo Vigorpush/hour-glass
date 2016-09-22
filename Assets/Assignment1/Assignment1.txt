@@ -1,0 +1,28 @@
+Create a simple platformer that spawns a player on a platform and allows them to jump from level to level. Your platformer should have the following features
+
+ Character (10 Marks each)
+
+    The character should always start at the same location
+    The character should be an animated sprite with jump and walk animations as demonstrated in tutorial.
+    The character should only collide with platform with its feet when going down. It should be able to jump straight up from one platform to another.
+    The character should be able to walk up and down sloping platforms naturally (hint use a circular collider on the feet)
+    If the character falls to the bottom of the screen it should die and respawn back at a starting location.
+    The character should have 3 controls, walk left, walk right and jump
+    The Character should use the adding FORCES method of movement discussed in the tutorials 
+
+Environment (5 Marks each)
+
+    The environment should be single screen only (no camera movement necessary)
+    There should be three levels of platforms for the character to jump on
+    There should be at least 7 platforms total covering no more than 75% of the length of any of the three levels
+    At least two platforms should be sloped at approximately ±30° and have different coefficients of friction
+    At least one platform should move either left to right or up and down
+    There should be a background for the scene
+
+ Bonus Marks (maximum possible for assignment 100%)
+
+    Make one platform a bounce pad. If the character jumps while on the bounce pad, they get a significant height boost to their jump (5 Marks)
+    Make one platform appear and disappear periodically (5 Marks)
+    Use the animation blend feature to handle jumping and falling with the same animation structure as in tutorial, ie the animation should be triggered by a measurement of a state change of the player. (5 marks)
+
+This is assignment is due on the 4th
