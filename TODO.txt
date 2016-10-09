@@ -3,5 +3,39 @@
 This is Branch for implement gui, please put the code and Asset related to GUI
 in here.
 
-
-
+1:Design the GUI
+    Font For
+      Game	
+      
+    Intro Menu
+      Buttons For
+	Start Game (Normal)
+	Survival / New game + (Game Mode)
+	Story
+	Exit
+      Check Box For
+	Mode ??
+      Image
+	Menu BackGround
+    
+    Combat Windows
+      Hourglass Area	
+	animations
+      Game/Combat Area
+      Player info Area
+	
+	Attack windows
+	  Player info Area(Detailed)
+    
+    
+    Party window
+    
+      Skill Windows
+	Graph Area
+	Data Area
+      Equipment
+    
+    Map of dungeon
+      
+2:Phototype GUI
+3:Implementation of GUI
