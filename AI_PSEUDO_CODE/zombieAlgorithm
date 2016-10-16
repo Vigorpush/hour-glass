@@ -1,0 +1,36 @@
+This is the pseudo code for the most basic melee units that cannot fight in packs
+
+TODO:
+
+Primitives Required:
+
+
+General: 
+This AI will have access to simple information about the paths to players so that it can walk in a straight line to the nearest one. 
+It will then ues it's only attack.
+
+ALG: Zombie AI 
+Parameters: 
+	   shortestPath : Master AI's path to nearest player character
+Returns: The action sequence of the zombie
+//Turn Start
+
+if(shortestPath==NULL && !player-ajacent)  //can-attack-enemy = false
+	actionQueue.add(Move(random-stupid))
+	Add a disappointed zombie groan to the actionQueue  // He's hungry guys
+	return actionQueue
+end if
+//If there is a player nearby 
+if(player-adjacent)
+	actionQueue.add(Attack(random-adjacent))
+	return actionQueue
+//Zombie walks toward the closest player and attacks if it can
+else
+	actionQueue.add(moveTo-shortestPath)
+	if(can-attack-random-adjacent)
+		actionQueue.add(Attack(random-adjacent))
+		return actionQueue
+
+
+
+
