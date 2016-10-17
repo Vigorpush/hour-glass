@@ -2,13 +2,8 @@ The following is a list the primitive conditions for a unit:
 
 
 can-move-toward-target
-move-toward-target
 can-move-away-from-target
-move-away-from-target target
 can-run-away-from-target l
-run-away-from-target
-can-attack-target
-attack-target
 too-far-from-target
 too-close-to-target
 is-debuffed
@@ -20,11 +15,26 @@ target-has-debuff
 target-is-same-alignment
 target-is-opposed-alignment
 enough-buddies-in-pack
+
 too-far-from-pack-center
 can-move-toward-pack-center
+
 move-toward-pack-center
 too-close-to-pack-center
 can-move-away-from-pack-center
 move-away-from-pack-center
 target-has-buff
+
+
+
+Pseudo Code:
+can-move-toward-target
+	if(movement<=path.length)
+			
+Basic Actions
+
+move-toward-target
+move-away-from-target target
+run-away-from-target
+can-attack-target
 
