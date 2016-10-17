@@ -1,0 +1,7 @@
+BattleMaster AI 
+Listens to the environment and knows all about the current room and its occupants
+This will be a utility based agent with a model.
+
+Needs to bed able to produce results for all primitives
+
+
