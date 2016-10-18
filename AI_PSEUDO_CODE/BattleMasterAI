@@ -5,3 +5,8 @@ This will be a utility based agent with a model.
 Needs to bed able to produce results for all primitives
 
 
+Will need to communicate with the pack AI and the individual AI.
+Functions for doing this:
+
+
+It will have its information queried by the evaluator which will then update the credit cost of units. After that, the roomBuilder will build rooms slightly smarter.
