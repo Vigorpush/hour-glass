@@ -1,0 +1,20 @@
+Pack AI can be implemented by a master AI that decides how a particular pack behaves. 
+
+PackStrength/Cohesion
+
+Each pack will start with a strength that determines how well they work together. This value can be increased or reduced based on the events of a game.
+
+Increases:
+-pack successfully kills a player
+-leader AI is present
+-pack is closer together
+
+Decreases:
+-leader dies (large decrease)
+-pack member dies
+-pack too spread out
+
+Once strength is reduced bellow a threshhold, the pack ai will be disabled and the units will think as individuals.
+
+
+

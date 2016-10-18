@@ -1,4 +1,4 @@
-The format of a   based based reflex agent
+The format of a model based reflex agent
 
 KEY DIFFERENCES FROM A simpleReflexAgent:
 Knows what the world is like now:
