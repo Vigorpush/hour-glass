@@ -16,7 +16,7 @@ Returns: The action sequence of the zombie
 //Turn Start
 
 if(shortestPath==NULL && !player-ajacent)  //can-attack-enemy = false
-	actionQueue.add(Move(random-stupid))
+	actionQueue.add(MoveTowards(HighestThreat))
 	Add a disappointed zombie groan to the actionQueue  // He's hungry guys
 	return actionQueue
 end if
