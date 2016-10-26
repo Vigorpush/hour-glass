@@ -16,9 +16,15 @@ public class PlayerMovement : MonoBehaviour {
 	void movingOn(){
 		moving = true;
 	}
+
 	void movingOff(){
 		moving = false;
 	}
+
+    public void StartTurn()
+    {
+        Debug.Log("Player 1 is beginning turn.");
+    }
 
 	void startMoveCooldown(){
 		movingOn ();

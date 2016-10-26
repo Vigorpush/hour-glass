@@ -12,4 +12,10 @@ public class HeroUnit :  Unit  {
 	void Update () {
 	
 	}
+
+	void StartTurn(){
+
+		Debug.Log( this.tag +" Starting turn.");
+
+	}
 }

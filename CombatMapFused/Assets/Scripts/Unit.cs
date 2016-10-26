@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Unit : MonoBehaviour {
+public class Unit : MonoBehaviour {
 	public int hp,initiative,speed,range,attack;
 	// Use this for initialization
 	void Start () {
