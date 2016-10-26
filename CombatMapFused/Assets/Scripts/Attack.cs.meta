@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ac1dec0502b761046804b00cca6376c3
+timeCreated: 1477431037
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - theHourglass: {fileID: 114000012514670610, guid: 66210dd0506b34e818372ff3a8afc94f,
+      type: 2}
+  - inputMessage: {fileID: 114000010128106514, guid: e2c594c829b8b407b9b7ff74e65639dc,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
