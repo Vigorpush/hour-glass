@@ -8,16 +8,14 @@ public class Unit : MonoBehaviour {
     string Name;
     public int curhp;
 
-    public Weapon wp;
-    public Armour ar;
-    public GameObject en;//testing gameobject for damage
+    public Weapon weap;
+    public Armour armr;
+    public GameObject targ;//testing gameobject for damage
 
-    
     //End of fields
 
     void Start()
     {
-
         curhp = getmaxhp();//setting up the start HP
     }
 
@@ -92,7 +90,11 @@ public class Unit : MonoBehaviour {
 	}
 	
 	public void takeDamage(int attackAmount){
-        curhp -= attackAmount;
+        if (attackAmount - armr.getArmour()<=0)
+        {
+            return;
+        }
+        curhp -= attackAmount - armr.getArmour();
         if (curhp <= 0)
         {
             SendMessage("Die"); //Returns if dead
@@ -103,14 +105,12 @@ public class Unit : MonoBehaviour {
     public void doDamage()
     {
         //need a way to dynamically target a GameObject, currently manually assigned
-        // Armour is currently flat damage reduction
-        en.SendMessage("takeDamage", wp.getDamge() + getattack() - ar.getArmour());//testing gameobject for damage
+        targ.SendMessage("takeDamage", weap.getDamge() + getattack());//testing gameobject for damage
 
     }
 
 	void Die(){
-	
+        Destroy(gameObject);
         Debug.Log ("I died");
-	
     }
 }
