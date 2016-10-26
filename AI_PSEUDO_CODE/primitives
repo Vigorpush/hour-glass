@@ -3,7 +3,6 @@ The following is a list the primitive conditions for a unit:
 
 can-move-toward-target
 can-move-away-from-target
-can-run-away-from-target l
 too-far-from-target
 too-close-to-target
 is-debuffed
