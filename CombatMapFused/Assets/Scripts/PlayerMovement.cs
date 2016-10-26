@@ -108,7 +108,7 @@ public class PlayerMovement : MonoBehaviour {
 				}
 
 			}
-			else if (Input.GetKeyDown("down"))
+			else
 			{
 				
 				tf.localEulerAngles = new Vector3 (0, 0, 180);
