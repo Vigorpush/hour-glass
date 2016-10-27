@@ -5,9 +5,9 @@ public class PlayerMovement : MonoBehaviour {
 	const int BUMP_DIST = 1; // The range that will check for movement collisions
 	private Transform tf;
 	private float speed;
-	private Vector2 pos;
+	public Vector2 pos;
 	public float h,v;
-	public Vector2 initialPosition;
+	public Vector2 initialPosition = new Vector2(2,2);
 	RaycastHit2D rayCast;
 	private bool moving=false,isTurn=false;
 	public GameObject turnManager;
@@ -17,9 +17,13 @@ public class PlayerMovement : MonoBehaviour {
 
     public void AllowMovement()
     {
-       
 		isTurn = true;
+		Debug.Log ("is turn on");
     }
+
+	public void DisableMovement(){
+		isTurn = false;
+	}
 
 	public void EndTurn(){
 		isTurn = false;
@@ -28,7 +32,7 @@ public class PlayerMovement : MonoBehaviour {
 			turnManager.SendMessage ("CalculateTurn");
 		} else {
 
-			Debug.Log ("Nothing manager for some reason/");
+			Debug.Log ("No manager found");
 		}
 	}
 
@@ -47,8 +51,11 @@ public class PlayerMovement : MonoBehaviour {
 		turnManager = GameObject.Find("Manager");
 		tf = GetComponent<Transform>();
 		tf.position = initialPosition;
+		pos=tf.position;
+		Debug.Log ("Initial postion" + tf.position);
+
 		anim = GetComponent<Animator>();
-		if (speed == null) {
+		if (speed == null || speed==0) {
 			speed = 4;
 		}
 
@@ -58,8 +65,9 @@ public class PlayerMovement : MonoBehaviour {
 		
 		if (isTurn) {
 			checkPlayerMovement ();
-			transform.position = Vector3.MoveTowards (tf.position, pos, Time.deltaTime * speed);
-			Debug.DrawRay (pos, (Vector2)(tf.up), Color.blue);
+			tf.position = Vector3.MoveTowards (tf.position, pos, Time.deltaTime * speed);
+			//Debug.Log ("Moving toward " + pos.ToString ());
+			Debug.DrawRay (pos,(Vector2)(tf.up), Color.blue);
 
 		}
 	}
@@ -69,16 +77,13 @@ public class PlayerMovement : MonoBehaviour {
 		h = Input.GetAxis("Horizontal");
 		v = Input.GetAxis("Vertical");
 
-
-		if (Input.GetButton("Horizontal") && !moving) {         
-			if (h>0) {
-				
+		if (Input.GetButton("Horizontal") && !moving) {  
+			if (h>0) {	
 				tf.localEulerAngles = new Vector3 (0, 0, 270);   // Always rotate the character even if you cannot move
 				rayCast = rayCheckLine (BUMP_DIST);
 				if (rayCast.collider == null) {
 					pos += Vector2.right;
 					startMoveCooldown ();
-
 				} else {
 					Debug.Log ("Move right failed:" + rayCast.collider.gameObject + " in the way.");
 
@@ -136,14 +141,16 @@ public class PlayerMovement : MonoBehaviour {
 	//Makes movement less choppy
 	void movingOn(){
 		moving = true;
+		Debug.Log ("moving on");
 	}
 	void movingOff(){
+		Debug.Log ("moving off");
 		moving = false;
 	}
 	//Checks for collisions with units in a line of length L
 
 	//RAY CAST METHODS
 	RaycastHit2D rayCheckLine(int L){
-		return Physics2D.Linecast(pos,(Vector2)(pos+(Vector2)(tf.up)),L);
+		return Physics2D.Linecast(tf.position,(Vector2)(pos+(Vector2)(tf.up)),L);
 	}
 }

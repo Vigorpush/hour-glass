@@ -17,6 +17,8 @@ public class Unit : MonoBehaviour {
     void Start()
     {
         curhp = getmaxhp();//setting up the start HP
+		//weap = //temp weapon
+		//armr = //temp armor
     }
 
 

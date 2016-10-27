@@ -20,8 +20,8 @@ public class HeroUnit :  Unit  {
     }
 
 	void StartTurn(){
-
-		Debug.Log( this.tag +" Starting turn.");
+		SendMessage ("AllowMovement");
+		Debug.Log( "I, " + this.gameObject.name + " Started turn.");
 
 	}
 }

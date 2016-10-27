@@ -126,7 +126,9 @@ public class TurnManager : MonoBehaviour
 	{
 		
 		if (Input.GetButton ("Jump") && currentUnit != null) {
-			currentUnit.SendMessage ("EndTurn");
+			currentUnit.SendMessage ("DisableMovement");
+			CalculateTurn ();
+
 		}
 
 	}
@@ -148,11 +150,11 @@ public class TurnManager : MonoBehaviour
 
 
 		int baseInitiative = baseInitiativeTable [currentUnit];
-		Debug.Log (currentUnit.ToString () + " 's Base initiative=" + baseInitiative);
+		//Debug.Log (currentUnit.ToString () + " 's Base initiative=" + baseInitiative);
 		int newInitiative = curPair.initiative + baseInitiative;  
 		//Manipulate the pair
 		curPair.initiative = newInitiative;  //Add initiative value to current unit
-		Debug.Log (currentUnit.ToString () + " 's New Initiative: " + newInitiative);
+		//Debug.Log (currentUnit.ToString () + " 's New Initiative: " + newInitiative);
 		currentInitiatives.Add (curPair);
 		currentInitiatives.Sort ();
 		MakeTurn ();
@@ -170,6 +172,6 @@ public class TurnManager : MonoBehaviour
 	void MakeTurn ()
 	{
 		currentUnit.SendMessage ("StartTurn");
-		//player1.SendMessage("StartTurn");
+		//Debug.Log ("I am telling " + currentUnit.name);
 	}
 }
