@@ -13,7 +13,7 @@ public class BasicAttack : MonoBehaviour {
 	void Start () {
 	
 	}
-	public attack1(){
+	void attack1(){
 
 
 	}

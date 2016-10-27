@@ -69,7 +69,7 @@ public class TurnManager : MonoBehaviour
 
 	void initializeTables ()
 	{
-		
+
 		baseInitiativeTable = new Dictionary<GameObject,int> ();
 		currentInitiativeTable = new SortedDictionary<int,GameObject> ();
 		currentInitiatives = new List<UnitInitiativeP> ();
@@ -86,7 +86,7 @@ public class TurnManager : MonoBehaviour
 
 	void addPlayersToTable ()
 	{
-		
+
 		currentInitiatives.Add (new UnitInitiativeP (player1.GetComponent<HeroUnit> (), player1.GetComponent<HeroUnit> ().initiative));
 		baseInitiativeTable.Add (player1, player1.GetComponent<HeroUnit> ().initiative);
 
@@ -124,7 +124,7 @@ public class TurnManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		
+
 		if (Input.GetButton ("Jump") && currentUnit != null) {
 			currentUnit.SendMessage ("DisableMovement");
 			CalculateTurn ();
@@ -135,7 +135,7 @@ public class TurnManager : MonoBehaviour
 
 	public void CalculateTurn ()
 	{
-		
+
 		currentInitiatives.Sort ();
 
 		//The pair of the unit to act
@@ -165,7 +165,7 @@ public class TurnManager : MonoBehaviour
 
 	void DebugTurn ()
 	{
-		
+
 
 	}
 

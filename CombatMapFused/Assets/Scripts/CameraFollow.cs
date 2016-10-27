@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraFollow : MonoBehaviour
 {
-	public float CAMERA_SPEED=.001f;
+	public float CAMERA_SPEED=10000000000f;
     private GameObject player;
     private Vector3 offset;
 	public bool turnActive;
@@ -13,16 +13,22 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
 		setActive (false);
+		//NEED TO MAKE THIS SET WHEN the calculate turn is called
         player = GameObject.FindGameObjectWithTag("Player1");
         offset = transform.position - player.transform.position;
     }
 
 	void Update(){
 		if (turnActive) {
+			
 			transform.position = Vector3.MoveTowards (transform.position, player.transform.position+ new Vector3(0,0,-1), Time.deltaTime * CAMERA_SPEED);
+		
 		}
 	}
 	public void SetCameraFollow(GameObject targetPlayer){
+		if (targetPlayer == null) {
+			player = targetPlayer;
+		}
 		if (targetPlayer != player) {
 			player = targetPlayer;
 			setActive (true);
@@ -35,7 +41,7 @@ public class CameraFollow : MonoBehaviour
 
 
 		//Invoke ("setActive(false)", 1);
-		//transform.position = player.transform.position;
+		transform.position = new Vector3 (transform.position.x, transform.position.y, -1);
 		//transform.position = new Vector3 (transform.position.x, transform.position.y, -1);
 
 		//offset = transform.position - player.transform.position;
@@ -43,10 +49,7 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-		if (!turnActive) {
-
-			//transform.position = player.transform.position + offset;
-		}
+		
     }
 	void setActive(bool status){
 		turnActive = status;
