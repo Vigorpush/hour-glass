@@ -37,14 +37,7 @@ public class CameraFollow : MonoBehaviour
 			setActive (false);
 			Invoke ("activate", 1f);
 		}
-
-
-
-		//Invoke ("setActive(false)", 1);
 		transform.position = new Vector3 (transform.position.x, transform.position.y, -1);
-		//transform.position = new Vector3 (transform.position.x, transform.position.y, -1);
-
-		//offset = transform.position - player.transform.position;
 	}
 
     void LateUpdate()

@@ -15,15 +15,68 @@ public class PlayerMovement : MonoBehaviour {
 
 
 
-    public void AllowMovement()
-    {
+
+	// Use this for initialization
+	void Start () {
+		initializeController ();
+
+	}
+	// Update is called once per phys tick
+	void FixedUpdate () {
+
+		if (isTurn) {
+			checkPlayerMovement ();
+			tf.position = Vector3.MoveTowards (tf.position, pos, Time.deltaTime * speed);
+			Debug.DrawRay (pos,(Vector2)(tf.up), Color.blue);
+
+		}
+	}
+		
+	//----------------------------------------------------//
+	//HELPERS
+	public void AllowMovement()
+	{
 		isTurn = true;
 		Debug.Log ("is turn on");
-    }
+	}
+	void initializeController(){
+		turnManager = GameObject.Find("Manager");
+		tf = GetComponent<Transform>();
+		tf.position = initialPosition;
+		pos=tf.position;
+		Debug.Log ("Initial postion" + tf.position);
+
+		anim = GetComponent<Animator>();
+		if (speed == null || speed==0) {
+			speed = 4;
+		}
+	}
+
 
 	public void DisableMovement(){
 		isTurn = false;
 	}
+
+	//Limits input speed
+	void startMoveCooldown(){
+		movingOn ();
+		Invoke ("movingOff", 1f/ speed);
+
+	}
+
+	//Makes movement less choppy
+	void movingOn(){
+		moving = true;
+		Debug.Log ("moving on");
+	}
+	void movingOff(){
+		Debug.Log ("moving off");
+		moving = false;
+	}
+	//----------------------------------------------------//
+
+	//Turn Management
+
 
 	public void EndTurn(){
 		isTurn = false;
@@ -36,43 +89,16 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
-	void startMoveCooldown(){
-		movingOn ();
-		Invoke ("movingOff", 1f/ speed);
 
-	}
-	// Use this for initialization
-	void Start () {
-		initializeController ();
 
+	//RAY CAST METHODS
+	//-------------------------------------------------//
+	//Checks for collisions with units in a line of length L
+	RaycastHit2D rayCheckLine(int L){
+		return Physics2D.Linecast(tf.position,(Vector2)(pos+(Vector2)(tf.up)),L);
 	}
 
-	void initializeController(){
-		turnManager = GameObject.Find("Manager");
-		tf = GetComponent<Transform>();
-		tf.position = initialPosition;
-		pos=tf.position;
-		Debug.Log ("Initial postion" + tf.position);
-
-		anim = GetComponent<Animator>();
-		if (speed == null || speed==0) {
-			speed = 4;
-		}
-
-	}
-	// Update is called once per phys tick
-	void FixedUpdate () {
-		
-		if (isTurn) {
-			checkPlayerMovement ();
-			tf.position = Vector3.MoveTowards (tf.position, pos, Time.deltaTime * speed);
-			//Debug.Log ("Moving toward " + pos.ToString ());
-			Debug.DrawRay (pos,(Vector2)(tf.up), Color.blue);
-
-		}
-	}
-		
-
+	//Input Handling
 	void checkPlayerMovement(){
 		h = Input.GetAxis("Horizontal");
 		v = Input.GetAxis("Vertical");
@@ -136,21 +162,9 @@ public class PlayerMovement : MonoBehaviour {
 			}
 
 		}
+	
+
+
 	}
 
-	//Makes movement less choppy
-	void movingOn(){
-		moving = true;
-		Debug.Log ("moving on");
-	}
-	void movingOff(){
-		Debug.Log ("moving off");
-		moving = false;
-	}
-	//Checks for collisions with units in a line of length L
-
-	//RAY CAST METHODS
-	RaycastHit2D rayCheckLine(int L){
-		return Physics2D.Linecast(tf.position,(Vector2)(pos+(Vector2)(tf.up)),L);
-	}
 }

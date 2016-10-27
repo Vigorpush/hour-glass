@@ -41,22 +41,23 @@ public class TurnManager : MonoBehaviour
 
 		}
 	}
+	//TURN MANAGER MEMBER VARIABLES
 
 	private List<GameObject> players;
 	SortedDictionary<int,GameObject> currentInitiativeTable;
 	//Contains all original initiatives to get via object
 	Dictionary<GameObject,int> baseInitiativeTable;
-
+	//The main Camera!
+	GameObject cam = GameObject.FindGameObjectWithTag ("MainCamera");
 	public List<UnitInitiativeP> currentInitiatives;
 
 
-	//SortedSet<>
 	GameObject player1;
 	GameObject player2;
 	GameObject player3;
 
+	//FOR SWAPPING TURN ON BUTTON PRESS
 	GameObject endTurnButton;
-
 
 	public GameObject currentUnit;
 
@@ -97,12 +98,7 @@ public class TurnManager : MonoBehaviour
 		baseInitiativeTable.Add (player3, player3.GetComponent<HeroUnit> ().initiative);
 	}
 
-	void Start ()
-	{
-		setUpButton ();
-		GetAllPlayers ();		
-		initializeTables ();
-	}
+
 
 	void GetAllUnits ()
 	{
@@ -150,11 +146,11 @@ public class TurnManager : MonoBehaviour
 
 
 		int baseInitiative = baseInitiativeTable [currentUnit];
-		//Debug.Log (currentUnit.ToString () + " 's Base initiative=" + baseInitiative);
+
 		int newInitiative = curPair.initiative + baseInitiative;  
-		//Manipulate the pair
+
 		curPair.initiative = newInitiative;  //Add initiative value to current unit
-		//Debug.Log (currentUnit.ToString () + " 's New Initiative: " + newInitiative);
+
 		currentInitiatives.Add (curPair);
 		currentInitiatives.Sort ();
 		MakeTurn ();
@@ -172,8 +168,7 @@ public class TurnManager : MonoBehaviour
 	void MakeTurn ()
 	{
 		currentUnit.SendMessage ("StartTurn");
-		GameObject cam = GameObject.FindGameObjectWithTag ("MainCamera");
-		cam.SendMessage ("SetCameraFollow",currentUnit);
-		//Debug.Log ("I am telling " + currentUnit.name);
+
+		cam.SendMessage ("SetCameraFollow", currentUnit);
 	}
 }
