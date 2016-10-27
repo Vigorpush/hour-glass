@@ -3,24 +3,18 @@ using System.Collections;
 
 public class HeroUnit :  Unit  {
 
-    //remove the start method to avoid override stats
+	// Use this for initialization
+	void Start () {
 	
+	}
+		
+	// Update is called once per frame
 	void Update () {
-
-
-        //Start of Debug for damaging
-        if (Input.GetKeyDown("space"))
-        {
-            doDamage();
-
-            //Debug.Log(getcurrentHP());
-        }
-        //End of Debug for damaging
 	
-    }
+	}
 
 	void StartTurn(){
-
+		SendMessage ("AllowMovement");
 		Debug.Log( this.tag +" Starting turn.");
 
 	}

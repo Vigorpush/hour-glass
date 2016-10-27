@@ -3,98 +3,173 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
-public class TurnManager : MonoBehaviour {
+
+
+public class TurnManager : MonoBehaviour
+{
+	//Holds the pairs
+	[System.Serializable]
+	public class UnitInitiativeP : IComparable
+	{
+		public Unit u;
+		public int initiative;
+		//Compare by initiative
+		public int CompareTo (object otherUnit)
+		{
+			if (otherUnit == null) {
+				return 1;
+			}
+			int result = this.u.initiative - ((UnitInitiativeP)otherUnit).initiative;
+			if (result < 0) {
+				return -1;
+			} else if (result == 0) {
+				return 1;
+			} else {
+
+				return 1;
+			}
+			//Might need to be changed..
+
+		}
+
+		public UnitInitiativeP (Unit unit, int init)
+		{
+			u = unit;
+			initiative = init;
+
+		}
+	}
 
 	private List<GameObject> players;
 	SortedDictionary<int,GameObject> currentInitiativeTable;
-	//Contains all original initiatives to get via object 
+	//Contains all original initiatives to get via object
 	Dictionary<GameObject,int> baseInitiativeTable;
+
+	public List<UnitInitiativeP> currentInitiatives;
+
+
+	//SortedSet<>
 	GameObject player1;
 	GameObject player2;
-	GameObject player;
+	GameObject player3;
+
 	GameObject endTurnButton;
 
 
 	public GameObject currentUnit;
 
 
-	void setUpButton(){
+	void setUpButton ()
+	{
 		endTurnButton = GameObject.Find ("EndTurnButton");
 	}
 	// Use this for initialization
 
-	void initializeTables(){
+	void initializeTables ()
+	{
 		
-		baseInitiativeTable = new Dictionary<GameObject,int>();
-		currentInitiativeTable = new SortedDictionary<int,GameObject>();
+		baseInitiativeTable = new Dictionary<GameObject,int> ();
+		currentInitiativeTable = new SortedDictionary<int,GameObject> ();
+		currentInitiatives = new List<UnitInitiativeP> ();
+
 		//Fill the tables
 
 		//Get all players and units by calling respective methods
-		currentInitiativeTable.Add(player1.GetComponent<HeroUnit>().initiative,player1);
-		baseInitiativeTable.Add(player1,player1.GetComponent<HeroUnit>().initiative);
+		addPlayersToTable ();
 
-	
 
-		CalculateTurn();
+		CalculateTurn ();
 
 	}
-	void Start () {
+
+	void addPlayersToTable ()
+	{
+		
+		currentInitiatives.Add (new UnitInitiativeP (player1.GetComponent<HeroUnit> (), player1.GetComponent<HeroUnit> ().initiative));
+		baseInitiativeTable.Add (player1, player1.GetComponent<HeroUnit> ().initiative);
+
+		currentInitiatives.Add (new UnitInitiativeP (player2.GetComponent<HeroUnit> (), player2.GetComponent<HeroUnit> ().initiative));
+		baseInitiativeTable.Add (player2, player2.GetComponent<HeroUnit> ().initiative);
+
+		currentInitiatives.Add (new UnitInitiativeP (player3.GetComponent<HeroUnit> (), player3.GetComponent<HeroUnit> ().initiative));
+		baseInitiativeTable.Add (player3, player3.GetComponent<HeroUnit> ().initiative);
+	}
+
+	void Start ()
+	{
 		setUpButton ();
 		GetAllPlayers ();		
 		initializeTables ();
 	}
 
-	void GetAllUnits(){
-		GameObject[] units =  GameObject.FindGameObjectsWithTag("Enemy");
+	void GetAllUnits ()
+	{
+		GameObject[] units = GameObject.FindGameObjectsWithTag ("Enemy");
 
 	}
 
-	void GetAllPlayers(){
-		players = new List<GameObject>();
-		player1 =  GameObject.FindGameObjectWithTag("Player1");
-		players.Add(player1);
-		//Find and add players...
+	void GetAllPlayers ()
+	{
+		players = new List<GameObject> ();
+		player1 = GameObject.FindGameObjectWithTag ("Player1");
+		player2 = GameObject.FindGameObjectWithTag ("Player2");
+		player3 = GameObject.FindGameObjectWithTag ("Player3");
+		players.Add (player1);
+		players.Add (player2);
+		players.Add (player3);
 
 	}
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		
+		if (Input.GetButton ("Jump") && currentUnit != null) {
+			currentUnit.SendMessage ("EndTurn");
+		}
+
 	}
 
-    public void CalculateTurn()
-    {
-		//Get next unit at top of queue
-		IEnumerable<KeyValuePair<int,GameObject>> dictionaryValue = currentInitiativeTable.Take(1);
-		//Remove the old top initiative
+	public void CalculateTurn ()
+	{
+		
+		currentInitiatives.Sort ();
 
-		//Add initiative value to current unit
-		//Only one in list so first gets the next unit
-		GameObject UnitEntity = dictionaryValue.ElementAt(0).Value;
-		int myCurrentInit = dictionaryValue.ElementAt (0).Key;
-		//Remove the value
-		currentInitiativeTable.Remove (currentInitiativeTable.Keys.First());
-		//currentInitiativeTable.Remove (currentInitiativeTable.Keys.First());
-		//currentInitiativeTable.Remove (currentInitiativeTable.Keys.First());
-		//currentInitiativeTable.Remove (currentInitiativeTable.Keys.First());
-		//currentInitiativeTable.Clear();
-		//Amount to be added for new initiative value
-		int baseInitiative = baseInitiativeTable[UnitEntity];
-		Debug.Log ("Base initiative" +baseInitiative);
-		Debug.Log ("Offender" + UnitEntity.GetComponent<Unit>().initiative);
-		Debug.Log ("This should be null: " + currentInitiativeTable.Take(1));
-		int newInitiative = myCurrentInit + baseInitiative;
-		Debug.Log ("Base initiative" + newInitiative);
-		currentInitiativeTable.Add(newInitiative,UnitEntity);
+		//The pair of the unit to act
+		UnitInitiativeP curPair = currentInitiatives.First ();
+		//Get the gameObject based on the sorted list which is the game object of the unit in the pair
+		currentUnit = curPair.u.gameObject;
+
+
+		//Get the unchanged initiative value
+
+		currentInitiatives.Remove (curPair);  //Remove the value
+
+
+		int baseInitiative = baseInitiativeTable [currentUnit];
+		Debug.Log (currentUnit.ToString () + " 's Base initiative=" + baseInitiative);
+		int newInitiative = curPair.initiative + baseInitiative;  
+		//Manipulate the pair
+		curPair.initiative = newInitiative;  //Add initiative value to current unit
+		Debug.Log (currentUnit.ToString () + " 's New Initiative: " + newInitiative);
+		currentInitiatives.Add (curPair);
+		currentInitiatives.Sort ();
 		MakeTurn ();
 
-		//currentInitiativeTable.Add(,dictionaryValue.First);
 
-    }
 
-    void MakeTurn()
-    {
+	}
+
+	void DebugTurn ()
+	{
+		
+
+	}
+
+	void MakeTurn ()
+	{
 		currentUnit.SendMessage ("StartTurn");
-       // player1.SendMessage("StartTurn");
-    }
+		//player1.SendMessage("StartTurn");
+	}
 }

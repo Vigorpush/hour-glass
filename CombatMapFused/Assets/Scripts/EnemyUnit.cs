@@ -3,6 +3,13 @@ using System.Collections;
 
 public class EnemyUnit : Unit {
 
-    //remove the start method to avoid override stats
-
+	// Use this for initialization
+	void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
 }

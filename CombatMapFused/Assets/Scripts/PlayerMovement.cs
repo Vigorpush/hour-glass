@@ -9,22 +9,28 @@ public class PlayerMovement : MonoBehaviour {
 	public float h,v;
 	public Vector2 initialPosition;
 	RaycastHit2D rayCast;
-	private bool moving;
-
+	private bool moving=false,isTurn=false;
+	public GameObject turnManager;
 	private Animator anim;
 
-	void movingOn(){
-		moving = true;
-	}
 
-	void movingOff(){
-		moving = false;
-	}
 
-    public void StartTurn()
+    public void AllowMovement()
     {
-        Debug.Log("Player 1 is beginning turn.");
+       
+		isTurn = true;
     }
+
+	public void EndTurn(){
+		isTurn = false;
+		Debug.Log("endingturn");
+		if (turnManager != null) {
+			turnManager.SendMessage ("CalculateTurn");
+		} else {
+
+			Debug.Log ("Nothing manager for some reason/");
+		}
+	}
 
 	void startMoveCooldown(){
 		movingOn ();
@@ -33,32 +39,33 @@ public class PlayerMovement : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
+		initializeController ();
+
+	}
+
+	void initializeController(){
+		turnManager = GameObject.Find("Manager");
 		tf = GetComponent<Transform>();
-		speed = 4;
 		tf.position = initialPosition;
 		anim = GetComponent<Animator>();
-	}
-	//Checks for collisions with units in a line of length L
+		if (speed == null) {
+			speed = 4;
+		}
 
-	//RAY CAST METHODS
-	RaycastHit2D rayCheckLine(int L){
-		return Physics2D.Linecast(pos,(Vector2)(pos+(Vector2)(tf.up)),L);
 	}
-
 	// Update is called once per phys tick
 	void FixedUpdate () {
 		
-		checkPlayerMovement ();
-		transform.position = Vector3.MoveTowards(tf.position, pos, Time.deltaTime * speed);
-		Debug.DrawRay (pos, (Vector2)(tf.up),Color.blue);
-	
+		if (isTurn) {
+			checkPlayerMovement ();
+			transform.position = Vector3.MoveTowards (tf.position, pos, Time.deltaTime * speed);
+			Debug.DrawRay (pos, (Vector2)(tf.up), Color.blue);
+
 		}
+	}
 		
 
 	void checkPlayerMovement(){
-		
-		//
-
 		h = Input.GetAxis("Horizontal");
 		v = Input.GetAxis("Vertical");
 
@@ -124,5 +131,19 @@ public class PlayerMovement : MonoBehaviour {
 			}
 
 		}
+	}
+
+	//Makes movement less choppy
+	void movingOn(){
+		moving = true;
+	}
+	void movingOff(){
+		moving = false;
+	}
+	//Checks for collisions with units in a line of length L
+
+	//RAY CAST METHODS
+	RaycastHit2D rayCheckLine(int L){
+		return Physics2D.Linecast(pos,(Vector2)(pos+(Vector2)(tf.up)),L);
 	}
 }
