@@ -11,9 +11,9 @@ public class BasicAttack : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
-	public attack1(){
+	public void attack1(){
 
 
 	}
