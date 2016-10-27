@@ -7,8 +7,8 @@ A Fast Paced Tactics Game
 |JiaWei Zang|JIZ457|
 |Justin Schneider|JHS507|
 |Parker Neufeld|PDN844|
-|Matt Collison|NSID|
-|Liam Balan|NSID|
+|Matt Collison|MSC263|
+|Liam Balan|LGB621|
 
 ## Project OverView
 
