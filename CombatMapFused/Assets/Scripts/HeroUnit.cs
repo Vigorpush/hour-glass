@@ -9,12 +9,7 @@ public class HeroUnit :  Unit  {
 
 
         //Start of Debug for damaging
-        if (Input.GetKeyDown("space"))
-        {
-            doDamage();
-
-            //Debug.Log(getcurrentHP());
-        }
+       
         //End of Debug for damaging
 	
     }

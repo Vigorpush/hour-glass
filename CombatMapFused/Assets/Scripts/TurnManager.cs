@@ -172,6 +172,8 @@ public class TurnManager : MonoBehaviour
 	void MakeTurn ()
 	{
 		currentUnit.SendMessage ("StartTurn");
+		GameObject cam = GameObject.FindGameObjectWithTag ("MainCamera");
+		cam.SendMessage ("SetCameraFollow",currentUnit);
 		//Debug.Log ("I am telling " + currentUnit.name);
 	}
 }
