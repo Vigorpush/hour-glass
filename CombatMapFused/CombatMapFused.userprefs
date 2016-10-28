@@ -1,12 +1,14 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TurnManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/NewAttack1.cs">
     <Files>
-      <File FileName="Assets/Scripts/PlayerMovement.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/CameraFollow.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/PlayerMovement.cs" Line="95" Column="55" />
+      <File FileName="Assets/Scripts/CameraFollow.cs" Line="9" Column="25" />
       <File FileName="Assets/Scripts/HeroUnit.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Unit.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/TurnManager.cs" Line="87" Column="49" />
+      <File FileName="Assets/Scripts/TurnManager.cs" Line="83" Column="3" />
+      <File FileName="Assets/Scripts/TileGrid.cs" Line="24" Column="2" />
+      <File FileName="Assets/Scripts/NewAttack1.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

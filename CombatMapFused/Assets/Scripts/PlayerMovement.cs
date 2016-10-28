@@ -3,15 +3,15 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 	const int BUMP_DIST = 1; // The range that will check for movement collisions
-	private Transform tf;
-	private float speed;
+	public Transform tf;
+	public float speed;
 	public Vector2 pos;
 	public float h,v;
 	public Vector2 initialPosition = new Vector2(2,2);
 	RaycastHit2D rayCast;
-	private bool moving=false,isTurn=false;
+	public bool moving=false,isTurn=false;
 	public GameObject turnManager;
-	private Animator anim;
+	public Animator anim;
 
 
 
@@ -37,18 +37,19 @@ public class PlayerMovement : MonoBehaviour {
 	public void AllowMovement()
 	{
 		isTurn = true;
-		Debug.Log ("is turn on");
+		//Debug.Log ("is turn on");
 	}
 	void initializeController(){
 		turnManager = GameObject.Find("Manager");
 		tf = GetComponent<Transform>();
 		tf.position = initialPosition;
 		pos=tf.position;
-		Debug.Log ("Initial postion" + tf.position);
+		//Debug.Log ("Initial postion" + tf.position);
 
-		anim = GetComponent<Animator>();
-		if (speed == null || speed==0) {
-			speed = 4;
+        anim = GetComponent<Animator>();
+        anim.SetBool("Moving", false);
+        if (speed == null || speed==0) {
+			speed = 5;
 		}
 	}
 
@@ -67,11 +68,14 @@ public class PlayerMovement : MonoBehaviour {
 	//Makes movement less choppy
 	void movingOn(){
 		moving = true;
-		Debug.Log ("moving on");
-	}
+		//Debug.Log ("moving on");
+        anim.SetBool("Moving", true);
+    }
 	void movingOff(){
-		Debug.Log ("moving off");
-		moving = false;
+		//Debug.Log ("moving off");
+        anim.SetBool("Moving", false);
+
+        moving = false;
 	}
 	//----------------------------------------------------//
 
@@ -80,12 +84,12 @@ public class PlayerMovement : MonoBehaviour {
 
 	public void EndTurn(){
 		isTurn = false;
-		Debug.Log("endingturn");
+		//Debug.Log("endingturn");
 		if (turnManager != null) {
 			turnManager.SendMessage ("CalculateTurn");
 		} else {
 
-			Debug.Log ("No manager found");
+			//Debug.Log ("No manager found");
 		}
 	}
 
@@ -120,7 +124,7 @@ public class PlayerMovement : MonoBehaviour {
 				rayCast = rayCheckLine (BUMP_DIST);
 				if (rayCast.collider == null) {	
 					pos += Vector2.left;
-					anim.SetTrigger ("Walk Left");
+					//anim.SetTrigger ("Walking");
 					startMoveCooldown ();
 				
 				} else {
@@ -138,7 +142,7 @@ public class PlayerMovement : MonoBehaviour {
 				rayCast = rayCheckLine (BUMP_DIST);
 				if (rayCast.collider == null) {	
 					pos += Vector2.up;
-					anim.SetTrigger("Walk Up");
+					//anim.SetTrigger("Walking");
 					startMoveCooldown ();
 				} else {
 					Debug.Log ("Move up failed:" + rayCast.collider.gameObject  + " in the way.");
@@ -153,7 +157,7 @@ public class PlayerMovement : MonoBehaviour {
 				rayCast = rayCheckLine (BUMP_DIST);
 				if (rayCast.collider == null) {	
 					pos += Vector2.down;
-					anim.SetTrigger ("Walk Down");
+					//anim.SetTrigger ("Walking");
 					startMoveCooldown ();
 				} else {
 					Debug.Log("Move down failed:" + rayCast.collider.gameObject + " in the way.");

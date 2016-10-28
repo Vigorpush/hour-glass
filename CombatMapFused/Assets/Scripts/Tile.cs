@@ -4,19 +4,20 @@ using System.Collections;
 
 [System.Serializable] 
 public class Tile {
-	private enum TileTypes{
+	public enum TileTypes{
 
 		LAVA= 0,
 		GRASS=1,
 		SAND = 2,
 
 	}
-	private int code;
-	public string terrain;
-	private bool occupied; // Can the tile be walked onto?
-	public GameObject occupant;
+
+	public int code;//{ get; set;}
+	public string terrain;//{ get; set;}
+	public bool occupied;//{ get; set;} // Can the tile be walked onto?
+	public GameObject occupant;//{ get; set;}
 	//MAYBE USE TEXTURE HERE
-	public GameObject visual;
+	public GameObject visual;// { get; set;}
 
 	// Use this for initialization
 	//Marks the tile to signify that it is within range 

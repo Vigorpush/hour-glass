@@ -4,8 +4,8 @@ using System.Collections;
 public class CameraFollow : MonoBehaviour
 {
 	public float CAMERA_SPEED=10000000000f;
-    private GameObject player;
-    private Vector3 offset;
+    public GameObject player;
+    public Vector3 offset;
 	public bool turnActive;
 
 

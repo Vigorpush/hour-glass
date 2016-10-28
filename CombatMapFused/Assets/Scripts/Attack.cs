@@ -1,29 +1,47 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-
+//Defines the time aspect of one ability
 public class Attack : MonoBehaviour {
 
-    public float timeLeft;
-    bool pauseHourglass;
-    private Animator anim;
-    private bool castingAnimating;
-    private bool timeStampC1Set;
-    private bool timeStampC2Set;
-    private bool timeStampC3Set;
-    private float timeDiff;
     
+    //---------------------------------//
+	//ANIMATOR
+    public Animator anim;
 
+
+	//----------------------------------//
+
+
+    public bool castingAnimating;
+	bool pauseHourglass;
+	//---------------------------------//
+	//Necessary for delta time on combos
+
+	public bool timeStampC1Set,timeStampC2Set,timeStampC3Set;
+	public float TIME_LEFT_INITIAL = 30 ; 
+	public float timeLeft;
+    public float comboStartTime;  
+
+
+	//---------------------------------//
+	//GUI ELEMENTS
     public Text theHourglass;
 
     public Text inputMessage;
 
 	// Use this for initialization
 	void Start () {
+
+		//Misc setup
+		anim = GetComponent<Animator>();
+
         //start counting down timer
-        timeLeft = 30;
-        pauseHourglass = false;
-        anim = GetComponent<Animator>();
+		timeLeft = TIME_LEFT_INITIAL;
+       
+        
+		//boolean locks
+		pauseHourglass = false;
         castingAnimating = false;
         timeStampC1Set = false;
         timeStampC2Set = false;
@@ -36,36 +54,42 @@ public class Attack : MonoBehaviour {
 
         theHourglass.text = "Time left: " + Mathf.Round(timeLeft);
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Elf Casting"))
-        {
+		/* Depricated
+        	if (anim.GetCurrentAnimatorStateInfo(0).IsName("Elf Casting"))
+        	{
             //Debug.Log("The elf is casting");
            // if (anim.GetCurrentAnimatorStateInfo(0).) { }
-        }
-
+        	}
+		*/
+		// tick down from start time
         if (!pauseHourglass)
         {
             timeLeft -= Time.deltaTime;
         }
-
+		// none move action triggered
         if (Input.GetButtonDown("Fire1") && !castingAnimating)
         {
             anim.SetTrigger("Start Casting");
             pauseHourglass = true;
+			//Animator is now decides when this should unlock using keyframe function call
             castingAnimating = true;
-
         }
-
+		//********************$$$$$$$$$$$$$$$$$$$$$$$TODO: modulate each attack window$$$$$$$$$$$$$$$$$$$$$$$$************************
+		//Play test: may change if we add crits and other mechanics
+		//Initialize game with slotted 3 slotted abilities
         if (timeStampC1Set)
         {
            // Debug.Log("First Combo Attempt: Begin keypress window for a");
-           // Debug.Log(timeDiff - timeLeft);
+           // Debug.Log(comboStartTime - timeLeft);
             inputMessage.text = "Press A!";
+			//Total turn time ran out
             if(timeLeft < 0)
             {
                 anim.SetTrigger("Failed Input, Timer out");
                 timeStampC1Set = false;
                 inputMessage.text = "Round lost, Time up!";
             }
+			//Successful button press
             if (Input.GetButtonDown("Fire1"))
             {
                // Debug.Log("A pressed");
@@ -73,7 +97,8 @@ public class Attack : MonoBehaviour {
                 timeStampC1Set = false;
                 timeStampC2Set = true;
             }
-            if (timeDiff-timeLeft > 2)
+			//Specific combo window missed
+            if (comboStartTime-timeLeft > 2)
             {
                 anim.SetTrigger("Failed Input");
                 timeStampC1Set = false;
@@ -82,10 +107,12 @@ public class Attack : MonoBehaviour {
             }
         }
 
+
+
         if (timeStampC2Set)
         {
            // Debug.Log("First Combo Attempt: Begin keypress window for s");
-           // Debug.Log(timeDiff - timeLeft);
+           // Debug.Log(comboStartTime - timeLeft);
             inputMessage.text = "Press S!";
             if (timeLeft < 0)
             {
@@ -100,7 +127,7 @@ public class Attack : MonoBehaviour {
                 timeStampC2Set = false;
                 timeStampC3Set = true;
             }
-            if (timeDiff - timeLeft > 2)
+            if (comboStartTime - timeLeft > 2)
             {
                 anim.SetTrigger("Failed Input");
                 timeStampC2Set = false;
@@ -112,7 +139,7 @@ public class Attack : MonoBehaviour {
         if(timeStampC3Set)
         {
           //  Debug.Log("First Combo Attempt: Begin keypress window for d");
-          //  Debug.Log(timeDiff - timeLeft);
+          //  Debug.Log(comboStartTime - timeLeft);
             inputMessage.text = "Press D!";
             if (timeLeft < 0)
             {
@@ -129,7 +156,7 @@ public class Attack : MonoBehaviour {
                 pauseHourglass = true;
                 //Save rest of turn time to hourglass -> houglass += timeleft
             }
-            if (timeDiff - timeLeft > 2)
+            if (comboStartTime - timeLeft > 2)
             {
                 anim.SetTrigger("Failed Input");
                 timeStampC3Set = false;
@@ -139,26 +166,29 @@ public class Attack : MonoBehaviour {
         }
 
     }
-
+	//Called after the cast animation 
     public void BeginCastAttempt1()  {
         pauseHourglass = false;
         if(!timeStampC1Set)     //if this is the first frame of the combo window
         {
+			//The next part of update must execute
             timeStampC1Set = true;
-            timeDiff = timeLeft;
+			//Start combo time
+            comboStartTime = timeLeft;
         }
     }
 
     public void tryCombo1()
     {
+		
         Debug.Log("Begin keypress window for s");
-        timeDiff = timeLeft;
+        comboStartTime = timeLeft;
     }
 
     public void tryCombo2()
     {
         Debug.Log("Begin keypress window for d");
-        timeDiff = timeLeft;
+        comboStartTime = timeLeft;
     }
     
 }
