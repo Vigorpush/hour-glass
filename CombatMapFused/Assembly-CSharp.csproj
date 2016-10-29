@@ -54,10 +54,10 @@
      <Compile Include="Assets\Scripts\Equipment.cs" />
      <Compile Include="Assets\Scripts\HeroUnit.cs" />
      <Compile Include="Assets\Scripts\IButtonMap.cs" />
-     <Compile Include="Assets\Scripts\NewAttack1.cs" />
+     <Compile Include="Assets\Scripts\IRayCast.cs" />
      <Compile Include="Assets\Scripts\PlayerAttackController.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
-     <Compile Include="Assets\Scripts\SpecialAbility.cs" />
+     <Compile Include="Assets\Scripts\TargetScan.cs" />
      <Compile Include="Assets\Scripts\Tile.cs" />
      <Compile Include="Assets\Scripts\TileGrid.cs" />
      <Compile Include="Assets\Scripts\TurnManager.cs" />

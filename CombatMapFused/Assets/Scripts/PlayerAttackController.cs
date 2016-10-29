@@ -28,19 +28,17 @@ public class PlayerAttackController : MonoBehaviour {
 		myHero = GetComponent<HeroUnit> ();
 		anim = GetComponent<Animator> ();
 		if (emptySlots [0] == true) {
-
-
+			hasBaseAttack=false;
 		}
 		//abilities = new ArrayList();
 		//On build get 3 active abilities and 1 basic attack   //Implies that wait, defend are the same all the time
 		activeAbilities = new List<BasicAttack>();
 		activeAbilities.Capacity = NUMBER_OF_ABILITIES;
 		//TESTTESTTEST
-		BasicAttack testAtk = new SpecialAbility();
+		BasicAttack testAtk = new BasicAttack();
+		testAtk.damage = 10;
 
 		activeAbilities.Add(testAtk);
-	
-
 		baseButtons = true;
 
 	}
@@ -56,10 +54,6 @@ public class PlayerAttackController : MonoBehaviour {
 		if (activeAbilities [0] == null) {
 			hasBaseAttack = false;
 		}
-
-		
-
-
 	}
 	//Basic = 0, A1=1 ....
 	void Update (){	
@@ -74,7 +68,6 @@ public class PlayerAttackController : MonoBehaviour {
 			if(Input.GetKeyDown(KeyCode.Alpha3) && emptySlots [3] == false) {
 				ExecuteAbility (activeAbilities [3]);
 			}
-
 		} else {
 			//WHEN CANNOT USE SPECIAL ABILITIES
 			if (Input.GetKeyDown (KeyCode.Alpha1) && hasBaseAttack == false) {
@@ -88,9 +81,6 @@ public class PlayerAttackController : MonoBehaviour {
 			if (Input.GetKeyDown (KeyCode.Alpha3)) {
 				myHero.SendMessage ("FortifyAction");
 			}
-
-
-
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha4) ){
 			switchButtonInput ();
@@ -113,8 +103,11 @@ public class PlayerAttackController : MonoBehaviour {
 
 	}
 
-	public void ExecuteAbility(BasicAttack abilityMap){
+	public void ExecuteAbility(BasicAttack ability){
+		//TEMP SOLUTION FOR TESTS
 		//abilities[i].Execute;
+		this.SendMessage("FindTargets");//return some thing
+
 		Debug.Log("Start casting abilitiy");
 	}
 

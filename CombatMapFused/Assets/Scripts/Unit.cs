@@ -3,20 +3,20 @@ using System.Collections;
 
 public class Unit : MonoBehaviour {
 	public float defaultDefenseModifier = 1;
-	public bool isFortified { get; set; }
-	public float fortifyMultiplier{ get; set; }
+	public bool isFortified;//{ get; set; }
+	public float fortifyMultiplier;//{ get; set; }
     //Start of fields
-	public int maxhp{ get; set; }
-	public int initiative{ get; set; }
-	public int speed{ get; set; }
-	public int range{ get; set; }
-	public int attack{ get; set; }
-	public string Name{ get; set; }
-	public int curhp{ get; set; }
+	public int maxhp;//{ get; set; }
+	public int initiative;//{ get; set; }
+	public int speed;//{ get; set; }
+	public int range;//{ get; set; }
+	public int attack;//{ get; set; }
+	public string Name;//{ get; set; }
+	public int curhp;//{ get; set; }
 
-	public Weapon weap{ get; set; }
-	public Armour armr{ get; set; }
-	public GameObject targ{ get; set; }//testing gameobject for damage
+	public Weapon weap;//{ get; set; }
+	public Armour armr;//{ get; set; }
+	public GameObject targ;//{ get; set; }//testing gameobject for damage
 
     //End of fields
 	//Reset multiplier

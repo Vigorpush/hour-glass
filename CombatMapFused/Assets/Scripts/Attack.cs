@@ -90,7 +90,7 @@ public class Attack : MonoBehaviour {
                 inputMessage.text = "Round lost, Time up!";
             }
 			//Successful button press
-            if (Input.GetButtonDown("Fire1"))
+			if (Input.GetKey(KeyCode.Alpha1))
             {
                // Debug.Log("A pressed");
                 anim.SetTrigger("Successful Input");
@@ -113,7 +113,7 @@ public class Attack : MonoBehaviour {
         {
            // Debug.Log("First Combo Attempt: Begin keypress window for s");
            // Debug.Log(comboStartTime - timeLeft);
-            inputMessage.text = "Press S!";
+            inputMessage.text = "Press S!"; //ALSO VARIABLEs
             if (timeLeft < 0)
             {
                 anim.SetTrigger("Failed Input, Timer out");
@@ -127,7 +127,7 @@ public class Attack : MonoBehaviour {
                 timeStampC2Set = false;
                 timeStampC3Set = true;
             }
-            if (comboStartTime - timeLeft > 2)
+            if (comboStartTime - timeLeft > 2) // CLASS SPECIFIC
             {
                 anim.SetTrigger("Failed Input");
                 timeStampC2Set = false;
