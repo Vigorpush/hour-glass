@@ -1,18 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+[System.Serializable]
 public class BasicAttack : AttackTemplate {
 	
 	//Ray Shape Type
 
 	//effect class?
-	// Use this for initialization
-	void Start () {
-	
+
+	public BasicAttack(){
+		//executor = this.gameObject;
+
 	}
 
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

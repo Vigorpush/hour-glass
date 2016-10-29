@@ -9,21 +9,21 @@ public abstract class AttackTemplate : MonoBehaviour {
 	public float consistency { get; set;}
 	Vector3 abilityOrigin { get; set;}
 	Vector3 abilityDestination { get; set;}
-	GameObject executor { get; set;}
+	public GameObject executor { get; set;}
 	GameObject target { get; set;}  //This can be a coord or a unit    : use a if typeof...
+	public SpriteRenderer img;
 
+
+	//BARE CONSTRUCTOR
+	//Comes out naked
+	public AttackTemplate(){
+
+	}
 	//PSEUDOCODE
-	// Use this for initialization
+	//Use this for initialization
 	//Use the ability
 	void Execute(){
 
-	}
-	void Start () {
-	
-	}
-	// Update is called once per frame
-	void Update () {
-	
 	}
 
 

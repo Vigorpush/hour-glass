@@ -57,6 +57,7 @@
      <Compile Include="Assets\Scripts\NewAttack1.cs" />
      <Compile Include="Assets\Scripts\PlayerAttackController.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+     <Compile Include="Assets\Scripts\SpecialAbility.cs" />
      <Compile Include="Assets\Scripts\Tile.cs" />
      <Compile Include="Assets\Scripts\TileGrid.cs" />
      <Compile Include="Assets\Scripts\TurnManager.cs" />

@@ -19,6 +19,7 @@ public class HeroUnit :  Unit, IButtonMap  {
     }
 
 	void StartTurn(){
+		
 		SendMessage ("AllowMovement");
         SendMessage("AllowAttack");
 		Debug.Log( "I, " + this.gameObject.name + " Started turn.");

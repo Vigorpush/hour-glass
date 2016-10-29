@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour {
 	public float h,v;
 	public Vector2 initialPosition = new Vector2(2,2);
 	RaycastHit2D rayCast;
-	public bool moving=false,isTurn=false;
+	public bool moving=false,isTurn=false;  //isTurn technically means that it is your turn AND you can move
 	public GameObject turnManager;
 	public Animator anim;
 
@@ -19,7 +19,6 @@ public class PlayerMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		initializeController ();
-
 	}
 	// Update is called once per phys tick
 	void FixedUpdate () {
@@ -39,6 +38,26 @@ public class PlayerMovement : MonoBehaviour {
 		isTurn = true;
 		//Debug.Log ("is turn on");
 	}
+	public void UnAllowMovement()
+	{
+		isTurn = false;
+		moving = false;
+
+		//Debug.Log ("is turn on");
+	}
+	//Ends turn and gets to next turn faster
+	public void WaitAction(int speedUp){
+		GetComponent<HeroUnit> ().initiative -= speedUp;
+		EndTurn ();
+
+	}
+	public void FortifyAction(float mult){
+		HeroUnit player = GetComponent<HeroUnit> ();
+		player.isFortified = true;
+		player.fortifyMultiplier =+mult;
+		EndTurn ();
+	}
+
 	void initializeController(){
 		turnManager = GameObject.Find("Manager");
 		tf = GetComponent<Transform>();
@@ -89,7 +108,7 @@ public class PlayerMovement : MonoBehaviour {
 			turnManager.SendMessage ("CalculateTurn");
 		} else {
 
-			//Debug.Log ("No manager found");
+			Debug.Log ("No manager found");
 		}
 	}
 

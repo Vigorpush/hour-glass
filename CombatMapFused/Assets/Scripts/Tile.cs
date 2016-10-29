@@ -24,18 +24,6 @@ public class Tile {
 	void highLight(){
 		//visual.GetComponent<SpriteRenderer> ().color 
 	}
-
-	void awake(){
 		
-	}
-	void Start () {
-	
-	}
-
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 }
