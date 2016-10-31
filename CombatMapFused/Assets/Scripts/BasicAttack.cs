@@ -16,18 +16,14 @@ public class BasicAttack : AttackTemplate {
 
 
 	void Start(){
-		//executor = gameObject;
-		//origin=  GameObject.Find ("P1");
-		origin=this.gameObject;
+		
+		origin=  GameObject.Find ("Player1");
+		//attempts
+		//startTransform=this.GetComponentInParent<Transform>();
+		////executor =  GameObject.Find ("Player1");
+		startTransform = origin.transform;
 
-		Debug.Log ("Called start on origin " +origin.GetComponent<Collider2D>());
-		if (origin == null) {
-
-			Debug.Log ("the origin game object was not supposed to be null");
-		}
-
-		startTransform = origin.GetComponent<Transform>();
-
+		Debug.Log ("!!!!"+origin.name + origin.transform.position);
 		//pos = startTransform.position;
 		if (startTransform == null) {
 
@@ -49,18 +45,23 @@ public class BasicAttack : AttackTemplate {
 
 	//public List<GameObject> CheckLine(){
 	public List<RaycastHit2D> CheckLine(){
+		origin=  GameObject.Find ("Player1");
+		startTransform = origin.transform;
+		
 		if (startTransform == null) {
 			Debug.Log ("The start transform when checking line is null");
 		}
 
+		Debug.Log ("Swing");
 		List<RaycastHit2D> toRet = new List<RaycastHit2D>();
 
-//Debug.DrawRay ((Vector2)pos, (Vector2)pos+(Vector2)((startTransform.up) * dimensions[LENGTH]),Color.green);	
+		Debug.DrawRay ((Vector2)startTransform.position, (Vector2)startTransform.position+(Vector2)((startTransform.up) * 3f),Color.green);	
 		//allTargets = (Physics2D.RaycastAll ((Vector2)pos, (Vector2)pos+(Vector2)startTransform.up*dimensions[LENGTH]));
 
 		allTargets = Physics2D.RaycastAll ((Vector2)startTransform.position, (Vector2)startTransform.position+Vector2.up,3f); ///3f is hard coded for testing!!!!!!!!!!!!!
 		foreach (RaycastHit2D hit in allTargets) {
 			if (hit.collider.tag=="Baddie") {
+				Debug.Log ("There is a bad guy infront of me to hit");
 				toRet.Add (hit);
 				//validTargets.Add (hit.collider.gameObject);
 				//Debug.Log (hit.collider.ToString ());

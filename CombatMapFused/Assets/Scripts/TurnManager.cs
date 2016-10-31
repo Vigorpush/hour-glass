@@ -33,15 +33,15 @@ public class TurnManager : MonoBehaviour
 			int result = initiative-((UnitInitiativeP)otherUnit).initiative ;
 			//other is slower
 			if (result < 0) {
-				Debug.Log (initiative + " was less than " + ((UnitInitiativeP)otherUnit).initiative);
+				//Debug.Log (initiative + " was less than " + ((UnitInitiativeP)otherUnit).initiative);
 				return -1;
 			//other is the same
 			} else if (result == 0) {
-				Debug.Log (initiative + " was equal to " + ((UnitInitiativeP)otherUnit).initiative);
+				//Debug.Log (initiative + " was equal to " + ((UnitInitiativeP)otherUnit).initiative);
 				return 1;
 			//other is faster
 			} else {
-				Debug.Log (initiative + " was greater than " + ((UnitInitiativeP)otherUnit).initiative);
+				//Debug.Log (initiative + " was greater than " + ((UnitInitiativeP)otherUnit).initiative);
 				return 1;
 			}
 			//Might need to be changed..
