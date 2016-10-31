@@ -52,7 +52,7 @@ public class Attack : MonoBehaviour {
 
         //Debug.Log(anim.GetCurrentAnimatorStateInfo(0).IsName("Elf Casting"));
 
-        theHourglass.text = "Time left: " + Mathf.Round(timeLeft);
+        //theHourglass.text = "Time left: " + Mathf.Round(timeLeft);
 
 		/* Depricated
         	if (anim.GetCurrentAnimatorStateInfo(0).IsName("Elf Casting"))

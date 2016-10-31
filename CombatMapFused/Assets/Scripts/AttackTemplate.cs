@@ -24,8 +24,8 @@ public abstract class AttackTemplate : MonoBehaviour {
 	//Use the ability
 	public void Execute(){ 
 	}
-	public List<GameObject> findTargets(){
-		return new List<GameObject> ();
-	}
+	//public List<GameObject> FindTargets(){
+	//	return new List<GameObject> ();
+	//}
 
 }

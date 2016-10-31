@@ -19,17 +19,29 @@ public class TurnManager : MonoBehaviour
 		public Unit u;
 		public int initiative;
 		//Compare by initiative
+		public void updateInit(int amt){
+
+			initiative += amt;
+		}
 		public int CompareTo (object otherUnit)
 		{
+			//Debug.Log("Comparing" + u.name + ":" + u.initiative+ " to "  + ((UnitInitiativeP)otherUnit).u.name + ":" + ((UnitInitiativeP)otherUnit).initiative) ;
 			if (otherUnit == null) {
 				return 1;
+
 			}
-			int result = this.u.initiative - ((UnitInitiativeP)otherUnit).initiative;
+			int result = initiative-((UnitInitiativeP)otherUnit).initiative ;
+			//other is slower
 			if (result < 0) {
+				Debug.Log (initiative + " was less than " + ((UnitInitiativeP)otherUnit).initiative);
 				return -1;
+			//other is the same
 			} else if (result == 0) {
+				Debug.Log (initiative + " was equal to " + ((UnitInitiativeP)otherUnit).initiative);
 				return 1;
+			//other is faster
 			} else {
+				Debug.Log (initiative + " was greater than " + ((UnitInitiativeP)otherUnit).initiative);
 				return 1;
 			}
 			//Might need to be changed..
@@ -46,9 +58,9 @@ public class TurnManager : MonoBehaviour
 	//TURN MANAGER MEMBER VARIABLES
 
 	public List<GameObject> players;
-	SortedDictionary<int,GameObject> currentInitiativeTable;
-	//Contains all original initiatives to get via object
-	Dictionary<GameObject,int> baseInitiativeTable;
+	//SortedDictionary<int,GameObject> currentInitiativeTable;
+	//Contains all original initiatives to get via object   MAPS UNIT->INITIATIVE STAT
+	public Dictionary<Unit,int> baseInitiativeTable;
 
 	
 	public List<UnitInitiativeP> currentInitiatives;
@@ -60,8 +72,14 @@ public class TurnManager : MonoBehaviour
 	//FOR SWAPPING TURN ON BUTTON PRESS
 	GameObject endTurnButton;
 
-	public GameObject currentUnit;
+	public Unit currentUnit;
 
+	public void Start()
+	{
+		cam = GameObject.FindGameObjectWithTag("MainCamera");
+		GetAllPlayers();
+		initializeTables();
+	}
 	void setUpButton ()
 	{
 		endTurnButton = GameObject.Find ("EndTurnButton");
@@ -70,29 +88,33 @@ public class TurnManager : MonoBehaviour
 
 	void initializeTables ()
 	{
-		baseInitiativeTable = new Dictionary<GameObject,int>();
-		currentInitiativeTable = new SortedDictionary<int,GameObject>();
+		baseInitiativeTable = new Dictionary<Unit,int>();
 		currentInitiatives = new List<UnitInitiativeP>();
 
 		//Fill the tables
 
 		//Get all players and units by calling respective methods
 		addPlayersToTable();
-
+		currentInitiatives.Sort ();
 		CalculateTurn();
 	}
 
+
+
 	void addPlayersToTable ()
 	{
+		
 		currentInitiatives.Add (new UnitInitiativeP (player1.GetComponent<HeroUnit> (), player1.GetComponent<HeroUnit> ().initiative));
-		baseInitiativeTable.Add (player1, player1.GetComponent<HeroUnit> ().initiative);
+		baseInitiativeTable.Add (player1.GetComponent<HeroUnit>(), player1.GetComponent<HeroUnit> ().initiative);
+
 
 		currentInitiatives.Add (new UnitInitiativeP (player2.GetComponent<HeroUnit> (), player2.GetComponent<HeroUnit> ().initiative));
-		baseInitiativeTable.Add (player2, player2.GetComponent<HeroUnit> ().initiative);
+		baseInitiativeTable.Add (player2.GetComponent<HeroUnit> (), player2.GetComponent<HeroUnit> ().initiative);
+
 
 		currentInitiatives.Add (new UnitInitiativeP (player3.GetComponent<HeroUnit> (), player3.GetComponent<HeroUnit> ().initiative));
-		baseInitiativeTable.Add (player3, player3.GetComponent<HeroUnit> ().initiative);
-       // Debug.Log("Building tables?" + baseInitiativeTable.Count);
+		baseInitiativeTable.Add (player3.GetComponent<HeroUnit> (), player3.GetComponent<HeroUnit> ().initiative);
+  
     }
 
 
@@ -114,57 +136,33 @@ public class TurnManager : MonoBehaviour
 		players.Add (player3);
 
 	}
-	// Update is called once per frame
-	void Update ()
-	{
-
-		if (Input.GetButton ("Jump") && currentUnit != null) {
-			currentUnit.SendMessage ("DisableMovement");
-			CalculateTurn ();
-		}
-
-	}
-
 	public void CalculateTurn ()
 	{
 		currentInitiatives.Sort ();
-
-		//The pair of the unit to act
-		UnitInitiativeP curPair = currentInitiatives.First ();
-		//Get the gameObject based on the sorted list which is the game object of the unit in the pair
-		currentUnit = curPair.u.gameObject;
-
-
-		//Get the unchanged initiative value
-
-		currentInitiatives.Remove (curPair);  //Remove the value
-
-		int baseInitiative = baseInitiativeTable [currentUnit];
-
-		int newInitiative = curPair.initiative + baseInitiative;  
-
-		curPair.initiative = newInitiative;  //Add initiative value to current unit
-
-		currentInitiatives.Add (curPair);
+		UnitInitiativeP curPair = currentInitiatives [0];
+		currentUnit = curPair.u;
+		currentInitiatives.RemoveAt(0);
+		curPair.updateInit (currentUnit.initiative);
+		currentInitiatives.Add (new UnitInitiativeP(curPair.u,curPair.initiative));
 		currentInitiatives.Sort ();
+		currentUnit = curPair.u;
+
 		MakeTurn ();
-	}
 
-	void DebugTurn ()
-	{
+
 
 	}
-
+		
+	int numTurns=0;
 	void MakeTurn ()
 	{
+		
 		currentUnit.SendMessage ("StartTurn");
-		cam.SendMessage ("SetCameraFollow", currentUnit);
+		numTurns++;
+		Debug.Log ("Turn " + numTurns + currentUnit.name);
+
+		cam.SendMessage ("SetCameraFollow", currentUnit.gameObject);
 	}
 
-    public void Awake()
-    {
-         cam = GameObject.FindGameObjectWithTag("MainCamera");
-        GetAllPlayers();
-        initializeTables();
-    }
+   
 }

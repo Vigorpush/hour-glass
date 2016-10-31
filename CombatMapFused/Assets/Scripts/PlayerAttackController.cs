@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+[System.Serializable]
 public class PlayerAttackController : MonoBehaviour {
 
 	private const int NUMBER_OF_ABILITIES = 4;
@@ -9,7 +9,9 @@ public class PlayerAttackController : MonoBehaviour {
 	public bool[] emptySlots = new bool[NUMBER_OF_ABILITIES]; 
 	// Find the collection library public Hashtable<string,Abiity> playerAbilities;
 	public List<BasicAttack> activeAbilities;
-	private bool allowAttack=false;
+	public bool allowAttack;
+	public bool AllowAttack { get { return allowAttack; } set { allowAttack = value;} }
+	//public BasicAttack test;
 	public HeroUnit myHero;
 	// Use this for initialization
 	private Animator anim;
@@ -22,34 +24,48 @@ public class PlayerAttackController : MonoBehaviour {
 	private bool baseButtons;
 	private bool hasBaseAttack;
 
+	void Awake(){
+		//activeAbilities = new List<BasicAttack> ();
+	}
 
 	void Start () {
-
-		myHero = GetComponent<HeroUnit> ();
+		//activeAbilities = new List<BasicAttack> ();
+		//activeAbilities.Insert (0,test);
+		//Debug.Log (activeAbilities.ToString());
+		myHero = GetComponent<HeroUnit> (); //!
 		anim = GetComponent<Animator> ();
+		setEmptySlots ();
 		if (emptySlots [0] == true) {
 			hasBaseAttack=false;
 		}
-		//abilities = new ArrayList();
-		//On build get 3 active abilities and 1 basic attack   //Implies that wait, defend are the same all the time
-		activeAbilities = new List<BasicAttack>();
-		activeAbilities.Capacity = NUMBER_OF_ABILITIES;
-		//TESTTESTTEST
-		BasicAttack testAtk = new BasicAttack();
-		testAtk.damage = 10;
 
-		activeAbilities.Add(testAtk);
-		baseButtons = true;
+		//On build get 3 active abilities and 1 basic attack   //Implies that wait, defend are the same all the time
+
+		//activeAbilities.Capacity = NUMBER_OF_ABILITIES;
+
+		baseButtons = true;	
+	}
+
+	/*void AllowAttack(){
+		allowAttack = true;
+
+		//attackController = GetComponent<PlayerAttackController> ();
+		//AllowMovement();
+		//attackController.AllowAttack = true;
+		Debug.Log( "I, " + this.gameObject.name + " Started turn and can attack.");
 
 	}
+	*/
 	void setEmptySlots(){
 		int i = 0;
+
 		activeAbilities.ForEach(delegate(BasicAttack ab) 
 		{
 				if(ab == null){
 
 					emptySlots[i]=true;
 				}
+				i++;
 		});
 		if (activeAbilities [0] == null) {
 			hasBaseAttack = false;
@@ -57,37 +73,37 @@ public class PlayerAttackController : MonoBehaviour {
 	}
 	//Basic = 0, A1=1 ....
 	void Update (){	
-		//WHEN CAN USE SPECIAL ABILITIES	
-		if (!baseButtons) {
-			if (Input.GetKeyDown(KeyCode.Alpha1) && emptySlots [1] == false) {//if (Input.GetButtonDown ("AButton") && emptySlots [0] == false) {
-				ExecuteAbility (activeAbilities [1]);
+		//WHEN CAN USE SPECIAL ABILITIES
+		if (allowAttack) {
+			if (!baseButtons) {
+				if (Input.GetKeyDown (KeyCode.Alpha1) && emptySlots [1] == false) {//if (Input.GetButtonDown ("AButton") && emptySlots [1] == false) {
+					ExecuteAbility (activeAbilities [1]);
+				}
+				if (Input.GetKeyDown (KeyCode.Alpha2) && emptySlots [2] == false) {//if (Input.GetButtonDown ("XButton") && emptySlots [2] == false) {
+					ExecuteAbility (activeAbilities [2]);
+				}
+				if (Input.GetKeyDown (KeyCode.Alpha3) && emptySlots [3] == false) {
+					ExecuteAbility (activeAbilities [3]);
+				}
+			} else {
+				//WHEN CANNOT USE SPECIAL ABILITIES
+				if (Input.GetKeyDown (KeyCode.Alpha1) && hasBaseAttack == false) {
+					//0 is used because
+					Debug.Log ("press 1");
+					ExecuteAbility (activeAbilities [0]);
+					anim.SetTrigger ("Attack1");
+				}
+				if (Input.GetKeyDown (KeyCode.Alpha2)) {
+					myHero.SendMessage ("WaitAction");
+				}
+				if (Input.GetKeyDown (KeyCode.Alpha3)) {
+					myHero.SendMessage ("FortifyAction");
+				}
 			}
-			if (Input.GetKeyDown(KeyCode.Alpha2) && emptySlots [2] == false){//if (Input.GetButtonDown ("XButton") && emptySlots [1] == false) {
-				ExecuteAbility (activeAbilities [2]);
-			}
-			if(Input.GetKeyDown(KeyCode.Alpha3) && emptySlots [3] == false) {
-				ExecuteAbility (activeAbilities [3]);
-			}
-		} else {
-			//WHEN CANNOT USE SPECIAL ABILITIES
-			if (Input.GetKeyDown (KeyCode.Alpha1) && hasBaseAttack == false) {
-				//0 is used because
-				ExecuteAbility (activeAbilities [0]);
-				anim.SetTrigger ("Attack1");
-			}
-			if (Input.GetKeyDown(KeyCode.Alpha2)) {
-				myHero.SendMessage ("WaitAction");
-			}
-			if (Input.GetKeyDown (KeyCode.Alpha3)) {
-				myHero.SendMessage ("FortifyAction");
+			if (Input.GetKeyDown (KeyCode.Alpha4)) {
+				switchButtonInput ();
 			}
 		}
-		if (Input.GetKeyDown(KeyCode.Alpha4) ){
-			switchButtonInput ();
-		}
-
-
-
 	}
 	public  void switchButtonInput(){
 		baseButtons = !baseButtons;
@@ -97,19 +113,25 @@ public class PlayerAttackController : MonoBehaviour {
 	void stopMovement(){
 		SendMessage ("UnAllowMovement");
 	}
-
-	public void AllowAttack(){
-		allowAttack = true;
-
-	}
-
+	//public void attackReady;
 	public void ExecuteAbility(BasicAttack ability){
-		//TEMP SOLUTION FOR TESTS
-		//abilities[i].Execute;
-		this.SendMessage("FindTargets");//return some thing
+		Debug.Log("Start casting ability");
+		anim.SetTrigger ("Attack1");
 
-		Debug.Log("Start casting abilitiy");
+		allowAttack = false;
+		//List<GameObject> thisAttackTargets = ability.FindTargets ();
+		List<RaycastHit2D> thisAttackTargets = ability.CheckLine ();
+
+		foreach (RaycastHit2D target in thisAttackTargets) {
+			GameObject tar = target.collider.gameObject;
+			tar.SendMessage ("DoDamage",ability.damage);
+
+		}
+			
 	}
 
 
-}
+	}
+
+
+

@@ -116,7 +116,7 @@ public class Unit : MonoBehaviour {
 		Debug.Log ("Oww");
 	}
 
-    public void doDamage()
+    public void DoDamage()
     {
         //need a way to dynamically target a GameObject, currently manually assigned
         targ.SendMessage("takeDamage", weap.getDamge() + getattack());//testing gameobject for damage

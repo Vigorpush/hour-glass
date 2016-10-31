@@ -9,20 +9,6 @@ public class HeroUnit :  Unit, IButtonMap  {
 	 * 
 	 * 
 	 */
-	void Update () {
 
-
-        //Start of Debug for damaging
-       
-        //End of Debug for damaging
-	
-    }
-
-	void StartTurn(){
-		
-		SendMessage ("AllowMovement");
-        SendMessage("AllowAttack");
-		Debug.Log( "I, " + this.gameObject.name + " Started turn.");
-
-	}
+    
 }
