@@ -3,6 +3,8 @@ using System.Collections;
 using System;
 
 public class FearMap : MonoBehaviour {
+	const int PLACEMENT_OFFSET = 1;	
+	
 	int[,] tiles;
 	int MAP_H,MAP_W;
 	FearSource[] sources;
@@ -64,18 +66,18 @@ public class FearMap : MonoBehaviour {
 		int r = source.radius;
 		int str = source.strength;
 		//Offset to be change if +- 1 is easier 
-		int offset = 1;
-		int adjustedX = x - offset;
-		int adjustedY = y - offset;
+		int adjustedX = x - PLACEMENT_OFFSET;
+		int adjustedY = y - PLACEMENT_OFFSET;
 		int jTime = 0;
 		int curNumberOfRows; 
 		//FOR FEAR POINTS (TILES THAT ARE SCARY)
 		if (r == 0) {
 			if(checkBounds(y,x)){
-				tiles[y,x] +=str;
+				tiles[adjustedY,adjustedX] +=str;
+				return;
 			}
-			tiles[y,x] +=str;
-			return;
+
+
 		}
 		//OUTER LOOP RUNS 2x range + 1 times
 		for (int i = 1; i != source.radius * 2+2; i++) {
@@ -116,8 +118,10 @@ public class FearMap : MonoBehaviour {
 		//Restart row power
 		powerHori = 0;
 	}
-
-	public void addDecayingSource(FearSource source,int x, int y){
+	//source -> The source of fear
+	// x, y -> coordinates of the center point
+	//decayFactor ->  How fast the fear falls off
+	public void addDecayingSource(FearSource source,int x, int y,float decayFact){
 		//For trouble shooting amount of tiles hit
 		if (!checkBounds (x, y)) {
 			throw new IndexOutOfRangeException ("You can't spawn a source outside of the map!");
@@ -128,11 +132,12 @@ public class FearMap : MonoBehaviour {
 		//Multipliers for proximity
 		//Full threat is applied to the center  1/2 is applied since there are 2 dimensions and a maximum fear must add to 1
 		float powerY,powerX;
-		float increment = 1f/(float)(r);
+		float decayFactor=decayFact;
+		float increment = decayFactor/(float)(r);
 		//Offset to be change if +- 1 is easier 
 		int offset = 1;
-		int adjustedX = x - offset;
-		int adjustedY = y - offset;
+		int adjustedX = x - PLACEMENT_OFFSET;
+		int adjustedY = y - PLACEMENT_OFFSET;
 		Debug.Log ("increment is" + increment);
 		int jTime = 0;
 		int curNumberOfRows; 
@@ -140,9 +145,10 @@ public class FearMap : MonoBehaviour {
 		if (r == 0) {
 			if(checkBounds(y,x)){
 				tiles[adjustedY,adjustedX] +=str;
+				return;
 			}
-			tiles[y,x] +=str;
-			return;
+
+
 		}
 		//OUTER LOOP RUNS 2x range + 1 times
 
@@ -168,29 +174,30 @@ public class FearMap : MonoBehaviour {
 				if(checkBounds(newX,newY)){
 					//The proximity of the tile affects the fear
 					//The powers are a function of the distance from the center
-					int differenceX = Math.Abs((adjustedX+1)-newX);
-					int differenceY = Math.Abs (adjustedY- newY);
-
+					int differenceX = Math.Abs((newX-1 -adjustedX));
+					int differenceY = Math.Abs (newY-adjustedY);
 					powerY = 1f - differenceY*increment;
 					powerX = 1f - differenceX*increment;
 
-					Debug.Log("The difference in x is:" + differenceX + "this results in an x power of:" + powerX.ToString("0.00") );
-					Debug.Log("The difference in y is:" + differenceY + "this results in a y power of:" + powerY.ToString("0.00") );
+					//Debug.Log("The difference in x is:" + differenceX + "this results in an x power of:" + powerX.ToString("0.00") );
+					//Debug.Log("The difference in y is:" + differenceY + "this results in a y power of:" + powerY.ToString("0.00") );
 					printhelp++;
 					//Rounds the value to an integer for testing... may use floats in the real game for more accurate fear measurements 
 					int alteredStrength = (int)Math.Round(((str)*(powerY+powerX)));
 					//Makes a 0 strength zone become 1 for testing, possibly valid for the game itself
-					if (alteredStrength == 0) {
+					if (alteredStrength <= 0) {
 						alteredStrength = 1; 
 					}
 
 					tiles [newY, newX] += alteredStrength;
-					Debug.Log ("Adding a point with str: " + alteredStrength);
-
-					this.displayMap ();
+					//Debug.Log ("Adding a point with str: " + alteredStrength);
+						
+					//this.displayMap ();
 				}
 			}
+
 		}
+		Debug.Log ("Final Result: ");
 		Debug.Log (jTime + "count J");
 		Debug.Log (printhelp + "Tiles affected");
 		//Restart row power
@@ -212,26 +219,29 @@ public class FearMap : MonoBehaviour {
 		
 
 		FearSource Mage22 = new FearSource ();
-		Mage22.strength = 2;
-		Mage22.radius = 2;
+		Mage22.strength = 4;
+		Mage22.radius = 4;
 		FearSource Mage53 = new FearSource ();
 		FearSource Mage70 = new FearSource ();
 		Mage70.radius = 0;
 		Mage70.strength = 7;
 		Mage53.strength = 9;
-		Mage53.radius = 2;
+		Mage53.radius = 4;
 		FearMap testMap = new FearMap (3, 3);
 		FearMap testMap2 = new FearMap (10, 10);
 
 		testMap2.initialize ();
 		testMap2.displayMap ();
-		Debug.Log("Adding 5str,3rad mage to 1,1");
-		testMap2.addFixedSource (Mage53, 1,1 );
+		Debug.Log("Adding 9str,4rad mage to 4,4");
+		testMap2.addFixedSource (Mage53, 4,4 );
 		testMap2.displayMap ();
-		Debug.Log("Adding 2str,2rad mage to 6,6 , that decays");
-			testMap2.addDecayingSource (Mage22, 6, 6);
-		Debug.Log("Adding 2str,2rad mage to 9,9");
-		testMap2.addDecayingSource(Mage22, 9,9 );
+		testMap2.initialize ();
+		Debug.Log("Adding 4str,4rad mage to 5,5 , that decays");
+		testMap2.addDecayingSource (Mage22, 5, 5,1.5f);
+		testMap2.displayMap ();
+		testMap2.initialize ();;
+		Debug.Log("Adding a fear tile of strength 7 to 1,1");
+		testMap2.addDecayingSource(Mage70, 1,1,1f );
 		testMap2.displayMap ();
 
 
