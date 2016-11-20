@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Unit : MonoBehaviour {
-	public float defaultDefenseModifier = 1;
+	public float defaultDefenseModifier = 1f;
 	public bool isFortified;//{ get; set; }
 	public float fortifyMultiplier;//{ get; set; }
     //Start of fields
@@ -11,7 +11,7 @@ public class Unit : MonoBehaviour {
 	public int speed;//{ get; set; }
 	public int range;//{ get; set; }
 	public int attack;//{ get; set; }
-	public string Name;//{ get; set; }
+	public string name;//{ get; set; }
 	public int curhp;//{ get; set; }
 
 	public Weapon weap;//{ get; set; }
@@ -83,9 +83,9 @@ public class Unit : MonoBehaviour {
     {
         return attack;
     }
-    public string getName()
+    public string getname()
     {
-        return Name;
+        return name;
     }
 
 

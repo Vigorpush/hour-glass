@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using C5;
 
 public class RoomBuilderAI {
-	MonsterMod m;
 	//VARIABLES PUBLIC FOR TESTING
+	MonsterMod mod;
 
-	int CreditTable;
+	CreditTable table;
 	MonsterDictionary dict;
 	int totalRoomsCleared =0;
-	float roomFactor;
+	float roomFactor = 5f;
 	public float difficultyFactor = 1f;  // will be constant
 	int dungeonDepth;
-	float depthFactor = 25f;
+	float depthFactor = 40f;
 	TileGrid currentRoom;
 	float BASE_CREDITS = 100f;
 	float MAX_CREDITS;
@@ -34,6 +34,7 @@ public class RoomBuilderAI {
 		currentRoom = room;
 		dungeonDepth = startlevel;
 		MonsterDictionary dict = new MonsterDictionary ();
+		CreditTable = new CreditTable ();
 	}
 	void Start () {
 
@@ -75,18 +76,19 @@ public class RoomBuilderAI {
 
 	}
 	//Purchases a unit from the given list
-	void purchaseUnit(){
+	void purchaseUnit(EnemyUnit chosen){
 		
-		curCredits= curCredits -
+		curCredits= curCredits - CreditTable
 	}
 
-	void applyModifier(EnemyUnit){
-	//	MonsterMod chosen = UnityEngine.Random.Range(0,MonsterMod.NUM_MODS);
-		//EnemyUnit.hp
+	void applyModifier(EnemyUnit luckyUnit){
+		MonsterMod chosen = UnityEngine.Random.Range(0,MonsterMod.NUM_MODS);
+		luckyUnit.AddMobModifier(Monster
 	//}
 	//Creates A list of potential enemies sorted by credit cost
+	}
 	void setUnitPool(){
-		for
+		
 
 	}
 	int rollEncounterType(){
