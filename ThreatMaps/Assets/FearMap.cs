@@ -6,6 +6,7 @@ public class FearMap : MonoBehaviour
 {
 	const int PLACEMENT_OFFSET = 1;	
 	int[,] tiles;
+
 	int MAP_H, MAP_W;
 	FearSource[] sources;
 	//TODO: IF PROCESSING THIS LAGS THE GAME, ADD MEMORY FOR THE THREAT SOURCES ON THE MAP AND REMOVE THEM USING AN INVERSE OPERATIONs
