@@ -3,19 +3,21 @@ using System.Collections;
 using C5;
 
 
-public static class MonsterMod : MonoBehaviour {
+public class MonsterMod : MonoBehaviour {
 	//HARDCODED values for
-	public float HEARTY_MOD = 1.2f;
-	/*
-	 * public float BRAVE_MOD = 1.2f;
-	 * public float HEARTY_MOD = 1.2f;
-	 * public float HEARTY_MOD = 1.2f;
-	 * public float HEARTY_MOD = 1.2f;
-	 * public float HEARTY_MOD = 1.2f;
-	 * public float HEARTY_MOD = 1.2f;
-	 * public float HEARTY_MOD = 1.2f;
-	 * public float HEARTY_MOD = 1.2f;
-	 * */
+	static public float HEARTY_MOD = 1.2f;
+
+	 static public float CLEVER_MOD = 1.2f;
+	static public int FAST_MOD = 1;
+	static public float VICIOUS_MOD = 1.1f;
+	static public float CAUCIOUS_MOD = 2f;
+	static public float BRAVE_MOD = 1.2f;
+	static public Vector2 BULKY_MOD = new Vector2 (HEARTY_MOD, VICIOUS_MOD);
+ 
+	public Vector3  RAGING_MOD = new Vector3(FAST_MOD,VICIOUS_MOD*2f,-HEARTY_MOD+1);
+	public Vector3 TERRIFYING_MOD = new Vector3(CLEVER_MOD,FAST_MOD,VICIOUS_MOD);
+	public bool VAMPIRIC;
+
 	public const int NUM_MODS = 10;
 	public enum MMods{
 		
@@ -40,24 +42,61 @@ public static class MonsterMod : MonoBehaviour {
 
 
 	}
-	public static ArrayList<MonsterMod> generateModList(){
+	public  ArrayList<MonsterMod> generateModList(){
 		ArrayList<MonsterMod> allMods  =new ArrayList<MonsterMod> ();
 		//Making all mod types
 		//Bulky
-		MonsterMod Hearty = new MonsterMod();
-		Hearty.hpMod = HEARTY_MOD;
+		MonsterMod hearty = new MonsterMod();
+		hearty.hpMod = HEARTY_MOD;
+		MonsterMod bulky = new MonsterMod ();
+		bulky.hpMod = HEARTY_MOD;
+		bulky.dmgMod = VICIOUS_MOD;
+		MonsterMod clever = new MonsterMod ();
+		clever.initMod = CLEVER_MOD;
+		MonsterMod fast = new MonsterMod ();
+		fast.moveMod = (int)FAST_MOD;
+		MonsterMod vicious = new MonsterMod ();
+		vicious.dmgMod = VICIOUS_MOD;
+		MonsterMod caucious = new MonsterMod ();
+		caucious.fortifyMod = CAUCIOUS_MOD;
+		MonsterMod raging = new MonsterMod();
+		raging.moveMod = (int)RAGING_MOD.x;
+		raging.dmgMod = RAGING_MOD.y;
+		raging.hpMod = RAGING_MOD.z;
+		MonsterMod terrifying = new MonsterMod ();
+		terrifying.initMod = TERRIFYING_MOD.x;
+		terrifying.moveMod = (int)TERRIFYING_MOD.y;
+		terrifying.dmgMod = TERRIFYING_MOD.z;
+		MonsterMod vampiric = new MonsterMod ();
+		vampiric.vampiric = true;
+		MonsterMod brave = new MonsterMod ();
+		brave.moraleMod = BRAVE_MOD;
 
+
+
+
+		//allMods.in
 		//Finally insert all of the created Modifiers and return the list
-		allMods.InsertAll(Hearty);
+		allMods.InsertLast(bulky);
+		allMods.InsertLast(raging);
+		allMods.InsertLast(terrifying);
+		allMods.InsertLast(brave);
+		allMods.InsertLast(clever);
+		allMods.InsertLast(caucious);
+		allMods.InsertLast(hearty);
+		allMods.InsertLast(fast);
+		allMods.InsertLast(vicious);
+		allMods.InsertLast(vampiric);
+
 		return allMods;
 
 
 
 	}
 
-	float hpMod,initMod,dmgMod,fortifyMod,moralMod;
-	int moveMod;
-	bool vampiric;
+	public float hpMod,initMod,dmgMod,fortifyMod,moraleMod;
+	public int moveMod;
+	public bool vampiric;
 
 	void setBase(){
 		hpMod = 1;		
@@ -65,9 +104,9 @@ public static class MonsterMod : MonoBehaviour {
 		dmgMod = 1;	
 		moveMod = 0;    // add this value to movement
 		fortifyMod = 1; // scaler
-		moralMod = 1;   //Modifies starting moral value
-		vampiric=0;     // 1 = true
-	
+		moraleMod = 1;   //Modifies starting moral value
+		vampiric=false;     // 1 = true
+
 
 	}
 	// Use this for initialization

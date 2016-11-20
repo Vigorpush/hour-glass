@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿/*
+using UnityEngine;
 using System.Collections;
 //A 2D Map Grid
 public class TileGrid : MonoBehaviour {
@@ -9,13 +10,13 @@ public class TileGrid : MonoBehaviour {
 	Vector2 selectedTile; //Only to be used if we use a cursor
 	// Use this for initialization
 	void Start () {
-		
+
 		Vector2 selectedTile = new Vector2 (0, 0);
 		initialize ();
 		randomize ();
 		createBorder ();
 		draw ();
-				
+
 
 		//CreateBorder ();
 	}
@@ -42,23 +43,23 @@ public class TileGrid : MonoBehaviour {
 		for (int i = -1; i < MAP_W+1; i++) {
 			for (int j = -1; j < MAP_H+1; j++) {
 				if (j == -1 || j == MAP_H || i == -1 || i == MAP_W) {
-					
+
 					GameObject tile = (GameObject)Instantiate (tileTypes [1].visual, new Vector3 ((i ), (j), 0f), Quaternion.identity);
 					tile.name = "Tile: " + i + ", " + j;
-				
+
 
 					tile.GetComponent<Transform>().parent=(this.GetComponent<Transform> ());
-					 
+
 				}
 			}
 		}
 
 	}
-		//Randomizes the tiles
+	//Randomizes the tiles
 	void randomize(){
 		for (int i = 0; i < MAP_W; i++) {
 			for (int j = 0; j < MAP_H; j++) {
-				
+
 				tiles [i, j] = Random.Range (0,tileTypes.Length);
 			}
 		}
@@ -79,7 +80,8 @@ public class TileGrid : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }
 
+*/

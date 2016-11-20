@@ -83,7 +83,7 @@ public class Unit : MonoBehaviour {
     {
         return attack;
     }
-    public string getname()
+    public string getame()
     {
         return name;
     }

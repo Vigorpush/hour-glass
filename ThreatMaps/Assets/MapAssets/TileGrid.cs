@@ -45,7 +45,7 @@ public class TileGrid : MonoBehaviour {
 		for (int i = 0; i < MAP_W; i++) {
 			for (int j = 0; j < MAP_H; j++) {
 				//
-				tiles [i, j] = Random.Range (0,System.Enum.GetValues(typeof(TileTypes)).Length);
+				tiles [i, j] = Random.Range (0,System.Enum.GetValues(typeof(Tile.TileTypes)).Length);
 			}
 		}
 	}

@@ -3,50 +3,85 @@ using System.Collections.Generic;
 using System;
 
 //A class for storing the current credit cost of everyUnit
-public static class CreditTable {
+public class CreditTable {
 	
 	Dictionary<String,CreditTableEntry> table;
 
-	static class CreditTableEntry {
+	 public class CreditTableEntry {
 		
 		//Initializes the table entry
-		CreditTableEntry(EnemyUnit u){
-			unit = u;
-			cost = u.creditValue;
+		public 	CreditTableEntry(EnemyUnit u){
+			 unit = u;
+			 cost = u.creditValue;
 		}
-		EnemyUnit unit;
-		float cost;
+		public EnemyUnit unit;
+		public float cost;
 		public void alterCost(float value){
 			cost += value;
 		}
+	
 		//Makes the unit 
 
 	}
+	public float cheapestPrice(){
+		if (table.Count == 0) {
+			throw(new Exception ("NO UNITS IN TABLE CAN'T GET CHEAPEST!"));
+		}
+				float cheapest = Int32.MaxValue;
+		foreach (KeyValuePair<string,CreditTable.CreditTableEntry> pair in table) {
+			{
+				if (pair.Value.cost < cheapest) {
+					cheapest = pair.Value.cost;
+				}
+			}
+		}
+		return cheapest;
+
+	}
 	public bool addEntry(EnemyUnit unit){
-		if (table.ContainsKey (unit.getname ())) {
+		if (table.ContainsKey (unit.name)) {
 			throw(new Exception ("Already in table!!!"));
 			return false;
 		}
 		CreditTableEntry newEntry = new CreditTableEntry (unit);
-		table.Add (unit.getname (), newEntry);
-
+		table.Add (unit.name, newEntry);
+		return true;
 	}
 	public bool raiseCost(EnemyUnit unit, float amount){
 		if (table.ContainsKey (unit.name)) {
-			CreditTableEntry toBeRaised = table.TryGetValue (unit.name);
-			toBeRaised.alterCost (amount);
+			CreditTableEntry target = new CreditTableEntry (unit);
+			table.TryGetValue(unit.name,out target);
+			target.alterCost (amount);
+			return true;
 
 		}
-
+		return false;
 	}
 	public bool cheapen(EnemyUnit unit,float amount){
 		if (table.ContainsKey (unit.name)) {
-			CreditTableEntry toBeRaised = table.TryGetValue (unit.name);
-			toBeRaised.alterCost (amount);
+						CreditTableEntry target = new CreditTableEntry (unit);
+			table.TryGetValue (unit.name,out target);	
+		
 
+			target.alterCost (-amount);
+			return true;
 		}
+		return false;
 
 	} 
+
+	//Returns negative 1 if failure
+	public float lookUp(EnemyUnit unit){
+		if (table.ContainsKey (unit.name)) {
+			CreditTableEntry target = new CreditTableEntry (unit);
+			table.TryGetValue (unit.name,out target);
+			return target.cost;
+		} else {
+
+			return -1f;
+		}
+
+	}
 	// Use this for initialization
 
 	

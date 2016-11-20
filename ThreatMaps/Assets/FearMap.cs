@@ -89,7 +89,7 @@ public class FearMap : MonoBehaviour
 		for (int i = 1; i != source.radius * 2 + 2; i++) {
 			
 			//(2 + 2 * r - Math.Abs (r - (2 * i - 3 - r) - 1))    Is the formula for those sexy diamonds
-			curNumberOfRows = (2 + 2 * r - Math.Abs (r - (2 * i - 3 - r) - 1));
+			curNumberOfRows = (2 + 2 * r - Math.Abs (r - (2 * i - r) + 2));
 			for (int j = 1; j != (curNumberOfRows); j++) {
 				//Locations depend on i
 				int newX = x - (r - Math.Abs (r - i + 1)) + j;
@@ -125,7 +125,7 @@ public class FearMap : MonoBehaviour
 		//Full threat is applied to the center  1/2 is applied since there are 2 dimensions and a maximum fear must add to 1
 		float powerY, powerX;
 		float decayFactor = source.decayFactor;
-		float increment = decayFactor / (float)(r);
+		float increment = decayFactor / (float)(r)*2;
 		//Offset to be change if +- 1 is easier 
 		int offset = 1;
 		int adjustedX = x - PLACEMENT_OFFSET;
