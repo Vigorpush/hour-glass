@@ -2,11 +2,12 @@
 using System.Collections;
 using C5;
 
+
 public class MonsterMod : MonoBehaviour {
 	//HARDCODED values for
 	public float HEARTY_MOD = 1.2f;
 	/*
-	 * public float HEARTY_MOD = 1.2f;
+	 * public float BRAVE_MOD = 1.2f;
 	 * public float HEARTY_MOD = 1.2f;
 	 * public float HEARTY_MOD = 1.2f;
 	 * public float HEARTY_MOD = 1.2f;
@@ -15,7 +16,7 @@ public class MonsterMod : MonoBehaviour {
 	 * public float HEARTY_MOD = 1.2f;
 	 * public float HEARTY_MOD = 1.2f;
 	 * */
-	const int NUM_MODS = 10;
+	public const int NUM_MODS = 10;
 	enum MMods{
 		/*
 		BULKY = 1,
@@ -50,7 +51,10 @@ public class MonsterMod : MonoBehaviour {
 
 
 	}
+	//Takes in enemy Unit
+	public void applyMod(){
 
+	}
 	float hpMod,initMod,dmgMod,fortifyMod,moralMod;
 	int moveMod;
 	bool vampiric;

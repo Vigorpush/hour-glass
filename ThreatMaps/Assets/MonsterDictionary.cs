@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 using C5;
+using System.Collections.Generic;
 
-public class MonsterDictionary : MonoBehaviour {
-	//public ArrayList<GEnemyUnit> allEnemies;
+public class MonsterDictionary  {
+	//public ArrayList<EnemyUnit> allEnemies;
 	//public ArrayList<EnemyUnit> goblins;
 	//public ArrayList<EnemyUnit> bosses;
 	//public ArrayList creatures;
-	public ArrayList<MonsterMod> monsterMods;
+	public List<MonsterMod> monsterMods;
 	// Use this for initialization
-
+	public MonsterDictionary(){
+		populateCreatures();
+		populateBossess ();
+		populateGoblins ();
+	}
 	void Start () {
 		
 	}
@@ -18,18 +23,16 @@ public class MonsterDictionary : MonoBehaviour {
 
 	}
 	void populateBossess(){
-
+		//Goblin Necromancer that summons 
 	}
 	void populateCreatures (){
 
 	}
 
-	void applyModifiers(){
 
-	}
-	
+
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
 }
