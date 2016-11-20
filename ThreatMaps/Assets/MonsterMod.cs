@@ -17,7 +17,7 @@ public class MonsterMod : MonoBehaviour {
 	 * public float HEARTY_MOD = 1.2f;
 	 * */
 	public const int NUM_MODS = 10;
-	enum MMods{
+	public enum MMods{
 		/*
 		BULKY = 1,
 		B     = 2,

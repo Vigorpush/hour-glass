@@ -4,10 +4,11 @@ using C5;
 using System.Collections.Generic;
 
 public class MonsterDictionary  {
-	//public ArrayList<EnemyUnit> allEnemies;
-	//public ArrayList<EnemyUnit> goblins;
-	//public ArrayList<EnemyUnit> bosses;
-	//public ArrayList creatures;
+	
+	public ArrayList<EnemyUnit> allEnemies;
+	public ArrayList<EnemyUnit> goblins;
+	public ArrayList<EnemyUnit> bosses;
+	public ArrayList<EnemyUnit> creatures;
 	public List<MonsterMod> monsterMods;
 	// Use this for initialization
 	public MonsterDictionary(){
@@ -15,15 +16,21 @@ public class MonsterDictionary  {
 		populateBossess ();
 		populateGoblins ();
 	}
-	void Start () {
-		
-	}
+
 	void populateGoblins(){
-		//EnemyUnitType;
+		EnemyUnit goblin = new EnemyUnit (); 
+		goblin.creditValue = 25;
+		EnemyUnit goblinArcher = new EnemyUnit (); 
+		goblinArcher.creditValue = 35;
+		EnemyUnit goblinShaman = new EnemyUnit (); 
+		goblinShaman.creditValue = 40;
+		EnemyUnit goblinWarlord = new EnemyUnit (); 
+		goblinWarlord.creditValue = 50;
 
 	}
 	void populateBossess(){
-		//Goblin Necromancer that summons 
+		EnemyUnit boss = new EnemyUnit ();
+		boss.creditValue = 100;
 	}
 	void populateCreatures (){
 

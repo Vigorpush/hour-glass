@@ -1,37 +1,44 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using C5;
 
 public class EnemyUnit : Unit {
-
+	//Moral checks start happening when bellow 50
+	public float maxMorale;
+	public int scaredThresh = 50;
     public float creditValue;
     public int meleeDamage;
     public string damageType;
-    public bool canFailMorate;
-    public string mobModifier;
+    public float canFailMorale;
+	public int curMorale;
+	public  ArrayList<MonsterMod> mods;
 
-    private void MakeMoraleCheck()
+	public EnemyUnit(){
+		
+	}
+	//True = passed the test
+    private bool MakeMoraleCheck()
     {
-
+		if (canFailMorale && curMorale <scaredThresh) {
+			//Check if it's brave enough to pass check
+			float roll =Random.Range(0f,100f);
+			if (roll >= curMorale) {
+				return true;
+			}
+		} else {
+			return true;
+		}
+		return false;
     }
 
-    public void SetMobModifier(string modifierType)
+	public void AddMobModifier(MonsterMod newMod)
     {
-        switch (modifierType){
-            //base types
-            case "Hearty": break;
-            case "Clever": break;
-            case "Fast": break;
-            case "Vicious": break;
-            case "Cautious": break;
-            case "Brave": break;
-            //compound types
-            case "Bulky": break;
-            case "Raging": break;
-            case "Wizardly": break;
-            case "Leader": break;
-            case "Uber": break;
-        }
+		mods.Add (newMod);
+        
     }
+	public void ClearMobModifiers(){
+		mods = new ArrayList<MonsterMod> ();
+	}
 
 	// Use this for initialization
 	
