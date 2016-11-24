@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using C5;
+
 
 
 public class MonsterMod : MonoBehaviour {
@@ -42,8 +42,8 @@ public class MonsterMod : MonoBehaviour {
 
 
 	}
-	public  ArrayList<MonsterMod> generateModList(){
-		ArrayList<MonsterMod> allMods  =new ArrayList<MonsterMod> ();
+	public  ArrayList generateModList(){
+		ArrayList allMods  =new ArrayList ();
 		//Making all mod types
 		//Bulky
 		MonsterMod hearty = new MonsterMod();
@@ -77,16 +77,17 @@ public class MonsterMod : MonoBehaviour {
 
 		//allMods.in
 		//Finally insert all of the created Modifiers and return the list
-		allMods.InsertLast(bulky);
-		allMods.InsertLast(raging);
-		allMods.InsertLast(terrifying);
-		allMods.InsertLast(brave);
-		allMods.InsertLast(clever);
-		allMods.InsertLast(caucious);
-		allMods.InsertLast(hearty);
-		allMods.InsertLast(fast);
-		allMods.InsertLast(vicious);
-		allMods.InsertLast(vampiric);
+
+		allMods.Add(bulky);
+		allMods.Add(raging);
+		allMods.Add(terrifying);
+		allMods.Add(brave);
+		allMods.Add(clever);
+		allMods.Add(caucious);
+		allMods.Add(hearty);
+		allMods.Add(fast);
+		allMods.Add(vicious);
+		allMods.Add(vampiric);
 
 		return allMods;
 

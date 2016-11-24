@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
-using C5;
 using System.Collections.Generic;
+//ssusing C5;
+
 
 public class MonsterDictionary  {
 	
-	public static ArrayList<EnemyUnit> allEnemies;
-	public static ArrayList<EnemyUnit> goblins;
-	public static ArrayList<EnemyUnit> bosses;
-	public static ArrayList<EnemyUnit> creatures;
-	public static ArrayList<MonsterMod> monsterMods;
+	public ArrayList allEnemies;
+	public ArrayList goblins;
+	public ArrayList bosses;
+	public ArrayList creatures;
+	public ArrayList undeads;
+	public ArrayList monsterMods;
 	// Use this for initialization
 	public MonsterDictionary(){
 		populateCreatures();
 		populateBossess ();
 		populateGoblins ();
+		populateUndeads ();
 	}
 
 	void populateGoblins(){
@@ -33,6 +36,10 @@ public class MonsterDictionary  {
 		goblinWarlord.name = "Goblin Warlord";
 
 	}
+	void populateUndeads(){
+
+
+	}
 	void populateBossess(){
 		EnemyUnit boss = new EnemyUnit ();
 		boss.creditValue = 100;
@@ -40,6 +47,7 @@ public class MonsterDictionary  {
 	void populateCreatures (){
 
 	}
+
 
 
 

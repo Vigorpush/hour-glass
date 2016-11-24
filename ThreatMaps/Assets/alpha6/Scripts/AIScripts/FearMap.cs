@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class FearMap : MonoBehaviour
+public class FearMap 
 {
 	const int PLACEMENT_OFFSET = 1;	
 	int[,] tiles;

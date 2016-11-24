@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using C5;
+using System.Collections;
+
 
 public class EnemyUnit : Unit {
 	//Moral checks start happening when bellow 50
@@ -11,7 +12,7 @@ public class EnemyUnit : Unit {
     public string damageType;
     public bool canFailMorale;
 	public int curMorale;
-	public  ArrayList<MonsterMod> mods;
+	public  ArrayList mods;
 
 	public EnemyUnit(){
 		
@@ -38,7 +39,7 @@ public class EnemyUnit : Unit {
         
     }
 	public void ClearMobModifiers(){
-		mods = new ArrayList<MonsterMod> ();
+		mods = new ArrayList ();
 	}
 	public bool hasModifier(MonsterMod modInQuestion){
 		return mods.Contains(modInQuestion);

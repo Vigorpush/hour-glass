@@ -15,6 +15,7 @@ public class Tile {
 	public int code;//{ get; set;}
 	public string terrain;//{ get; set;}
 	public bool occupied;//{ get; set;} // Can the tile be walked onto?
+	public bool walkable;
 	public GameObject occupant;//{ get; set;}
 	//MAYBE USE TEXTURE HERE
 	public GameObject visual;// { get; set;}

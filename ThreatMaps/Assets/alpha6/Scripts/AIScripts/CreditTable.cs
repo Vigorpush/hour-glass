@@ -48,6 +48,7 @@ public class CreditTable {
 		return true;
 	}
 	public bool raiseCost(EnemyUnit unit, float amount){
+		Debug.Log ("Raising the price of " + unit.name + " by " + amount);
 		if (table.ContainsKey (unit.name)) {
 			CreditTableEntry target = new CreditTableEntry (unit);
 			table.TryGetValue(unit.name,out target);
@@ -58,12 +59,14 @@ public class CreditTable {
 		return false;
 	}
 	public bool cheapen(EnemyUnit unit,float amount){
+		
 		if (table.ContainsKey (unit.name)) {
 						CreditTableEntry target = new CreditTableEntry (unit);
 			table.TryGetValue (unit.name,out target);	
 		
 
 			target.alterCost (-amount);
+			Debug.Log ("Reducing the price of " + unit.name + " by " + amount +" it now costs " + lookUp(unit));
 			return true;
 		}
 		return false;
