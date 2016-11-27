@@ -21,6 +21,7 @@ public class MonsterDictionary  {
 	}
 
 	void populateGoblins(){
+		
 		EnemyUnit goblin = new EnemyUnit (); 
 		goblin.creditValue = 25;
 		goblin.name = "Goblin";

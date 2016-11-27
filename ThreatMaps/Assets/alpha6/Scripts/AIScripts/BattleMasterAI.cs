@@ -21,6 +21,7 @@ public class BattleMasterAI : MonoBehaviour {
 	//
 	ArrayList enemies; 
 	TileGrid MAP_TILE = new TileGrid();
+	GameObject[][] tempMap;
 	FearMap fearTable = new FearMap (50,50);
 	FearMap proximityTable = new FearMap (50,50);
 
@@ -69,8 +70,6 @@ public class BattleMasterAI : MonoBehaviour {
 	}
 	//Send a message here?? 
 	void checkFightOver(){
-
-
 	}
 	void logMonsterDamage(EnemyUnit u,int amount){
 		damageDone [enemies.IndexOf (u)] += amount;

@@ -6,7 +6,7 @@ public class RoomBuilderAI : MonoBehaviour {
 	//VARIABLES PUBLIC FOR TESTING
 	MonsterMod mod;
 	MonsterDictionary d;
-	CreditTable cTable;
+	public CreditTable cTable;
 	//Max number of enemies that will be alloted to an encounter party 
 	float MAX_MONSTERS_FACTOR;
 	int totalRoomsCleared =0;
@@ -36,20 +36,28 @@ public class RoomBuilderAI : MonoBehaviour {
 		CHEAP = 7,
 		PREFER_MODS = 8
 	}
-	public RoomBuilderAI(int startlevel,TileGrid room){
-		dungeonDepth = startlevel;
+
+	void Start(){
+		//Testing Encounter Rolls
+		cTable =  (CreditTable) this.gameObject.GetComponent<CreditTable>();
+
+		Debug.Log("starting");
 		d = new MonsterDictionary ();
 		cTable = new CreditTable ();
 		unitPool = new ArrayList();
 		bossPool = new ArrayList ();
+
+		rollEncounterType();
+		setFloor (1);
+
+		//Testing getting enemyPool
+
+
+
 	}
 
-	public void start(){
-		//Testing Encounter Rolls
-		rollEncounterType();
-
-
-
+	public void setFloor(int dungeonLevel){
+		dungeonDepth = dungeonLevel;
 	}
 	void buildRoom(TileGrid newRoom){
 	
@@ -133,14 +141,14 @@ public class RoomBuilderAI : MonoBehaviour {
 	//Purchases a unit from the given list
 	void purchaseUnit(EnemyUnit chosen){
 		if (canPurchaseUnit(chosen)) {
-			curCredits = curCredits - cTable.lookUp (chosen);
+			curCredits = curCredits - cTable.lookUp (chosen.name);
 			Debug.Log ("Choose " + chosen.name + " as unit to buy.");
 		}
 		Debug.Log ("Can't afford unit.");
 	}
 	private bool canPurchaseUnit(EnemyUnit chosen){
 
-		return curCredits > cTable.lookUp (chosen);
+		return curCredits > cTable.lookUp (chosen.name);
 	}
 	/* Unit picker algorithms */
 	//Doesn't check if can afford
@@ -174,9 +182,10 @@ public class RoomBuilderAI : MonoBehaviour {
 	}
 
 	float getUnitCreditEfficiency(EnemyUnit unit){
-		return cTable.lookUp (unit) / (unit.creditValue);
+		return cTable.lookUp (unit.name) / (unit.creditValue);
 
 	}
+	//script name is enemyUnitFactory
 	//Should buy more strong units on average but won't ignore worse deals entirely
 	EnemyUnit testOfTimePick(ArrayList options){
 		int numberOfTrails = 5; // FUDGE
@@ -217,7 +226,7 @@ public class RoomBuilderAI : MonoBehaviour {
 		Debug.Log ("Judging the dps performance of" + judged.name + ".");
 		float maxChangeFactor = .15f;
 
-		float curCost = cTable.lookUp(judged);
+		float curCost = cTable.lookUp(judged.name);
 		float maxChange = curCost * .15f;
 
 		float damagePerCredit = damageOutput/curCost;
@@ -247,7 +256,7 @@ public class RoomBuilderAI : MonoBehaviour {
 		Debug.Log ("Judging the dps performance of" + judged.name + ".");
 		float maxChangeFactor = .15f;
 
-		float curCost = cTable.lookUp(judged);
+		float curCost = cTable.lookUp(judged.name);
 		float maxChange = curCost * maxChangeFactor;
 
 		float healingPerCredit = healingOutput/curCost;
@@ -322,11 +331,12 @@ public class RoomBuilderAI : MonoBehaviour {
 
 
 	}
-	 int rollEncounterType(){
+	private void rollEncounterType(){
 		
-		return UnityEngine.Random.Range (1, NUM_ENCOUNTER_TYPES);
-		Debug.Log("Rolled a " + currentEncounterType.ToString());
 
+		//currentEncounterType = (encounterType)UnityEngine.Random.Range (1, NUM_ENCOUNTER_TYPES);
+		currentEncounterType = encounterType.RANDOM;
+		Debug.Log("Rolled " + currentEncounterType.ToString());
 	}
 		
 	/* Debug FUNCTIONS */

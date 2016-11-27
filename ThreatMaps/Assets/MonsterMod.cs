@@ -3,7 +3,7 @@ using System.Collections;
 
 
 
-public class MonsterMod : MonoBehaviour {
+public class MonsterMod {
 	//HARDCODED values for
 	static public float HEARTY_MOD = 1.2f;
 
