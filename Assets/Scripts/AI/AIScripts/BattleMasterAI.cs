@@ -23,7 +23,7 @@ public class BattleMasterAI : MonoBehaviour {
 	TileGrid MAP_TILE = new TileGrid();
 	GameObject[][] tempMap;
 	FearMap fearTable = new FearMap (50,50);
-	FearMap proximityTable = new FearMap (50,50);
+	FearMap proximityTable = new FearMap (50,50); // SAFETY, can be added to a fearTable for a different behaviour style
 
 	ArrayList players;
 	public int[] damageDone;
