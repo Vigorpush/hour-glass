@@ -379,8 +379,8 @@ public class ComboController : MonoBehaviour {
                 }
 
                 if (
-                    tar.gameObject.GetComponent<Unit>().willDieFromDamage(attackDamage) ||
-                    tar.gameObject.GetComponent<Unit>().willDieFromDamage(spellDamageToDeal)
+                    tar.gameObject.GetComponent<Unit>().WillDieFromDamage(attackDamage) ||
+                    tar.gameObject.GetComponent<Unit>().WillDieFromDamage(spellDamageToDeal)
                     ) //if lethal damage
                 {
                     if (thisAttackTargets.Count == 1)

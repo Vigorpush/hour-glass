@@ -191,8 +191,15 @@ public class TurnManager : MonoBehaviour
 		
 	
 	void MakeTurn ()
-	{		
-		currentUnit.SendMessage ("StartTurn");
+	{	
+		if (currentUnit.tag.Equals ("Baddy")) {
+			
+			currentUnit.GetComponent<ZombieAI> ().enabled = true;
+
+		} else {
+			currentUnit.SendMessage ("StartTurn");
+
+		}
 		cam.SendMessage ("SetCameraFollow", currentUnit.gameObject);
 	}
 

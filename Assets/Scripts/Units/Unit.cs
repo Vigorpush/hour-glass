@@ -119,16 +119,25 @@ public class Unit : MonoBehaviour {
 
 	}
 
-    public bool willDieFromDamage(int attackAmount)
+    public bool WillDieFromDamage(int attackAmount)
     {
-        if (curhp <= attackAmount - armr.getArmour())
-        {
-            return true;
-        }
-        else return false;
+		if (hasArmour()) {
+			if (curhp <= attackAmount - armr.getArmour ()) {
+				return true;
+			} else
+				return false;
+		} else {
+			if (curhp <= attackAmount) {
+				return true;
+			} else
+				return false;
+		}
+			
     }
-
-    public void heal(int healAmount)
+	public bool hasArmour(){
+		return armr != null;
+	}
+    public void Heal(int healAmount)
     {
         curhp += healAmount;
         Debug.Log("healing for " +healAmount);
@@ -148,18 +157,31 @@ public class Unit : MonoBehaviour {
     public void takeDamage(int attackAmount, GameObject damageDealer){
         anim.SetTrigger("GotHit");
         unitThatHitMeThisTurn = damageDealer;
-        if (attackAmount - armr.getArmour()<=0)
-        {
-            return;
-        }
-        curhp -= attackAmount - armr.getArmour();
-        GetComponent<SpawnTextBubble>().gotHit(attackAmount - armr.getArmour());
-        AnnounceDamage(attackAmount-armr.getArmour(),damageDealer);
-        if (curhp <= 0)
-        {
-            Die();
-        }
-        InitCBT((attackAmount - armr.getArmour()).ToString());
+		if (hasArmour ()) {
+			if (attackAmount - armr.getArmour () <= 0) {
+				return;
+			}
+			curhp -= attackAmount - armr.getArmour ();
+			GetComponent<SpawnTextBubble> ().gotHit (attackAmount - armr.getArmour ());
+			AnnounceDamage (attackAmount - armr.getArmour (), damageDealer);
+			InitCBT ((attackAmount - armr.getArmour ()).ToString ());
+			if (curhp <= 0) {
+				Die ();
+			}
+
+		} else {
+			if (attackAmount <= 0) {
+				return;
+			}
+			curhp -= attackAmount;
+			GetComponent<SpawnTextBubble> ().gotHit (attackAmount);
+			AnnounceDamage (attackAmount, damageDealer);
+			InitCBT (attackAmount.ToString ());
+			if (curhp <= 0) {
+				Die ();
+			}
+		}
+
     }
 
     public void takeCriticalDamage(int critAmount, GameObject damageDealer)
@@ -167,21 +189,31 @@ public class Unit : MonoBehaviour {
         anim.SetTrigger("GotHit");
         critShaker.DoShake();
         unitThatHitMeThisTurn = damageDealer;
-        if (critAmount - armr.getArmour() <= 0)
-        {
-            return;
-        }
-        curhp -= critAmount - armr.getArmour();
-       // this.SendMessage("gotHit", critAmount - armr.getArmour());
-        GetComponent<SpawnTextBubble>().gotHit(critAmount - armr.getArmour());
-        AnnounceDamage(critAmount - armr.getArmour(),damageDealer);
-        InitCBTCrit((critAmount - armr.getArmour()).ToString());
+		if (hasArmour()) {
+			if (critAmount - armr.getArmour () <= 0) {
+				return;
+			}
+			curhp -= critAmount - armr.getArmour ();
+			// this.SendMessage("gotHit", critAmount - armr.getArmour());
+			GetComponent<SpawnTextBubble> ().gotHit (critAmount - armr.getArmour ());
+			AnnounceDamage (critAmount - armr.getArmour (), damageDealer);
+			InitCBTCrit ((critAmount - armr.getArmour ()).ToString ());
+		} else {
+			if (critAmount <= 0) {
+				return;
+			}
+			curhp -= critAmount;
+			// this.SendMessage("gotHit", critAmount - armr.getArmour());
+			GetComponent<SpawnTextBubble> ().gotHit (critAmount);
+			AnnounceDamage (critAmount, damageDealer);
+			InitCBTCrit (critAmount.ToString ());
+		}
+			if (curhp <= 0) {
+				Die ();
 
-        if (curhp <= 0)
-        {
-            Die();
+			}
+		
 
-        }
     }
 
    /* public void DoDamage()

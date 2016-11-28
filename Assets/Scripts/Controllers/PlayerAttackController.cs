@@ -102,7 +102,7 @@ public class PlayerAttackController : MonoBehaviour {
             anim.SetTrigger("Attack1");
             anim.SetTrigger("ComboFail");
             //Debug.Log(theTarget.name);
-            theTarget.GetComponent<Unit>().heal(healAmount);
+            theTarget.GetComponent<Unit>().Heal(healAmount);
             Invoke("endTurnWithBuffer", 1f);
         }
     }
