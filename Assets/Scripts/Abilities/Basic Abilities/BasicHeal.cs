@@ -1,0 +1,130 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class BasicHeal : AttackTemplate
+{
+
+    private Transform startTransform;
+    private GameObject[] allAllies;
+   // private GameObject[] enemiesInRange;
+    private GameObject theSelectedTarget;
+    private SpriteRenderer targetSprite;
+    private int[] damageSteps = new int[3];
+    private int healAmount;
+    private HeroUnit myHero;
+    public int attackDamageScaler;
+    private List<KeyCode> theCombo;
+    private bool cycleTargetLock;
+    private int sizeOfTargetArray;
+    private int currentSelectedIndex;
+    List<GameObject> toRet;
+    private GameObject cam;
+    private GameObject thePlayer;
+
+    // Use this for initialization
+    void Start()
+    {
+        cycleTargetLock = true;
+        toRet = new List<GameObject>();
+        hasASpellAnimation = true;
+        cam = GameObject.FindGameObjectWithTag("MainCamera");
+    }
+
+    public override void informOfParent(GameObject playerIn)
+    {
+        thePlayer = playerIn;
+        startTransform = thePlayer.GetComponent<Transform>();
+        myHero = thePlayer.GetComponent<HeroUnit>();
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!cycleTargetLock)
+        {
+            if (Input.GetKeyDown("space"))
+            {
+                cycleTargetLock = true;
+                theSelectedTarget.SendMessage("Untargetted");
+               // RaycastHit2D rayHit = Physics2D.Raycast((Vector2)myHero.transform.position, (Vector2)theSelectedTarget.GetComponent<Transform>().position - (Vector2)myHero.transform.position);
+                //Debug.DrawRay((Vector2)myHero.transform.position, (Vector2)theSelectedTarget.GetComponent<Transform>().position - (Vector2)myHero.transform.position, Color.cyan, 3f);
+                // Debug.Log("Mage ray targetting: " + rayHit.collider.gameObject.name);
+                // cam.GetComponent<CameraFollow>().UnsetTargettingCam();
+               // toRet.Add(rayHit.collider.gameObject);
+                thePlayer.gameObject.GetComponent<PlayerAttackController>().setHealTarget(theSelectedTarget,damageSteps[0]);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                theSelectedTarget.SendMessage("Untargetted");
+                currentSelectedIndex = (currentSelectedIndex + 1) % allAllies.Length;
+                theSelectedTarget = allAllies[currentSelectedIndex];
+                theSelectedTarget.SendMessage("BeingTargetted");
+                // cam.GetComponent<CameraFollow>().SetTargettingCam(theSelectedTarget);
+                // Debug.DrawRay((Vector2)myHero.transform.position, (Vector2)theSelectedTarget.GetComponent<Transform>().position - (Vector2)myHero.transform.position, Color.cyan, 3f);
+               // Debug.Log(allAllies.Length + "Archer arrow targetting: " + theSelectedTarget.gameObject.name);
+            }
+        }
+    }
+
+    public override void CheckLine()
+    {
+       // allAllies = null;
+        List<RaycastHit2D> toRet = new List<RaycastHit2D>();
+
+        allAllies = new GameObject[3];
+
+        allAllies[0] = GameObject.FindGameObjectWithTag("Player1");
+        allAllies[1] = GameObject.FindGameObjectWithTag("Player2");
+        allAllies[2] = GameObject.FindGameObjectWithTag("Player3");
+
+        healAmount = myHero.getattack() + myHero.weap.getDamage();
+
+        toRet.Clear();
+        sizeOfTargetArray = allAllies.Length;
+
+        if (sizeOfTargetArray <= 0)
+        {
+            thePlayer.GetComponent<PlayerAttackController>().setAttackTargets(null);
+        }
+        else
+        {
+            currentSelectedIndex = 0;
+            theSelectedTarget = allAllies[0];
+            theSelectedTarget.SendMessage("BeingTargetted");
+            cycleTargetLock = false;
+        }
+    }
+
+    public override int[] GetDamageSteps()
+    {
+        // Debug.Log("Basic attack script thinks it is attached to " + myHero);
+        damageSteps[0] = myHero.getattack() + myHero.weap.getDamage();
+        damageSteps[1] = myHero.getattack() + myHero.weap.getDamage();
+        damageSteps[2] = myHero.getattack() + myHero.weap.getDamage();
+        return damageSteps;
+    }
+
+    public override List<KeyCode> GetComboInputSequence()
+    {
+        theCombo = new List<KeyCode>();
+        theCombo.Add(KeyCode.Alpha1);
+        theCombo.Add(KeyCode.Alpha1);
+        theCombo.Add(KeyCode.Alpha1);
+        //  Debug.Log("Basic attack made a list");
+        return theCombo;
+    }
+
+    public override string getMyName()
+    {
+        return "Basic Heal Ability";
+    }
+
+    public void clearTarget()
+    {
+        toRet.Clear();
+    }
+
+}

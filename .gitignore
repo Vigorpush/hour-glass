@@ -1,4 +1,8 @@
 Temp/UnityLockfile
+<<<<<<< HEAD
+=======
+Temp/UnityLockfile
+>>>>>>> 5b675ae7eeafed778dca38463359b0a693789a02
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -25,3 +29,7 @@ ExportedObj/
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+<<<<<<< HEAD
+=======
+.gitignore
+>>>>>>> 5b675ae7eeafed778dca38463359b0a693789a02

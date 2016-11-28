@@ -1,0 +1,30 @@
+Generates a fear map based on the provided threat sources
+
+Paramaters:
+playersKnown : A list of threat sources provided by its surroundings. 
+Returns: A 2D array of integers with appropriate fear value of ending a turn on a tile
+
+func generateDangerMap(playersKnown){
+map = new 2D array
+for each source in Sources
+	source.addRangedThreat(map)   or  source.addMeleeThreat(map)
+end for
+
+
+// Base map is produced
+// Add unit specific modifiers 
+Unit.FearMapModifier(map)
+
+return map
+
+}
+
+Threat Sources:
+2 Types:
+	Ranged: Fixed value around range, and decreases gradually  
+	Melee: Essentially a ranged source with a range of 1
+
+
+
+
+

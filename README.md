@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Hourglass
 A Fast Paced Tactics Game
 ---
@@ -20,3 +21,9 @@ A Fast Paced Tactics Game
       &nbsp;&nbsp;&nbsp;&nbsp;     Fire Emblem  
       &nbsp;&nbsp;&nbsp;&nbsp;     Final Fantasy  
       &nbsp;&nbsp;&nbsp;&nbsp;     Rhythm Games  
+=======
+# CMPT306-RPG-GAME-PROJECT
+RPG GAME Project
+ Test file for git strangeness
+edit
+>>>>>>> 5b675ae7eeafed778dca38463359b0a693789a02
