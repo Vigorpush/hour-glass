@@ -45,18 +45,9 @@ public class ZombieAI : MonoBehaviour {
 
 			movementCooldown = false;
 		}
-
-
     }
 
-	void OnEnable(){
-		Debug.Log (this.gameObject.name + ": Beginning turn");
-		movementCooldown = false;
-		Debug.Log (isStillTurn);
-		isStillTurn = true;
 
-		BeginTurn ();
-	}
 
 	//UTIL
     public void AmDying()
@@ -126,6 +117,8 @@ public class ZombieAI : MonoBehaviour {
 	//ALL TREES
 	private DecisionTree BuildZombieTree()
      {
+		DecisionTree t = new DecisionTree ();
+		DecisionTree.
 		return new DecisionTree ();
     }
 
@@ -143,6 +136,21 @@ public class ZombieAI : MonoBehaviour {
 
  
 	//MOVEMENT
+	void StayStill(){
+		EndMyTurn ();
+	}
+
+	bool canMoveTowardTarget(){
+		return true;
+	}
+	void OnEnable(){
+		Debug.Log (this.gameObject.name + ": Beginning turn");
+		movementCooldown = false;
+		Debug.Log (isStillTurn);
+		isStillTurn = true;
+
+		BeginTurn ();
+	}
     private void MoveTowardsTarget()
     {
         //isStillTurn = true;

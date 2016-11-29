@@ -3,10 +3,12 @@ using System.Collections;
 
 public class DecisionTree {
 
-    public delegate bool Decision();
+	public delegate int Decision();
     public delegate void Action();
+
     Decision myDecision;
     Action myAction;
+	ArrayList children;
     public DecisionTree left;
     public DecisionTree right;
 
@@ -18,21 +20,15 @@ public class DecisionTree {
         myAction = null;
     }
 
-    public DecisionTree getLeft()
-    {
-        return left;
-    }
-    public DecisionTree getRight()
+  
+	public DecisionTree getChild(int childIndex)
     {
         return right;
     }
-    public void setLeft(DecisionTree leftTree)
+
+    public void addChild(DecisionTree child)
     {
-         left=leftTree;
-    }
-    public void setRight(DecisionTree rightTree)
-    {
-        right=rightTree;
+		children.Add (child);
     }
     public Decision getDecision(){
         return myDecision;
@@ -53,7 +49,7 @@ public class DecisionTree {
     public void Search(DecisionTree node)
     {
         //if at a leaf, no decision, just do action
-        if(node.getRight()==null && node.getLeft()==null)
+		if(children.Count == 0)
         {
             Action doAction = node.getAction();
             doAction();
@@ -62,14 +58,8 @@ public class DecisionTree {
         }
         //else not a leaf, make decision and recursive call
         Decision makeDecision = node.getDecision();
-       // Debug.Log("Thinking about " + makeDecision.Method);
-        if (makeDecision() == true)         // if decision true go left
-        {
-            Search(node.getLeft());
-        } else if (makeDecision() == false)  //if decision false to right
-        {
-            Search(node.getRight());
-        }
+		Search(node.getDecision());
+     
     }
 
 }
