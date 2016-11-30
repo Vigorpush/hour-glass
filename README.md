@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Hourglass
 A Fast Paced Tactics Game
 ---
@@ -24,6 +23,5 @@ A Fast Paced Tactics Game
 =======
 # CMPT306-RPG-GAME-PROJECT
 RPG GAME Project
- Test file for git strangeness
-edit
->>>>>>> 5b675ae7eeafed778dca38463359b0a693789a02
+
+
