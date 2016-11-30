@@ -10,6 +10,7 @@ using System.Collections;
 /// WHAT AIs need to know... threat list of targets, concernList of 
 /// 
 /// </summary>
+/// 
 public class BattleMasterAI : MonoBehaviour {
 	 //KNOWLEDGE
 	public enum ROLE{

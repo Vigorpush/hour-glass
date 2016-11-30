@@ -20,6 +20,7 @@ public class BasicArrowAttack : AttackTemplate
     List<GameObject> toRet;
     private GameObject cam;
     private GameObject thePlayer;
+    public GameObject theMaestro;
 
     // Use this for initialization
     void Awake()
@@ -30,6 +31,12 @@ public class BasicArrowAttack : AttackTemplate
         hasASpellAnimation = false;
         isARangerAbility = true;
         cam = GameObject.FindGameObjectWithTag("MainCamera");
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
+    }
+
+    void Start()
+    {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
     }
 
     public override void informOfParent(GameObject playerIn)
@@ -61,6 +68,7 @@ public class BasicArrowAttack : AttackTemplate
 
             if (Input.GetKeyDown(KeyCode.Tab))
             {
+                theMaestro.SendMessage("TargetPing");
                 theSelectedTarget.SendMessage("Untargetted");
                 currentSelectedIndex = (currentSelectedIndex + 1) % enemiesInRange.Length;
                 theSelectedTarget = enemiesInRange[currentSelectedIndex];
@@ -74,6 +82,7 @@ public class BasicArrowAttack : AttackTemplate
 
     public override void CheckLine()
     {
+        theMaestro.SendMessage("TargetPing");
         enemiesInRange = null;
         enemiesInRange = GameObject.FindGameObjectsWithTag("Baddy");
         //All enemies on board

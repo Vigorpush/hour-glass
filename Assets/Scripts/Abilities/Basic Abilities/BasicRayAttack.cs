@@ -19,9 +19,12 @@ public class BasicRayAttack : AttackTemplate {
     List<GameObject> toRet;
     private GameObject cam;
     private GameObject thePlayer;
+    public GameObject theMaestro;
+    
 
 	// Use this for initialization
 	void Start () {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
         cycleTargetLock = true;
         toRet = new List<GameObject>();
         hasASpellAnimation = true;
@@ -53,6 +56,7 @@ public class BasicRayAttack : AttackTemplate {
 
             if (Input.GetKeyDown(KeyCode.Tab))
             {
+                theMaestro.SendMessage("TargetPing");
                 theSelectedTarget.SendMessage("Untargetted");
                 currentSelectedIndex = (currentSelectedIndex + 1) % enemiesInRange.Length;
                 theSelectedTarget = enemiesInRange[currentSelectedIndex];
@@ -66,6 +70,7 @@ public class BasicRayAttack : AttackTemplate {
 
     public override void CheckLine()
     {
+        theMaestro.SendMessage("TargetPing");
         enemiesInRange = null;
         enemiesInRange = GameObject.FindGameObjectsWithTag("Baddy");
         //All enemies on board

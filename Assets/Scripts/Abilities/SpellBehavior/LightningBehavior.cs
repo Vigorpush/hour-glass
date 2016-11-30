@@ -20,14 +20,23 @@ public class LightningBehavior : AttackTemplate
     List<GameObject> toRet;
     private GameObject cam;
     private GameObject thePlayer;
+    public GameObject theMaestro;
 
     // Use this for initialization
     void Awake()
     {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
+
         LightningTargetLock = true;
         hasASpellAnimation = true;
         isARangerAbility = false;
         cam = GameObject.FindGameObjectWithTag("MainCamera");
+    }
+
+    void Start()
+    {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
+
     }
 
     public override void informOfParent(GameObject playerIn)
@@ -58,6 +67,8 @@ public class LightningBehavior : AttackTemplate
 
     public override void CheckLine()
     {
+        theMaestro.SendMessage("TargetPing");
+
         enemiesInRange = null;
         enemiesInRange = GameObject.FindGameObjectsWithTag("Baddy");
         //All enemies on board

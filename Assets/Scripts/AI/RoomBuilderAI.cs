@@ -36,14 +36,16 @@ public class RoomBuilderAI : MonoBehaviour {
 		CHEAP = 7,
 		PREFER_MODS = 8
 	}
-
+	void Awake(){
+		d = GameObject.FindGameObjectWithTag ("Dict").GetComponent<MonsterDictionary>();
+	}
 	void Start(){
 		//Testing Encounter Rolls
 		cTable =  (CreditTable) this.gameObject.GetComponent<CreditTable>();
 
 		Debug.Log("starting");
-		d = new MonsterDictionary ();
-		cTable = new CreditTable ();
+
+
 		unitPool = new ArrayList();
 		bossPool = new ArrayList ();
 
@@ -336,7 +338,7 @@ public class RoomBuilderAI : MonoBehaviour {
 
 		//currentEncounterType = (encounterType)UnityEngine.Random.Range (1, NUM_ENCOUNTER_TYPES);
 		currentEncounterType = encounterType.RANDOM;
-		Debug.Log("Rolled " + currentEncounterType.ToString());
+		//Debug.Log("Rolled " + currentEncounterType.ToString());
 	}
 		
 	/* Debug FUNCTIONS */

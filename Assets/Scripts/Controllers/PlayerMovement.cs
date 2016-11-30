@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour {
 	public PlayerAttackController attackController;
     public Text inputInstruction;
     bool turnOver;
+    public bool OutOfCombat;
+    public GameObject cam;  //the main camera
 
     //For UI building on turn
     public GameObject abil1UI;
@@ -33,12 +35,16 @@ public class PlayerMovement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {	
-		initializeController ();
+		Invoke("initializeController",1f); //allows player time to teleport to start
+        cam = GameObject.FindGameObjectWithTag("MainCamera");
+        attackController = this.gameObject.GetComponent<PlayerAttackController>();
         //UI 3 buttons, 4th button is switch panel
         abilitiesUI = new GameObject[3];
         abilitiesUI[0] = abil1UI;
         abilitiesUI[1] = abil2UI;
         abilitiesUI[2] = abil3UI;
+        OutOfCombat = true;
+     
     }
 
 	void checkEndTurn(){
@@ -101,6 +107,12 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
+    public void SetStartingPosition(Vector2 positionIn)
+    {
+        initialPosition = positionIn;
+        this.pos = positionIn;
+    }
+
 	public void DisableMovement(){
 		isTurn = false;
 	}
@@ -152,7 +164,6 @@ public class PlayerMovement : MonoBehaviour {
 	//Starts turn which allows movement and attack controls
 	void StartTurn(){
         //inputInstruction.text = "";
-        attackController = this.gameObject.GetComponent<PlayerAttackController>();
 
         UIportrait.GetComponent<Image>().overrideSprite = myPortrait;
 
@@ -162,7 +173,6 @@ public class PlayerMovement : MonoBehaviour {
            // Debug.Log(this.gameObject.name + " setting ability "+ i + " sprite to " + abilityIcons[i].name);
             abilitiesUI[i].GetComponent<Image>().overrideSprite = abilityIcons[i];
         }
-
 
         SendMessage ("AllowMovement");
 		Invoke ("endOK", TURN_BUFFER);
@@ -176,9 +186,23 @@ public class PlayerMovement : MonoBehaviour {
 
     public void EnterExplorationMode()
     {
+        OutOfCombat = true;
+        cam.GetComponent<CameraFollow>().SetCameraFollow(this.gameObject);
         Debug.Log(this.gameObject.name + ": I'm party lead, and exploring!");
         attackController.allowAttack = false;
         SendMessage("AllowMovement");
+    }
+
+    //Invokable method to begin calculating intiaties and first turn;
+    private void SpawnEncounter()
+    {
+        if (OutOfCombat)
+        {
+            Debug.Log("Hit an encounter tile");
+            OutOfCombat = false;
+            turnManager.SendMessage("Begin");
+        }
+       
     }
 
     public void CollapseForExploration()
@@ -197,35 +221,57 @@ public class PlayerMovement : MonoBehaviour {
 	//RAY CAST METHODS
 	//-------------------------------------------------//
 	//Checks for collisions with units in a line of length L
-	RaycastHit2D rayCheckLine(int L){
-		return Physics2D.Linecast(tf.position,(Vector2)(pos+(Vector2)(tf.up)),L);
-	}
 
+    RaycastHit2D rayCheckLine(int L)
+    {
+        RaycastHit2D rayHit = Physics2D.Linecast(tf.position, (Vector2)(pos + (Vector2)(tf.up)), L);
+        if (rayHit.collider != null)
+        {
+            Debug.Log(rayHit.collider);
+            if (rayHit.collider.gameObject.tag.Equals("Encounter"))
+            {
+                //Open door, move forward, move forward, fan party
+               // startMoveCooldown();
+                SpawnEncounter();
+               // pos += Vector2.up; //need to be relative forward direction
+                return rayHit;
+            }
+            return rayHit;
+        }
+        else return rayHit;
+    }
+    
+   /* RaycastHit2D rayCheckLine(int L){
+        return Physics2D.Linecast(tf.position,(Vector2)(pos+(Vector2)(tf.up)),L);
+	}
+    */
 	//Input Handling
 	void checkPlayerMovement(){
 		h = Input.GetAxis("Horizontal");
 		v = Input.GetAxis("Vertical");
+      //  Debug.Log("test");
 		if (Input.GetButton("Horizontal") && !moving) {  
 			if (h>0) {	
 				tf.localEulerAngles = new Vector3 (0, 0, 270);   // Always rotate the character even if you cannot move
 				rayCast = rayCheckLine (BUMP_DIST);
-				if (rayCast.collider == null) {
+				if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter")) {
 					pos += Vector2.right;
 					startMoveCooldown ();
 				} else {
-					//Debug.Log ("Move right failed:" + rayCast.collider.gameObject.name + " in the way.");
+					Debug.Log ("Move right failed:" + rayCast.collider.gameObject.name + " in the way.");
 				}
 			} else {
 				
 				tf.localEulerAngles = new Vector3 (0, 0, 90);
 				rayCast = rayCheckLine (BUMP_DIST);
-				if (rayCast.collider == null) {	
+                if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter"))
+                {	
 					pos += Vector2.left;
 					//anim.SetTrigger ("Walking");
 					startMoveCooldown ();
 				
 				} else {
-					//Debug.Log ("Move left failed:" + rayCast.collider.gameObject.name  + " in the way.");
+					Debug.Log ("Move left failed:" + rayCast.collider.gameObject.name  + " in the way.");
 				}
 			}
 		}
@@ -235,12 +281,13 @@ public class PlayerMovement : MonoBehaviour {
 				
 				tf.localEulerAngles = new Vector3 (0, 0, 0);
 				rayCast = rayCheckLine (BUMP_DIST);
-				if (rayCast.collider == null) {	
+                if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter"))
+                {	
 					pos += Vector2.up;
 					//anim.SetTrigger("Walking");
 					startMoveCooldown ();
 				} else {
-					//Debug.Log ("Move up failed:" + rayCast.collider.gameObject.name  + " in the way.");				
+				Debug.Log ("Move up failed:" + rayCast.collider.gameObject.name  + " in the way.");				
 				}
 			}
 			else
@@ -248,12 +295,13 @@ public class PlayerMovement : MonoBehaviour {
 				
 				tf.localEulerAngles = new Vector3 (0, 0, 180);
 				rayCast = rayCheckLine (BUMP_DIST);
-				if (rayCast.collider == null) {	
+                if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter"))
+                {	
 					pos += Vector2.down;
 					//anim.SetTrigger ("Walking");
 					startMoveCooldown ();
 				} else {
-					//Debug.Log("Move down failed:" + rayCast.collider.gameObject.name + " in the way.");
+					Debug.Log("Move down failed:" + rayCast.collider.gameObject.name + " in the way.");
 				}
 			}
 		}

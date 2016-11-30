@@ -341,7 +341,7 @@ public class ComboController : MonoBehaviour {
                         if (!rangedAbilityFlag && !playSpellAnimation) { swing2.Play(); }
                         if (playSpellAnimation) {
                             spellDamageToDeal += step2Damage;
-                            MageFX1.gameObject.SetActive(false);
+                           //MageFX1.gameObject.SetActive(false);
                             MageFX2.gameObject.SetActive(true);
                         } else {
                             if (rollCritChance())
@@ -361,7 +361,7 @@ public class ComboController : MonoBehaviour {
                         if (!rangedAbilityFlag && !playSpellAnimation) { swing3.Play(); }
                         if (playSpellAnimation) {
                             spellDamageToDeal += step3Damage;
-                            MageFX2.gameObject.SetActive(false);
+                            //MageFX2.gameObject.SetActive(false);
                             MageFX3.gameObject.SetActive(true);
                         } else {
                             if (rollCritChance())
@@ -641,6 +641,9 @@ public class ComboController : MonoBehaviour {
 
     private int splitDamageBetweenTargets()
     {
+		if (thisAttackTargets.Count==0) {
+			return spellDamageToDeal;
+		}
         return spellDamageToDeal/thisAttackTargets.Count;
     }
 

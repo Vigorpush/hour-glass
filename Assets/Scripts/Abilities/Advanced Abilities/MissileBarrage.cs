@@ -20,6 +20,7 @@ public class MissileBarrage : AttackTemplate
     List<GameObject> toRet;
     private GameObject cam;
     private GameObject thePlayer;
+    public GameObject theMaestro;
 
     // Use this for initialization
     void Awake()
@@ -28,6 +29,12 @@ public class MissileBarrage : AttackTemplate
         hasASpellAnimation = true;
         isARangerAbility = false;
         cam = GameObject.FindGameObjectWithTag("MainCamera");
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
+    }
+
+    void Start()
+    {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
     }
 
     public override void informOfParent(GameObject playerIn)
@@ -57,6 +64,7 @@ public class MissileBarrage : AttackTemplate
 
     public override void CheckLine()
     {
+        theMaestro.SendMessage("TargetPing");
         enemiesInRange = null;
         enemiesInRange = GameObject.FindGameObjectsWithTag("Baddy");
         //All enemies on board

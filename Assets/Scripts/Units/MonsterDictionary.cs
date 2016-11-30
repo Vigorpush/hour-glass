@@ -4,7 +4,7 @@ using System.Collections.Generic;
 //ssusing C5;
 
 
-public class MonsterDictionary  {
+public class MonsterDictionary : MonoBehaviour {
 	
 	public ArrayList allEnemies;
 	public ArrayList goblins;
@@ -42,8 +42,10 @@ public class MonsterDictionary  {
 
 	}
 	void populateBossess(){
+		/*
 		EnemyUnit boss = new EnemyUnit ();
 		boss.creditValue = 100;
+		*/
 	}
 	void populateCreatures (){
 

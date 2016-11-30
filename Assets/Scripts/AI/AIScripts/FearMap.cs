@@ -207,12 +207,12 @@ public class FearMap
 	void Start ()
 	{
 		
-
+        /*
 		DecayingFearSource Mage44DecayHigh = new DecayingFearSource (4,4,1.5f);
 
-		DecayingFearSource Mage44DecayLow = new DecayingFearSource (4,4,.5f);
-		FearSource Mage53= new FearSource (5,3);
-		FearSource Mage70 = new FearSource (0,7);
+		De  cayingFearSource Mage44DecayLow = new DecayingFearSource (4,4,.5f);
+		FearSource Mage53= new FearSource (/*5,3);
+		FearSource Mage70 = new FearSource (/*0,7);
 		FearMap testMap = new FearMap (3, 3);
 		FearMap testMap2 = new FearMap (10, 10);
 		//Regular sources
@@ -236,7 +236,7 @@ public class FearMap
 		testMap2.addFixedSource (Mage70, 1, 1);
 		testMap2.displayMap ();
 
-
+        */
 
 		//testMap2.displayMap ();
 

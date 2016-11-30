@@ -19,14 +19,22 @@ public class Whirlwind : AttackTemplate
     List<GameObject> toRet;
     private GameObject cam;
     private GameObject thePlayer;
+    public GameObject theMaestro;
+    
 
     // Use this for initialization
     void Awake()
     {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
         whirlTarLock = true;
         hasASpellAnimation = false;
         isARangerAbility = false;
         cam = GameObject.FindGameObjectWithTag("MainCamera");
+    }
+
+    void Start()
+    {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
     }
 
     public override void informOfParent(GameObject playerIn)
@@ -55,6 +63,7 @@ public class Whirlwind : AttackTemplate
 
     public override void CheckLine()
     {
+        theMaestro.SendMessage("TargetPing");
         enemiesInRange = null;
         enemiesInRange = GameObject.FindGameObjectsWithTag("Baddy");
         toRet.Clear();

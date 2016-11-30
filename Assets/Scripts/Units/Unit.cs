@@ -30,7 +30,7 @@ public class Unit : MonoBehaviour {
 
     public GameObject theMainCamera;
     private CameraShake critShaker;
-
+    private Transform transformForText;
 
     //End of fields
     //Reset multiplier
@@ -39,6 +39,7 @@ public class Unit : MonoBehaviour {
 	}
     void Start()
     {
+        transformForText = this.gameObject.transform;
         theMainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         critShaker = theMainCamera.GetComponent<CameraShake>();
         theTurnManager = GameObject.FindGameObjectWithTag("Manager");
@@ -297,7 +298,7 @@ public class Unit : MonoBehaviour {
         tempRect.transform.SetParent(transform.FindChild("EnemyCanvas"));
         tempRect.transform.localPosition = CBTprefab.transform.localPosition;
         tempRect.transform.localScale = CBTprefab.transform.localScale;
-
+       
 
         if (dying)
         {
@@ -316,6 +317,7 @@ public class Unit : MonoBehaviour {
         tempRect.transform.localPosition = CBTprefab.transform.localPosition;
         tempRect.transform.localScale = CBTprefab.transform.localScale;
 
+
         if (dying)
         {
             temp.GetComponent<Text>().fontSize += 25;
@@ -326,7 +328,7 @@ public class Unit : MonoBehaviour {
         temp.GetComponent<Text>().color = Color.yellow;
         Destroy(temp.gameObject, 4);
     }
-
+    
 
     void InitHealCBT(string textIn)
     {

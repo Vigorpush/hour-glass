@@ -20,10 +20,13 @@ public class Multishot : AttackTemplate
     List<GameObject> toRet;
     private GameObject cam;
     private GameObject thePlayer;
+    public GameObject theMaestro;
 
     // Use this for initialization
     void Awake()
     {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
+
 //Debug.Log("arrow attack woke up");
         ArrowTargetLock = true;
         //Debug.Log(ArrowTargetLock);
@@ -31,6 +34,12 @@ public class Multishot : AttackTemplate
         isARangerAbility = true;
         cam = GameObject.FindGameObjectWithTag("MainCamera");
     }
+
+    private void Start(){
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
+
+    }
+
 
     public override void informOfParent(GameObject playerIn)
     {
@@ -67,6 +76,7 @@ public class Multishot : AttackTemplate
 
     public override void CheckLine()
     {
+        theMaestro.SendMessage("TargetPing");
         enemiesInRange = null;
         enemiesInRange = GameObject.FindGameObjectsWithTag("Baddy");
         //All enemies on board

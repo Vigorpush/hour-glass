@@ -21,10 +21,13 @@ public class BasicHeal : AttackTemplate
     List<GameObject> toRet;
     private GameObject cam;
     private GameObject thePlayer;
+    public AudioSource tarSound;
+    public GameObject theMaestro;
 
     // Use this for initialization
     void Start()
     {
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
         cycleTargetLock = true;
         toRet = new List<GameObject>();
         hasASpellAnimation = true;
@@ -58,6 +61,7 @@ public class BasicHeal : AttackTemplate
 
             if (Input.GetKeyDown(KeyCode.Tab))
             {
+                theMaestro.SendMessage("TargetPing");
                 theSelectedTarget.SendMessage("Untargetted");
                 currentSelectedIndex = (currentSelectedIndex + 1) % allAllies.Length;
                 theSelectedTarget = allAllies[currentSelectedIndex];
@@ -71,6 +75,7 @@ public class BasicHeal : AttackTemplate
 
     public override void CheckLine()
     {
+        theMaestro.SendMessage("TargetPing");
        // allAllies = null;
         List<RaycastHit2D> toRet = new List<RaycastHit2D>();
 

@@ -8,29 +8,26 @@ public class DecisionTree {
 
     Decision myDecision;
     Action myAction;
-	ArrayList children;
-    public DecisionTree left;
-    public DecisionTree right;
+	protected ArrayList children = new ArrayList();
+ 
 
     public DecisionTree()
     {
-        left = null;
-        right = null;
+		
         myDecision = null;
         myAction = null;
     }
 
-  
-	public DecisionTree getChild(int childIndex)
-    {
-        return right;
-    }
+ 
 
     public void addChild(DecisionTree child)
     {
 		children.Add (child);
     }
     public Decision getDecision(){
+		if(this.myDecision == null){
+			Debug.Log("no decision!!!!!");
+		}
         return myDecision;
     }
     public Action getAction()
@@ -49,17 +46,27 @@ public class DecisionTree {
     public void Search(DecisionTree node)
     {
         //if at a leaf, no decision, just do action
-		if(children.Count == 0)
+		if(node.children.Count == 0)
         {
             Action doAction = node.getAction();
             doAction();
+
             Debug.Log("Decided to "+doAction.Method);
             return;
+		
         }
         //else not a leaf, make decision and recursive call
-        Decision makeDecision = node.getDecision();
-		Search(node.getDecision());
-     
+
+		Decision d =node.getDecision();
+		int result = d (); 
+		Debug.Log("d is"+ d);
+
+
+
+       // Debug.Log("Thinking about " + makeDecision.Method);
+
+		Search((DecisionTree)children[result]);
+       
     }
 
 }

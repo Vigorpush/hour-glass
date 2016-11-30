@@ -76,10 +76,9 @@ public class TurnManager : MonoBehaviour
 
 	public void Start()
 	{
-		cam = GameObject.FindGameObjectWithTag("MainCamera");
-		GetAllPlayers();
-		initializeTables();
+        cam = GameObject.FindGameObjectWithTag("MainCamera");
 	}
+
 	void setUpButton ()
 	{
 		endTurnButton = GameObject.Find ("EndTurnButton");
@@ -139,6 +138,9 @@ public class TurnManager : MonoBehaviour
 		player1 = GameObject.FindGameObjectWithTag ("Player1");
 		player2 = GameObject.FindGameObjectWithTag ("Player2");
 		player3 = GameObject.FindGameObjectWithTag ("Player3");
+        player1.SetActive(true);
+        player2.SetActive(true);
+        player3.SetActive(true);
 		players.Add (player1);
 		players.Add (player2);
 		players.Add (player3);
@@ -146,6 +148,15 @@ public class TurnManager : MonoBehaviour
 	}
 
     int numTurns = 0;
+	public void AIDisableThenCalcTurn(){
+        Debug.Log("Msg");
+
+		if (currentUnit.GetComponent<ZombieAI> () != null) {
+			
+			currentUnit.GetComponent<ZombieAI> ().enabled = false;
+		}
+		Invoke("CalculateTurn",.5f);
+	}
 	public void CalculateTurn ()
 	{
         //TODO needs to tell current player to end turn, and next player to make turn.  Curren't doesn't end turn for active player when button pressed
@@ -164,8 +175,9 @@ public class TurnManager : MonoBehaviour
         {
             if(!curPair.u.getDying()){            
                 //The unit died, do next turn;
-              //  Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Current unit is " + curPair.u.name);
+               // Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Current unit is " + curPair.u.name);
                 MakeTurn();
+			
             }
             else
             {
@@ -186,14 +198,14 @@ public class TurnManager : MonoBehaviour
                 break;
             }
         }
-        Invoke("checkCombatOver",3f);
+        Invoke("CheckCombatOver",3f);
     }
 		
 	
 	void MakeTurn ()
 	{	
 		if (currentUnit.tag.Equals ("Baddy")) {
-			
+			Debug.Log ("Current unit is a baddy");
 			currentUnit.GetComponent<ZombieAI> ().enabled = true;
 
 		} else {
@@ -201,11 +213,12 @@ public class TurnManager : MonoBehaviour
 
 		}
 		cam.SendMessage ("SetCameraFollow", currentUnit.gameObject);
+
 	}
 
     //If all enemies are dead, award XP, check for level up, and enter exploration mode
    
-   public void checkCombatOver()
+   public void CheckCombatOver()
    {
         bool atleastOneEnemyAlive=false;
         foreach(UnitInitiativeP curPair in currentInitiatives)
@@ -246,8 +259,10 @@ public class TurnManager : MonoBehaviour
     }
 
     //Fan out players along the Y axis
-    public void beginCombat()
-    {
+    public void Begin()
+    { 
+        GetAllPlayers();
+        Invoke("initializeTables",0.5f);
         Transform explorerTf = theExplorer.transform;
         float xToSpawn = explorerTf.transform.position.x;
         float yToSpawn = explorerTf.transform.position.y;
@@ -255,8 +270,16 @@ public class TurnManager : MonoBehaviour
         foreach (GameObject player in players)
         {
             player.GetComponent<PlayerMovement>().EnterCombat(xToSpawn,yToSpawn);
+            player.GetComponent<PlayerMovement>().SetStartingPosition(new Vector2(xToSpawn, yToSpawn));
             yToSpawn++;
         }
+
+        //Spawn some zombies
+        GameObject mobSpawner = GameObject.FindGameObjectWithTag("Spawner");
+        mobSpawner.GetComponent<EnemyUnitFactory>().PlaceSomeZombies();
+
+        GameObject theMaestro = GameObject.FindGameObjectWithTag("Maestro");
+        theMaestro.SendMessage("PlayBattle1");
     }
 
 }
