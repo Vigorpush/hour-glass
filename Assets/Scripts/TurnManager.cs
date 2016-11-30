@@ -11,6 +11,7 @@ public class TurnManager : MonoBehaviour
     GameObject cam;
     public GameObject[] units;
     public GameObject theExplorer;
+    GameObject theMaestro;
 
     //Holds the pairs
     [System.Serializable]
@@ -76,6 +77,7 @@ public class TurnManager : MonoBehaviour
 
 	public void Start()
 	{
+        theMaestro = GameObject.FindGameObjectWithTag("Maestro");
         cam = GameObject.FindGameObjectWithTag("MainCamera");
 	}
 
@@ -97,7 +99,7 @@ public class TurnManager : MonoBehaviour
         addEnemiesToTable();
 		currentInitiatives.Sort ();
         Debug.Log("==== Begin Encounter ====");
-		Invoke("CalculateTurn",1f);
+		Invoke("CalculateTurn",3f);
 	}
 
 
@@ -232,7 +234,7 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log("==== End of Encounter ====");
             enterExplorationMode();
-
+            theMaestro.SendMessage("EndCombat");
         }
 
    }
@@ -278,8 +280,8 @@ public class TurnManager : MonoBehaviour
         GameObject mobSpawner = GameObject.FindGameObjectWithTag("Spawner");
         mobSpawner.GetComponent<EnemyUnitFactory>().PlaceSomeZombies();
 
-        GameObject theMaestro = GameObject.FindGameObjectWithTag("Maestro");
-        theMaestro.SendMessage("PlayBattle1");
+        
+        theMaestro.SendMessage("BeginCombat");
     }
 
 }

@@ -200,6 +200,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             Debug.Log("Hit an encounter tile");
             OutOfCombat = false;
+            EndTurn();
             turnManager.SendMessage("Begin");
         }
        

@@ -461,8 +461,6 @@ public class ComboController : MonoBehaviour {
                                 }
                                 
                             }
-                            
-
                         }
                     }
                     else //if spell accumulate damage
@@ -525,7 +523,7 @@ public class ComboController : MonoBehaviour {
         // baseDamage =  myHero.weap.getDamage() +myHero.attack;
         stepsIntoCombo = comboStep;
         timerWindow = 3f;
-        waitTimeBeforeInput = 2.9999999f;
+        waitTimeBeforeInput = 2.5f;
         pauseHourglass = false;
         Invoke("EnableInput",.5f);
     }

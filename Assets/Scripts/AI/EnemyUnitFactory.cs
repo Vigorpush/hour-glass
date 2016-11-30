@@ -22,11 +22,11 @@ public class EnemyUnitFactory : MonoBehaviour
     public void PlaceSomeZombies()
     {
         for(int i =0;i<AMT;i++){
-        Vector3 change = new Vector3(UnityEngine.Random.Range(-3, 3), UnityEngine.Random.Range(-3, 3), 0);
-        this.transform.position += change;
-        CreateZombie();
-    }
-    Debug.Log("ding done");
+            Vector3 change = new Vector3(UnityEngine.Random.Range(-3, 3), UnityEngine.Random.Range(-3, 3), 0);
+            this.transform.position += change;
+            Invoke("CreateZombie",0.2f);
+        }
+    //Debug.Log("ding done");
     }
 
 

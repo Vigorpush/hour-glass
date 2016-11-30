@@ -43,7 +43,7 @@ public class Unit : MonoBehaviour {
         theMainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         critShaker = theMainCamera.GetComponent<CameraShake>();
         theTurnManager = GameObject.FindGameObjectWithTag("Manager");
-        anim = GetComponent<Animator>();
+        anim = this.gameObject.GetComponent<Animator>();
         col = GetComponent<Collider2D>();
         dying = false;
         curhp = getmaxhp();//setting up the start HP
