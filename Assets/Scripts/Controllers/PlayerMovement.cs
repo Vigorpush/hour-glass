@@ -215,6 +215,7 @@ public class PlayerMovement : MonoBehaviour {
                 exploreMode = false;
               //  Debug.Log(this.gameObject.name +" I though I was facing:" + this.gameObject.transform.eulerAngles.z);
 
+                //Nudge forward 1 tile
                 if (this.gameObject.transform.eulerAngles.z == 270)//if facing right
                 {
                    // Debug.Log("```````I wanted to go right");
@@ -276,16 +277,20 @@ public class PlayerMovement : MonoBehaviour {
         RaycastHit2D rayHit = Physics2D.Linecast(tf.position, (Vector2)(pos + (Vector2)(tf.up)), L);
         if (rayHit.collider != null)
         {
-            Debug.Log(rayHit.collider);
-            if (rayHit.collider.gameObject.tag.Equals("Encounter"))
+           if (rayHit.collider.gameObject.tag.Equals("Loot"))
+            {
+                Debug.Log("Found some loot!");
+                rayHit.collider.gameObject.SendMessage("rollAnUpgrade");
+            }
+            else if (rayHit.collider.gameObject.tag.Equals("Encounter"))
             {
                 //Open door, move forward, move forward, fan party
-                startMoveCooldown(); 
-              
+                startMoveCooldown();             
                 SpawnEncounter();
                // pos += Vector2.up; //need to be relative forward direction
                 return rayHit;
             }
+          
             else if (rayHit.collider.gameObject.tag.Equals("LevelClear"))
             {
                 Debug.Log("The Floor was cleared!");
@@ -395,11 +400,11 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
 
-        Debug.Log("Player survey thought here was good"+xToSpawn + " " +yToSpawn);
+      //  Debug.Log("Player survey thought here was good"+xToSpawn + " " +yToSpawn);
 
         turnManager.GetComponent<TurnManager>().Begin(xToSpawn,yToSpawn, buddy1SpawnLocation, buddy2SpawnLocation); 
 
-        Debug.Log(this.gameObject.name + " I figure the room is about size: "+ roomSizeApprox);
+      //  Debug.Log(this.gameObject.name + " I figure the room is about size: "+ roomSizeApprox);
 
     }
 
@@ -420,7 +425,7 @@ public class PlayerMovement : MonoBehaviour {
 					pos += Vector2.right;
 					startMoveCooldown ();
 				} else {
-					Debug.Log ("Move right failed:" + rayCast.collider.gameObject.name + " in the way.");
+				//	Debug.Log ("Move right failed:" + rayCast.collider.gameObject.name + " in the way.");
 				}
 			} else {
 				
@@ -433,7 +438,7 @@ public class PlayerMovement : MonoBehaviour {
 					startMoveCooldown ();
 				
 				} else {
-					Debug.Log ("Move left failed:" + rayCast.collider.gameObject.name  + " in the way.");
+				//	Debug.Log ("Move left failed:" + rayCast.collider.gameObject.name  + " in the way.");
 				}
 			}
 		}
@@ -462,7 +467,7 @@ public class PlayerMovement : MonoBehaviour {
 					//anim.SetTrigger ("Walking");
 					startMoveCooldown ();
 				} else {
-					Debug.Log("Move down failed:" + rayCast.collider.gameObject.name + " in the way.");
+				//	Debug.Log("Move down failed:" + rayCast.collider.gameObject.name + " in the way.");
 				}
 			}
 		}

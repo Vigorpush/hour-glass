@@ -17,11 +17,23 @@ public class EquipmentUpgradeGen : MonoBehaviour {
     public HeroUnit heroToUpgrade;
     private Equipment equipmentToUpgrade;
     private int upgradeAmount;
+    private bool triggered;
 
    void Start()
     {
-        UpgradeEquipment();
+        triggered = false;
+        //UpgradeEquipment();
        // Fighter = FighterPlayer.GetComponent<HeroUnit>();
+    }
+
+    public void rollAnUpgrade()
+    {
+        if(!triggered)
+        {
+            UpgradeEquipment();
+            Invoke("Consumed",0.1f);
+        }
+        
     }
 	
 	void UpgradeEquipment()
@@ -118,5 +130,10 @@ public class EquipmentUpgradeGen : MonoBehaviour {
                 armourToUpgrade.armour += upgradeAmount;
                 break;
         }
+    }
+
+    private void Consumed()
+    {
+        Destroy(this.gameObject);
     }
 }

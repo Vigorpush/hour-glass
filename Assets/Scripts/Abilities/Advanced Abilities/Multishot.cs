@@ -67,10 +67,14 @@ public class Multishot : AttackTemplate
                     // Debug.Log("Mage ray targetting: " + rayHit.collider.gameObject.name);
 
                     // cam.GetComponent<CameraFollow>().UnsetTargettingCam();
-
-                    if (rayHit.collider.tag.Equals("Baddy")){ 
-                        toRet.Add(rayHit.collider.gameObject);
+                    if (rayHit.collider != null)
+                    {
+                        if (rayHit.collider.tag.Equals("Baddy"))
+                        {
+                            toRet.Add(rayHit.collider.gameObject);
+                        }
                     }
+                   
                 }
                 ArrowTargetLock = true;
                 thePlayer.GetComponent<PlayerAttackController>().setAttackTargets(toRet);

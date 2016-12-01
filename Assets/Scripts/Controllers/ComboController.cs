@@ -311,7 +311,7 @@ public class ComboController : MonoBehaviour {
         //For each target when attack queued up
         foreach (GameObject target in thisAttackTargets)
         {
-            if (!target.GetComponent<Unit>().getDying())
+            if (target!=null)
             {
                 tar = target;
                 // Debug.Log("Step " + stepsIntoCombo);
@@ -498,7 +498,10 @@ public class ComboController : MonoBehaviour {
         {
             rangedAbilityFlag = false;
         }
-
+        anim.ResetTrigger("Attack1");
+        anim.ResetTrigger("Attack2");
+        anim.ResetTrigger("Attack3");
+        anim.ResetTrigger("ComboFail");
         //Debug.Log(tar.name);
         spellDamageToDeal = 3;
         turnTimeElapsed.enabled = true;

@@ -13,6 +13,8 @@ public class TurnManager : MonoBehaviour
     public GameObject theExplorer;
     GameObject theMaestro;
     private bool combatIsEnded;
+    public GameObject lootPrefab;
+    private Vector2 lootSpawnLoc;
 
     //Holds the pairs
     [System.Serializable]
@@ -78,6 +80,7 @@ public class TurnManager : MonoBehaviour
 
 	public void Start()
 	{
+        lootSpawnLoc = new Vector2(0,0);
         combatIsEnded = false;
         theMaestro = GameObject.FindGameObjectWithTag("Maestro");
         cam = GameObject.FindGameObjectWithTag("MainCamera");
@@ -243,10 +246,12 @@ public class TurnManager : MonoBehaviour
    public bool CheckCombatOver()
    {
         bool atleastOneEnemyAlive=false;
+       
         foreach(UnitInitiativeP curPair in currentInitiatives)
         {
             if (curPair.u.tag.Equals("Baddy"))
             {
+                lootSpawnLoc = curPair.u.gameObject.transform.position;
                 atleastOneEnemyAlive = true;
                 return false;
             }
@@ -255,6 +260,7 @@ public class TurnManager : MonoBehaviour
         {
             combatIsEnded = true;
             Debug.Log("==== End of Encounter ====");
+            UnityEngine.Object.Instantiate(lootPrefab, lootSpawnLoc, Quaternion.identity);
             enterExplorationMode();
             theMaestro.SendMessage("EndCombat");
             foreach(GameObject enemyToClear in units)
@@ -295,8 +301,8 @@ public class TurnManager : MonoBehaviour
         Invoke("initializeTables",0.5f);
         Transform explorerTf = theExplorer.transform;
 
-        Debug.Log("tried to put buddy 1 at "+ buddy1);
-        Debug.Log("tried to put buddy 2 at " + buddy2);
+       // Debug.Log("tried to put buddy 1 at "+ buddy1);
+       // Debug.Log("tried to put buddy 2 at " + buddy2);
 
         bool buddy1Spawned = false;
         foreach (GameObject player in players)

@@ -38,8 +38,9 @@ public class MaestroScript : MonoBehaviour {
         }
         if (Combat && battleVolume<=0.5f)
         {
-            battleVolume += (float)0.1 * Time.deltaTime;
-            battleMusic.volume = battleVolume;
+            //battleVolume += (float)0.1 * Time.deltaTime;
+            battleMusic.volume = 0.5f; //Fade in wasn't good for most battle music
+            //battleMusic.volume = battleVolume;
         }
         if (Explore && exploreVolume <= 0.5f)
         {
