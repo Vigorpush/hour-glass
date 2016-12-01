@@ -20,7 +20,9 @@ public class SpellFactory : MonoBehaviour {
     public GameObject CreateFireball(int damage, GameObject target, GameObject caster)
     {
         //Debug.Log("Casting a fireball?");
-        GameObject spell = (GameObject)UnityEngine.Object.Instantiate(instance.fireballPrefab, Vector3.zero, Quaternion.identity);
+       Debug.Log("Spell casting from here: " + caster.transform.position);
+        GameObject spell = (GameObject)UnityEngine.Object.Instantiate(instance.fireballPrefab, caster.transform.position, Quaternion.identity);
+        Debug.Log(spell.GetComponent<FireballFlight>().gameObject);
         spell.GetComponent<FireballFlight>().Initialize(damage,target,caster);
         return spell;
     }

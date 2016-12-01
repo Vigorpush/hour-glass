@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour {
 	public PlayerAttackController attackController;
     public Text inputInstruction;
     bool turnOver;
-    public bool OutOfCombat;
+    public bool exploreMode;
     public GameObject cam;  //the main camera
 
     //For UI building on turn
@@ -30,12 +30,13 @@ public class PlayerMovement : MonoBehaviour {
 
     private GameObject[] abilitiesUI;
     private Sprite[] abilityIcons;
-
+    public GameObject theFloorMaker;
 
 
     // Use this for initialization
     void Start () {	
 		Invoke("initializeController",1f); //allows player time to teleport to start
+        
         cam = GameObject.FindGameObjectWithTag("MainCamera");
         attackController = this.gameObject.GetComponent<PlayerAttackController>();
         //UI 3 buttons, 4th button is switch panel
@@ -43,7 +44,7 @@ public class PlayerMovement : MonoBehaviour {
         abilitiesUI[0] = abil1UI;
         abilitiesUI[1] = abil2UI;
         abilitiesUI[2] = abil3UI;
-        OutOfCombat = true;
+        exploreMode = true;
      
     }
 
@@ -62,7 +63,8 @@ public class PlayerMovement : MonoBehaviour {
 			checkEndTurn ();    //listen for endturn button
 			tf.position = Vector3.MoveTowards (tf.position, pos, Time.deltaTime * speed);   //animate movement
 			//Debug.DrawRay (pos,(Vector2)(tf.up), Color.blue);
-		}
+        }
+    
 	}
 		
 	//----------------------------------------------------//
@@ -186,7 +188,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public void EnterExplorationMode()
     {
-        OutOfCombat = true;
+        exploreMode = true;
         cam.GetComponent<CameraFollow>().SetCameraFollow(this.gameObject);
         Debug.Log(this.gameObject.name + ": I'm party lead, and exploring!");
         attackController.allowAttack = false;
@@ -196,27 +198,68 @@ public class PlayerMovement : MonoBehaviour {
     //Invokable method to begin calculating intiaties and first turn;
     private void SpawnEncounter()
     {
-        if (OutOfCombat)
+        if (exploreMode)
         {
             Debug.Log("Hit an encounter tile");
-            OutOfCombat = false;
-            EndTurn();
-            turnManager.SendMessage("Begin");
-        }
-       
+            int myX =(int) pos.x;
+            int myY = (int)pos.y;
+            TileType returned = theFloorMaker.GetComponent<floorMaker>().getTileAt(myX,myY);
+
+            if(returned == TileType.floor){
+                Debug.Log(gameObject.name + "I'm exiting a room, no fight yet :" + returned);
+            }
+            else if (returned == TileType.hallFloor)
+            {
+                exploreMode = false;
+                Debug.Log(this.gameObject.name +" I though I was facing:" + this.gameObject.transform.eulerAngles.z);
+
+                if (this.gameObject.transform.eulerAngles.z == 270)//if facing right
+                {
+                    Debug.Log("```````I wanted to go right");
+                    pos += Vector2.right;
+                }
+                if (this.gameObject.transform.eulerAngles.z == 180) //if facing down
+                {
+                    Debug.Log("```````I wanted to go down");
+                    pos += Vector2.down;
+                }
+                if (this.gameObject.transform.eulerAngles.z == 90)  //if facing left
+                {
+                    Debug.Log("```````I wanted to go left");
+                    pos += Vector2.left;
+                }
+                if (this.gameObject.transform.eulerAngles.z == 0) //if facing up
+                {
+                    Debug.Log("```````I wanted to go up");
+                    pos += Vector2.up;
+                }
+
+                Debug.Log(gameObject.name + "I kick down the door :" + returned);
+                Invoke("surveyRoomEntered", 1f);
+
+                
+                
+                //compare returned and position
+                //move that way
+            } 
+        }     
     }
 
     public void CollapseForExploration()
     {
         Debug.Log(this.gameObject.name + ": That was a hard fight, I'm taking a break.");
-        this.gameObject.SetActive(false);
+       // this.gameObject.SetActive(false);
+       //disable collider
+        GetComponent<SpriteRenderer>().enabled = false;
     }
 
-    public void EnterCombat(float tarXPos, float tarYPos)
+    public void EnterCombat(Vector2 spawnPos)
     {
-        this.transform.position = new Vector3(tarXPos, tarYPos, 0);
+
+        GetComponent<SpriteRenderer>().enabled = true;
+        this.transform.position = spawnPos;
         Debug.Log(this.gameObject.name + ": Ready for combat!");
-        this.gameObject.SetActive(true);
+
     }
 
 	//RAY CAST METHODS
@@ -232,16 +275,129 @@ public class PlayerMovement : MonoBehaviour {
             if (rayHit.collider.gameObject.tag.Equals("Encounter"))
             {
                 //Open door, move forward, move forward, fan party
-               // startMoveCooldown();
+                startMoveCooldown(); 
+              
                 SpawnEncounter();
                // pos += Vector2.up; //need to be relative forward direction
                 return rayHit;
+            }
+            else if (rayHit.collider.gameObject.tag.Equals("LevelClear"))
+            {
+                Debug.Log("The Floor was cleared!");
             }
             return rayHit;
         }
         else return rayHit;
     }
-    
+
+    //returns an approximation of room area
+    private void surveyRoomEntered()
+    {
+
+        Vector2 buddy1SpawnLocation = new Vector2(0,0);
+        Vector2 buddy2SpawnLocation = new Vector2(0,0);
+        buddy1SpawnLocation = this.transform.position;
+        buddy2SpawnLocation = this.transform.position;
+
+        RaycastHit2D rayHitUp = Physics2D.Raycast(this.gameObject.transform.position,Vector2.up);
+        RaycastHit2D rayHitRight = Physics2D.Raycast(this.gameObject.transform.position, Vector2.right);
+        RaycastHit2D rayHitLeft = Physics2D.Raycast(this.gameObject.transform.position,Vector2.left);
+        RaycastHit2D rayHitDown = Physics2D.Raycast(this.gameObject.transform.position, Vector2.down); 
+        if(rayHitUp.collider!=null){
+            Debug.Log(this.gameObject.name + "Looking +y I see this many units: "+rayHitUp.distance);
+           // Debug.DrawRay(transform.position, (Vector2)transform.position - Vector2.up , Color.red, 20);
+        }
+        if (rayHitRight.collider != null)
+        {
+            Debug.Log(this.gameObject.name + "Looking x I see this many units: " + rayHitRight.distance);
+           // Debug.DrawRay(transform.position, (Vector2)transform.position - Vector2.right, Color.red, 20);
+        }
+        if (rayHitLeft.collider != null)
+        {
+            Debug.Log(this.gameObject.name + "Looking -x I see this many units: " + rayHitLeft.distance);
+            //Debug.DrawRay(transform.position, (Vector2)transform.position - Vector2.left, Color.red, 20);
+        }
+        if (rayHitDown.collider != null)
+        {
+            Debug.Log(this.gameObject.name + "Looking -y I see this many units: " + rayHitDown.distance);
+           // Debug.DrawRay(transform.position, (Vector2)transform.position - Vector2.down, Color.red, 20);
+        }
+        float roomSizeApprox = (rayHitLeft.distance + rayHitRight.distance) * (rayHitUp.distance + rayHitDown.distance);
+
+        int xSpawnOffset = ((int)rayHitUp.distance + (int)rayHitDown.distance) / 2;
+        int ySpawnOffset = ((int)rayHitLeft.distance + (int)rayHitRight.distance )/ 2;
+        
+        int xToSpawn = (int) transform.position.x;
+        int yToSpawn = (int)transform.position.y;
+
+        //Figure out the likely center of the room by judging the greater of the returned distances in direction
+        if (this.gameObject.transform.eulerAngles.z == 270)//if facing right
+        {
+            buddy1SpawnLocation += Vector2.left;
+            buddy2SpawnLocation += Vector2.left * 2;
+            xToSpawn += xSpawnOffset;
+            //Find the greater of y options, and take that y as positive or negative direction
+            if(rayHitUp.distance >= rayHitDown.distance){
+                yToSpawn += ySpawnOffset;
+               
+            }
+            else
+            {
+                yToSpawn -= ySpawnOffset;
+            }
+        }
+        if (this.gameObject.transform.eulerAngles.z == 180) //if facing down
+        {
+            buddy1SpawnLocation += Vector2.up;
+            buddy2SpawnLocation += Vector2.up * 2;
+            yToSpawn -= ySpawnOffset;
+            if(rayHitLeft.distance >= rayHitRight.distance){
+                xToSpawn -= xSpawnOffset;
+            }
+            else
+            {
+                //Vector2.left;
+                xToSpawn += xSpawnOffset;
+            }
+        }
+        if (this.gameObject.transform.eulerAngles.z == 90) //if facing left
+        {
+            buddy1SpawnLocation += Vector2.right;
+            buddy2SpawnLocation += Vector2.right * 2;
+            xToSpawn -= xSpawnOffset;
+            //Find the greater of y options, and take that y as positive or negative direction
+            if (rayHitUp.distance >= rayHitDown.distance)
+            {
+                yToSpawn += ySpawnOffset;
+            }
+            else
+            {
+                yToSpawn -= ySpawnOffset;
+            }
+        }
+        if (this.gameObject.transform.eulerAngles.z == 0) //if facing up
+        {
+            buddy1SpawnLocation += Vector2.down;
+            buddy2SpawnLocation += Vector2.down * 2;
+            yToSpawn += ySpawnOffset;
+            if (rayHitLeft.distance >= rayHitRight.distance)
+            {
+                xToSpawn -= xSpawnOffset;
+            }
+            else
+            {
+                xToSpawn += xSpawnOffset;
+            }
+        }
+
+        Debug.Log("Player survey thought here was good"+xToSpawn + " " +yToSpawn);
+
+        turnManager.GetComponent<TurnManager>().Begin(xToSpawn,yToSpawn, buddy1SpawnLocation, buddy2SpawnLocation); 
+
+        Debug.Log(this.gameObject.name + " I figure the room is about size: "+ roomSizeApprox);
+
+    }
+
    /* RaycastHit2D rayCheckLine(int L){
         return Physics2D.Linecast(tf.position,(Vector2)(pos+(Vector2)(tf.up)),L);
 	}
@@ -278,8 +434,7 @@ public class PlayerMovement : MonoBehaviour {
 		}
 		else if (Input.GetButton("Vertical")&& !moving) {
 			if (v>0)
-			{
-				
+			{	
 				tf.localEulerAngles = new Vector3 (0, 0, 0);
 				rayCast = rayCheckLine (BUMP_DIST);
                 if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter"))

@@ -32,8 +32,10 @@ public class floorMaker : MonoBehaviour {
 	public int minHallwayLenght = 6;
 	protected Range hallwayLenght;
 
-	public int enemyDensity = 10;
-	public int obsticleDendity = 5;
+
+	public int obsticleDensity = 5;
+
+	private int actNumRooms;
 
 	//arrays and board holder
 	private TileType[][] floorTiles;
@@ -46,10 +48,14 @@ public class floorMaker : MonoBehaviour {
 	public GameObject[] wTiles;
 	public GameObject[] eTiles;
 	public GameObject[] oTiles;
+	public GameObject[] hTiles;
+	public GameObject[] gTiles;
 
     public GameObject Player1;
 
 	public GameObject[][] tileArr;
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -61,18 +67,23 @@ public class floorMaker : MonoBehaviour {
 		hallwayWidth = new Range (minHallwayWidth, maxHallwayWidth);
 		hallwayLenght = new Range (minHallwayLenght, maxHallwayLenght);
 
-		setUpFloorTilesArr ();
 
+		setUpFloorTilesArr ();
 		createRoomsAndHallways ();
 
-		setTilesValuesForRooms ();
 		setTilesValuesForHallways ();
+		setTilesValuesForRooms ();
+		setTilesValuesForEncounterTiles ();
+		setOuterBoundary ();
+		setGoalTile ();
+
 
 		instantiateTiles ();
-
 		buildGraphConnections ();
 
-        setExplorerStart();
+		setExplorerStart();
+
+
 	}
 
 	// Set Up the Array
@@ -96,7 +107,8 @@ public class floorMaker : MonoBehaviour {
 	void createRoomsAndHallways (){
 
 		//create a array to hold the rooms
-		rooms = new Room[numRooms.getRandRange()];
+		actNumRooms = numRooms.getRandRange();
+		rooms = new Room[actNumRooms];
 
 		//create an array to hold the Halways
 		hallways = new Hallway[rooms.Length - 1];
@@ -157,18 +169,12 @@ public class floorMaker : MonoBehaviour {
 
 					oCheck = Random.Range(1, 1000);
 
-					if (oCheck < enemyDensity) {
+					if (oCheck < obsticleDensity) {
 						floorTiles [xCoord] [yCoord] = TileType.obsticle;
 					}
 
 
-					int eCheck;
 
-					eCheck = Random.Range(1, 1000);
-
-					if (eCheck < enemyDensity) {
-						floorTiles [xCoord] [yCoord] = TileType.enemy;
-					}
 
 
 				}
@@ -210,7 +216,7 @@ public class floorMaker : MonoBehaviour {
 				}
 
 				// Set the tile at these coordinates to Floor.
-				floorTiles[xCoord][yCoord] = TileType.floor;
+				floorTiles[xCoord][yCoord] = TileType.hallFloor;
 			}
 		}
 	}
@@ -232,14 +238,21 @@ public class floorMaker : MonoBehaviour {
 					instantiateFromArray (fTiles, i, j, TileType.floor);
 					break;
 
-				case TileType.enemy:
-					instantiateFromArray (eTiles, i, j, TileType.enemy);
+				case TileType.encounter:
+					instantiateFromArray (eTiles, i, j, TileType.encounter);
 					break;
 
 				case TileType.obsticle:
 					instantiateFromArray (oTiles, i, j, TileType.obsticle);
 					break;
 
+				case TileType.hallFloor:
+					instantiateFromArray (hTiles, i, j, TileType.hallFloor);
+					break;
+
+				case TileType.goal:
+					instantiateFromArray (gTiles, i, j, TileType.hallFloor);
+					break;
 
 				}
 
@@ -310,5 +323,103 @@ public class floorMaker : MonoBehaviour {
         Player1.GetComponent<PlayerMovement>().SetStartingPosition(toStart);
     }
  
+	private void setOuterBoundary(){
+
+		for (int i = 0; i < floorHight; i++) {
+			floorTiles[0][i] = TileType.wall;
+			floorTiles [floorHight - 1] [i] = TileType.wall;
+		}
+
+		for (int j = 0; j < floorWidth; j++) {
+			floorTiles [j] [0] = TileType.wall;
+			floorTiles [j] [floorWidth - 1] = TileType.wall;
+		}
+
+	}
+
+	private void setTilesValuesForEncounterTiles (){
+
+		for (int i = 0; i < floorHight; i++) {
+			for (int j = 0; j < floorWidth; j++) {
+
+
+				if (floorTiles [i] [j] == TileType.hallFloor) {
+
+					if ( (i+1 < floorHight) && (i-1 > 0) && (j+1 < floorHight) && (j-1 > 0) ){
+
+					if (floorTiles [i + 1] [j] == TileType.floor) {
+						floorTiles [i + 1] [j] = TileType.encounter;
+					}
+
+					if (floorTiles [i - 1] [j] == TileType.floor) {
+						floorTiles [i - 1] [j] = TileType.encounter;
+					}
+
+					if (floorTiles [i ] [j + 1] == TileType.floor) {
+						floorTiles [i] [j + 1] = TileType.encounter;
+					}
+
+					if (floorTiles [i] [j - 1] == TileType.floor) {
+						floorTiles [i] [j - 1] = TileType.encounter;
+					}
+				}
+			}
+		}
+	}
+	}
+			
+
+
+	public void setGoalTile(){
+
+		Room lastRoom = rooms [actNumRooms - 1];
+
+		int xpos = lastRoom.xPos;
+		int ypos = lastRoom.yPos;
+		//int halfx = lastRoom.height / 2;
+		//int halfy = lastRoom.width / 2;
+		int i = xpos;
+		int j = ypos;
+
+
+        if (floorTiles[i][j] == TileType.floor)
+        {
+            floorTiles[i][j] = TileType.goal;
+        }
+       
+
+        //Old goal spawning, aims for room center
+
+     /*  if ((i + 1 < floorHight) && (i - 1 > 0) && (j + 1 < floorHight) && (j - 1 > 0)){
+           floorTiles[i][j] = TileType.goal; 
+       }*/
+
+        if ((i + 1 < floorHight) && (i - 1 > 0) && (j + 1 < floorHight) && (j - 1 > 0))
+        {
+            if (floorTiles[i + 1][j] == TileType.floor)
+            {
+                floorTiles[i + 1][j] = TileType.goal;
+            }
+
+            if (floorTiles[i - 1][j] == TileType.floor)
+            {
+                floorTiles[i - 1][j] = TileType.goal;
+            }
+
+            if (floorTiles[i][j + 1] == TileType.floor)
+            {
+                floorTiles[i][j + 1] = TileType.goal;
+            }
+
+            if (floorTiles[i][j - 1] == TileType.floor)
+            {
+                floorTiles[i][j - 1] = TileType.goal;
+            }
+        }
+	}
+
+    public TileType getTileAt(int xIn, int yIn){
+        return floorTiles[xIn][yIn];
+    }
 
 }

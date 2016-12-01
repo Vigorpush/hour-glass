@@ -34,5 +34,18 @@ public class HeroUnit :  Unit, IButtonMap  {
     {
         myExperience += ExperienceToAdd;
     }
-    
+
+   // @override
+    private void Die(){
+        GameObject.FindGameObjectWithTag("Manager").GetComponent<TurnManager>().removeFromInitiativeQueue(this.gameObject);
+        Debug.Log("A hero unit has died");
+        Invoke("ActuallyDie",1.5f);
+    }
+
+    private void ActuallyDie()
+    {
+        
+        this.gameObject.SetActive(false);
+    }
+
 }

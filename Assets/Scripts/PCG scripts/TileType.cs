@@ -3,7 +3,7 @@
 
 	//Tile Type
 	public enum TileType {
-		wall, floor, obsticle, enemy,
+	wall, floor, obsticle, encounter, hallFloor, goal,
 	}
 
 

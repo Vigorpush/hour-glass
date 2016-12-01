@@ -119,13 +119,14 @@ public class PlayerAttackController : MonoBehaviour {
 
 
     void Start () {
+        myAbilityIcons = new Sprite[3];
         unitSounds=GetComponents<AudioSource>();
 
         showHelpText = true;
         cam = GameObject.FindGameObjectWithTag("MainCamera");
 		myHero = GetComponent<HeroUnit> (); //!
 		anim = GetComponent<Animator> ();
-        CharacterBuilder charBuilder = GetComponent<CharacterBuilder>();
+       // CharacterBuilder charBuilder = GetComponent<CharacterBuilder>();
         abilityIsASpell =false;
         rangerAbility = false;
         if (emptySlots [0] == true) {
@@ -135,33 +136,31 @@ public class PlayerAttackController : MonoBehaviour {
 
 		//On build get 3 active abilities and 1 basic attack   //Implies that wait, defend are the same all the time
 		baseButtons = true;
-
-        myAbilityIcons = new Sprite[3];
-
-
     }
+
 
     public void buildActiveAbilites(List<GameObject> abilitiesIn)
     {
         List<AttackTemplate> toRet =  new List<AttackTemplate>();
-        //Debug.Log(abilitiesIn.Count);
 
         for (int i = 0; i < 3; i++)
-        {
-            
+        {      
             if (abilitiesIn[i] != null)
             {
+               // Debug.Log(abilitiesIn[i].name);
                // Debug.Log(this.gameObject.name + " working with " + abilitiesIn[i]);
                 emptySlots[i] = true;
                 GameObject tempAbil;
                 switch (abilitiesIn[i].gameObject.name)
                 {
                     case "BasicMeleeKey":
-                       // Debug.Log("Player: "+this.gameObject.name + " gets a(n): "+abilitiesIn[i].gameObject.name);
+                        //Debug.Log(0+"Player: "+this.gameObject.name + " gets a(n): "+abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(meleePrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
+                       // Debug.Log(myAbilityIcons[i].name);
                         myAbilityIcons[i] = meleeIcon;
+                        
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "BasicArrowKey":
@@ -169,7 +168,9 @@ public class PlayerAttackController : MonoBehaviour {
                         tempAbil = Instantiate(arrowPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
+                       // Debug.Log(myAbilityIcons[i].name);
                         myAbilityIcons[i] = arrowIcon;
+                        
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "BasicRayKey":
@@ -177,7 +178,9 @@ public class PlayerAttackController : MonoBehaviour {
                         tempAbil = Instantiate(rayPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
+                       // Debug.Log(myAbilityIcons[i].name);
                         myAbilityIcons[i] = rayIcon;
+                        
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "BasicHealKey":
@@ -213,7 +216,7 @@ public class PlayerAttackController : MonoBehaviour {
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "WhirlwindKey":
-                       // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
+                      // Debug.Log(i+"Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(WhirlwindPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;

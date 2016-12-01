@@ -137,30 +137,38 @@ public class TurnManager : MonoBehaviour
 	void GetAllPlayers ()
 	{
 		players = new List<GameObject> ();
+        players.Clear();
 		player1 = GameObject.FindGameObjectWithTag ("Player1");
 		player2 = GameObject.FindGameObjectWithTag ("Player2");
 		player3 = GameObject.FindGameObjectWithTag ("Player3");
-        player1.SetActive(true);
-        player2.SetActive(true);
-        player3.SetActive(true);
-		players.Add (player1);
-		players.Add (player2);
-		players.Add (player3);
+		if(player1.gameObject.activeSelf){
+            players.Add (player1);
+        }
+        if (player2.gameObject.activeSelf)
+        {
+            players.Add(player2);
+        }
+        if (player3.gameObject.activeSelf)
+        {
+            players.Add(player3);
+        }
 
 	}
 
     int numTurns = 0;
 	public void AIDisableThenCalcTurn(){
-        Debug.Log("Msg");
+      //  Debug.Log("Msg");
 
 		if (currentUnit.GetComponent<ZombieAI> () != null) {
 			
 			currentUnit.GetComponent<ZombieAI> ().enabled = false;
 		}
-		Invoke("CalculateTurn",.5f);
+		//Invoke("CalculateTurn",.5f);
+        CalculateTurn();
 	}
 	public void CalculateTurn ()
 	{
+        CheckCombatOver();
         //TODO needs to tell current player to end turn, and next player to make turn.  Curren't doesn't end turn for active player when button pressed
 		currentInitiatives.Sort ();
 		UnitInitiativeP curPair = currentInitiatives [0];
@@ -200,7 +208,7 @@ public class TurnManager : MonoBehaviour
                 break;
             }
         }
-        Invoke("CheckCombatOver",3f);
+        bool done = CheckCombatOver();
     }
 		
 	
@@ -220,7 +228,7 @@ public class TurnManager : MonoBehaviour
 
     //If all enemies are dead, award XP, check for level up, and enter exploration mode
    
-   public void CheckCombatOver()
+   public bool CheckCombatOver()
    {
         bool atleastOneEnemyAlive=false;
         foreach(UnitInitiativeP curPair in currentInitiatives)
@@ -228,6 +236,7 @@ public class TurnManager : MonoBehaviour
             if (curPair.u.tag.Equals("Baddy"))
             {
                 atleastOneEnemyAlive = true;
+                return false;
             }
         }
         if (!atleastOneEnemyAlive)
@@ -235,8 +244,9 @@ public class TurnManager : MonoBehaviour
             Debug.Log("==== End of Encounter ====");
             enterExplorationMode();
             theMaestro.SendMessage("EndCombat");
+            return true;
         }
-
+        return false; //should not happen
    }
 
     //Need to decide on one player as main, other 2 to collapse
@@ -261,26 +271,33 @@ public class TurnManager : MonoBehaviour
     }
 
     //Fan out players along the Y axis
-    public void Begin()
+    public void Begin(int spawnerX,int spawnerY, Vector2 buddy1, Vector2 buddy2)
     { 
         GetAllPlayers();
         Invoke("initializeTables",0.5f);
         Transform explorerTf = theExplorer.transform;
-        float xToSpawn = explorerTf.transform.position.x;
-        float yToSpawn = explorerTf.transform.position.y;
 
+        Debug.Log("tried to put buddy 1 at "+ buddy1);
+        Debug.Log("tried to put buddy 2 at " + buddy2);
+
+        bool buddy1Spawned = false;
         foreach (GameObject player in players)
         {
-            player.GetComponent<PlayerMovement>().EnterCombat(xToSpawn,yToSpawn);
-            player.GetComponent<PlayerMovement>().SetStartingPosition(new Vector2(xToSpawn, yToSpawn));
-            yToSpawn++;
+            if(player != theExplorer && !buddy1Spawned){
+                player.GetComponent<PlayerMovement>().SetStartingPosition(buddy1);
+                player.GetComponent<PlayerMovement>().EnterCombat(buddy1);
+            }
+            else if (player != theExplorer && buddy1Spawned){
+                player.GetComponent<PlayerMovement>().SetStartingPosition(buddy2);
+                player.GetComponent<PlayerMovement>().EnterCombat(buddy2);
+            }
         }
 
         //Spawn some zombies
         GameObject mobSpawner = GameObject.FindGameObjectWithTag("Spawner");
-        mobSpawner.GetComponent<EnemyUnitFactory>().PlaceSomeZombies();
-
-        
+        //Moves and spawns enemies
+        mobSpawner.GetComponent<EnemyUnitFactory>().MoveHere(spawnerX,spawnerY);
+ 
         theMaestro.SendMessage("BeginCombat");
     }
 

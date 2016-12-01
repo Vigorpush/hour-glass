@@ -92,7 +92,7 @@ public class MaestroScript : MonoBehaviour {
 
     public void PlayExplore()
     {
-        Debug.Log("Playing explore music?");
+       // Debug.Log("Playing explore music?");
         Explore = true;
         exploreMusic.Play();
     }

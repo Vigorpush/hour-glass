@@ -231,7 +231,7 @@ public class ZombieAI : MonoBehaviour {
 	}
 	public bool ScanNearbyForTarget(){
 		for (int i = 0; i < 4; i++) {
-            Debug.Log(myStats.range);
+           // Debug.Log(myStats.range);
 			RaycastHit2D result = ScanLineFacing (myStats.range);
             
 			if (result.collider != null) {
@@ -492,7 +492,7 @@ public class ZombieAI : MonoBehaviour {
 			return false;
 		}
 		if(Vector2.Distance (myTf.position,attackTarget.transform.position) <1f){
-			Debug.Log("My target is adjacent to me!");
+			//Debug.Log("My target is adjacent to me!");
 		return true;
 		}
 	return false;

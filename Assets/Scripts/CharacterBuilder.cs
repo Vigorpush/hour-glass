@@ -10,14 +10,8 @@ public class CharacterBuilder : MonoBehaviour {
     // Use this for initialization
     void Start () {
         attackCtrlr = GetComponent<PlayerAttackController>();
-        setAttackControls();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-   
+        Invoke("setAttackControls",1f);
+	}	 
 
     private void setAttackControls(){
         attackCtrlr.buildActiveAbilites(activeAbilities);

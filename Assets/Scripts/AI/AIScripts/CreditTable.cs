@@ -34,31 +34,31 @@ public class CreditTable : MonoBehaviour {
 	}
 	void Start(){
 		table = new Dictionary<String,CreditTableEntry> ();
-		Debug.Log ("Started the credit table.");
+	//	Debug.Log ("Started the credit table.");
 		//Debug.Log (table.ToString());
 		table.Add("Goblin",new CreditTableEntry(25f));
 		CreditTableEntry dummy = new CreditTableEntry (35f);
-		Debug.Log(table.TryGetValue(("Goblin"),out dummy ));
+		//Debug.Log(table.TryGetValue(("Goblin"),out dummy ));
 		displayTable ();
 
 		//TESTING cheapen and raiseCost
 		table["Goblin"].alterCost(10);
-		Debug.Log ("RAISING THE PRICE OF GOBLIN BY 10, EXPECT 35:" + table ["Goblin"].cost);
+		//Debug.Log ("RAISING THE PRICE OF GOBLIN BY 10, EXPECT 35:" + table ["Goblin"].cost);
 		table["Goblin"].alterCost(-20);
-		Debug.Log ("LOWERING THE PRICE OF GOBLIN BY 20, EXPECT 15:" + table ["Goblin"].cost);
+		//Debug.Log ("LOWERING THE PRICE OF GOBLIN BY 20, EXPECT 15:" + table ["Goblin"].cost);
 		//TESTING LOOKUP
-		Debug.Log("Lookup should yield 15: " + lookUp("Goblin"));
+		//Debug.Log("Lookup should yield 15: " + lookUp("Goblin"));
 
 	}
 	void displayTable(){
-		Debug.Log ("VALUES");
+		/*Debug.Log ("VALUES");
 		foreach (CreditTableEntry te in table.Values) {
 			
 			Debug.Log ("cost:" + te.cost);
 		}
 		Debug.Log ("NAMES");
 		Debug.Log (table.Keys.ToString ());
-		Debug.Log("Accessing the dictionary by [\"string] :" + table["Goblin"].cost);
+		Debug.Log("Accessing the dictionary by [\"string] :" + table["Goblin"].cost);*/
 
 
 	}

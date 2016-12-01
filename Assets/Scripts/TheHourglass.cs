@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TheHourglass : MonoBehaviour {
 
-    public ArrayList spawners = new ArrayList();
+   // public ArrayList spawners = new ArrayList();
     public GameObject theExplorer;
 
 	// Use this for initialization
@@ -12,9 +12,8 @@ public class TheHourglass : MonoBehaviour {
 	}
     void GetSpawners()
     {
-
-        spawners.Clear();
-        spawners.AddRange(GameObject.FindGameObjectsWithTag("Spawner"));
+       // spawners.Clear();
+       // spawners.AddRange(GameObject.FindGameObjectsWithTag("Spawner"));
 
     }
 
@@ -24,9 +23,9 @@ public class TheHourglass : MonoBehaviour {
         theExplorer.SendMessage("EnterExplorationMode");
     }
 
-    public void SpawnEncounter()
+ /*   public void SpawnEncounter()
     {
 
 
-    }
+    }*/
 }

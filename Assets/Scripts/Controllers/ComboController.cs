@@ -111,6 +111,8 @@ public class ComboController : MonoBehaviour {
     public GameObject MageFX2;
     public GameObject MageFX3;
 
+    public GameObject theHourGlass;
+
     void Start () {
         buttonMash = 0;
         spellName = "";
@@ -131,6 +133,7 @@ public class ComboController : MonoBehaviour {
         spellDamageToDeal=3;
         castFirstFail = true; //if first button missed, need a way to not auto cast lvl1 spell
         rangedAbilityFlag = false;
+
 	}
 
     public void disableHelpText()
@@ -242,7 +245,7 @@ public class ComboController : MonoBehaviour {
                         if (stepsIntoCombo < totalStepsForCombo && playSpellAnimation)
                         {
                             hitSounds[5].Play();
-                            cam.SendMessage("UnsetCombatZoom");
+ //                           cam.SendMessage("UnsetCombatZoom");
                         }
                         else if (playSpellAnimation)
                         {
@@ -502,8 +505,13 @@ public class ComboController : MonoBehaviour {
         }
         else
         {
+            
+            foreach(GameObject tar in thisAttackTargetsIn){
+                Debug.Log("ability targetted: "+ tar.gameObject.name);
+            }
+
             cam.GetComponent<CameraFollow>().SetCameraFollow(this.gameObject);
-            cam.SendMessage("SetCombatZoom");
+ //           cam.SendMessage("SetCombatZoom");
             theInputButtons = buttonSequence;
             totalStepsForCombo = theInputButtons.Capacity - 1;
             validInputButton = theInputButtons[0];
@@ -511,6 +519,7 @@ public class ComboController : MonoBehaviour {
             step2Damage = damageSteps[1];
             step3Damage = damageSteps[2];
             setCombo(validInputButton, stepsIntoCombo);
+            theHourGlass.SendMessage("PlayerTurnStarted");
         }
     }
 
@@ -523,7 +532,7 @@ public class ComboController : MonoBehaviour {
         // baseDamage =  myHero.weap.getDamage() +myHero.attack;
         stepsIntoCombo = comboStep;
         timerWindow = 3f;
-        waitTimeBeforeInput = 2.5f;
+        waitTimeBeforeInput = 2.9f;
         pauseHourglass = false;
         Invoke("EnableInput",.5f);
     }
@@ -562,10 +571,13 @@ public class ComboController : MonoBehaviour {
 
     public void EndCombat()
     {
-        MageFX3.gameObject.SetActive(false);
-        MageFX2.gameObject.SetActive(false);
-        MageFX1.gameObject.SetActive(false);
+        if(playSpellAnimation){
+            MageFX3.gameObject.SetActive(false);
+            MageFX2.gameObject.SetActive(false);
+            MageFX1.gameObject.SetActive(false);
+        }
         turnTimeElapsed.enabled = false;
+
 
         if (playSpellAnimation &&!castFirstFail) //if a spell attack
         {
@@ -607,11 +619,11 @@ public class ComboController : MonoBehaviour {
         {
            // Debug.Log("~~~~Physical combo completed");
             //this.gameObject.GetComponent<BasicRayAttack>().clearTarget();
-            cam.SendMessage("UnsetCombatZoom");
+ //           cam.SendMessage("UnsetCombatZoom");
             pauseHourglass = true;
             listenForComboInput = false;
             discreteInputWindow = false;
-            Invoke("EndTurn", 1f);
+            Invoke("EndTurn", 3f);
         }
     }
 
@@ -650,6 +662,7 @@ public class ComboController : MonoBehaviour {
     {
         anim.SetTrigger("ComboFail");
         // this.gameObject.GetComponent<BasicRayAttack>().clearTarget();
+        theHourGlass.SendMessage("PlayerTurnStopped");
         this.gameObject.GetComponent<PlayerMovement>().EndTurn();
     }
 

@@ -139,9 +139,15 @@ public class Unit : MonoBehaviour {
 		return armr != null;
 	}
     public void Heal(int healAmount)
-    {
+    {       
         curhp += healAmount;
+        int overHeal =0;
         Debug.Log("healing for " +healAmount);
+        if(curhp > maxhp){
+            overHeal = curhp - maxhp;
+            curhp = maxhp;
+        }
+        healAmount -= overHeal;//If overhealed, clip off amount over maxhp
         InitHealCBT(healAmount.ToString());
     }
 
@@ -155,64 +161,49 @@ public class Unit : MonoBehaviour {
         anim.SetBool("isATarget", false);
     }
 
+    private int CalculateDamageReduction(int preMitigatedDamage) {
+      //  Debug.Log("-----------------------------------------------------------preMitigatedDamage = "+ preMitigatedDamage);
+        float damagePercentage = 0;
+        float f = (float)preMitigatedDamage;    //this was needed to clarify arg to Mathf
+        float damagePostMitigation = 0;
+        damagePercentage = (float)100/( 100 + armr.armour);
+            // damage reduction formula
+        damagePostMitigation = Mathf.Ceil( (f * damagePercentage));
+      //  Debug.Log("-----------------------------------------------------------damagePercentage = " + damagePercentage);
+       // Debug.Log("-----------------------------------------------------------damagePostMitigation = " + damagePostMitigation);
+        int conv = Mathf.RoundToInt(damagePostMitigation);
+      //  Debug.Log("-----------------------------------------------------------damage after converting to int = " + conv);
+        return conv;
+
+    }
+
     public void takeDamage(int attackAmount, GameObject damageDealer){
         anim.SetTrigger("GotHit");
         unitThatHitMeThisTurn = damageDealer;
-		if (hasArmour ()) {
-			if (attackAmount - armr.getArmour () <= 0) {
-				return;
-			}
-			curhp -= attackAmount - armr.getArmour ();
-			GetComponent<SpawnTextBubble> ().gotHit (attackAmount - armr.getArmour ());
-			AnnounceDamage (attackAmount - armr.getArmour (), damageDealer);
-			InitCBT ((attackAmount - armr.getArmour ()).ToString ());
+        int result = CalculateDamageReduction(attackAmount);
+        curhp -= result;
+        GetComponent<SpawnTextBubble>().gotHit(result);
+        AnnounceDamage(result, damageDealer);
+		InitCBT (result.ToString ());
 			if (curhp <= 0) {
 				Die ();
 			}
-
-		} else {
-			if (attackAmount <= 0) {
-				return;
-			}
-			curhp -= attackAmount;
-			GetComponent<SpawnTextBubble> ().gotHit (attackAmount);
-			AnnounceDamage (attackAmount, damageDealer);
-			InitCBT (attackAmount.ToString ());
-			if (curhp <= 0) {
-				Die ();
-			}
-		}
-
     }
 
     public void takeCriticalDamage(int critAmount, GameObject damageDealer)
     {
-        anim.SetTrigger("GotHit");
         critShaker.DoShake();
+        anim.SetTrigger("GotHit");
         unitThatHitMeThisTurn = damageDealer;
-		if (hasArmour()) {
-			if (critAmount - armr.getArmour () <= 0) {
-				return;
-			}
-			curhp -= critAmount - armr.getArmour ();
-			// this.SendMessage("gotHit", critAmount - armr.getArmour());
-			GetComponent<SpawnTextBubble> ().gotHit (critAmount - armr.getArmour ());
-			AnnounceDamage (critAmount - armr.getArmour (), damageDealer);
-			InitCBTCrit ((critAmount - armr.getArmour ()).ToString ());
-		} else {
-			if (critAmount <= 0) {
-				return;
-			}
-			curhp -= critAmount;
-			// this.SendMessage("gotHit", critAmount - armr.getArmour());
-			GetComponent<SpawnTextBubble> ().gotHit (critAmount);
-			AnnounceDamage (critAmount, damageDealer);
-			InitCBTCrit (critAmount.ToString ());
-		}
-			if (curhp <= 0) {
-				Die ();
-
-			}
+        int result = CalculateDamageReduction(critAmount);
+        curhp -= result;
+        GetComponent<SpawnTextBubble>().gotHit(result);
+        AnnounceDamage(result, damageDealer);
+        InitCBT(result.ToString());
+        if (curhp <= 0)
+        {
+            Die();
+        }
 		
 
     }
@@ -238,7 +229,9 @@ public class Unit : MonoBehaviour {
         theTurnManager.SendMessage("removeFromInitiativeQueue", this.gameObject);   
         disableCollider();
         setDying();
-        Invoke("DieAfterDeathEffects",3f);
+        //This used to sort of work but stuff targetted dying units
+        //Invoke("DieAfterDeathEffects",3f);
+        DieAfterDeathEffects();
     }
 
    private void DieAfterDeathEffects()
@@ -246,8 +239,13 @@ public class Unit : MonoBehaviour {
         
        // Debug.Log("I died");
        //TODO: handle player death/res
-       //This blows up the player pretty bad, can they be resurected?
+       
+           
+           //This blows up the player pretty bad, can they be resurected?
         Destroy(gameObject);
+
+       //the resurect friendly version
+       // this.gameObject.SetActive(false);
 
     }
 

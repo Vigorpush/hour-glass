@@ -37,7 +37,7 @@ public class SpawnTextBubble : MonoBehaviour
         curHP -= damage;
 
         //put this code in update
-        Debug.Log(" I am " + unit.name + " and my hp is:" + curHP);
+      //  Debug.Log(" I am " + unit.name + " and my hp is:" + curHP);
         if ((curHP > 0) && (curHP < maxHP))
         {
             int intelligence = Random.Range(1, 6);
@@ -47,7 +47,7 @@ public class SpawnTextBubble : MonoBehaviour
                     StartCoroutine(ShowMessage("Ow!", 2));
                     break;
                 case 4:
-                    StartCoroutine(ShowMessage("Nngh.", 2));
+                    StartCoroutine(ShowMessage("Argh!", 2));
                     break;
                 case 3:
                     StartCoroutine(ShowMessage("Gah!", 2));
@@ -66,7 +66,7 @@ public class SpawnTextBubble : MonoBehaviour
         }
         if ((curHP < maxHP * 0.5) && (curHP >= maxHP * 0.2))
         {
-            StartCoroutine(ShowMessage("Oh, That was hurt!", 2));
+            StartCoroutine(ShowMessage("Oh, That was really hurt!", 2));
         }
 
 

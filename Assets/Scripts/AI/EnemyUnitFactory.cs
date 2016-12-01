@@ -18,13 +18,24 @@ public class EnemyUnitFactory : MonoBehaviour
         instance = this;  
     }
 
+    public void MoveHere(int xIn, int yIn)
+    {
+        this.transform.position = new Vector3(xIn,yIn, 0);
 
-    public void PlaceSomeZombies()
+        Debug.Log("Spawner moving to :"+ xIn + ", " + yIn);
+        PlaceSomeZombies();
+    }
+
+    private void PlaceSomeZombies()
     {
         for(int i =0;i<AMT;i++){
-            Vector3 change = new Vector3(UnityEngine.Random.Range(-3, 3), UnityEngine.Random.Range(-3, 3), 0);
+            Vector3 change = new Vector3(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2), 0);
             this.transform.position += change;
-            Invoke("CreateZombie",0.2f);
+
+            Debug.Log("Position on loop "+ i + " location is " + this.transform.position);
+
+            CreateZombie();
+            //Invoke("CreateZombie",0.1f);
         }
     //Debug.Log("ding done");
     }

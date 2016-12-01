@@ -43,7 +43,7 @@ public class RoomBuilderAI : MonoBehaviour {
 		//Testing Encounter Rolls
 		cTable =  (CreditTable) this.gameObject.GetComponent<CreditTable>();
 
-		Debug.Log("starting");
+		//Debug.Log("starting");
 
 
 		unitPool = new ArrayList();

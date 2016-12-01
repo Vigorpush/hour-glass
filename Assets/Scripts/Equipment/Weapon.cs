@@ -13,6 +13,12 @@ public class Weapon : Equipment {
         damageMax  +=amount;
     }
 
+    void Start()
+    {
+        damageMin = 5;
+        damageMax = 10;
+    }
+
 
     public int getDamage()
     {
