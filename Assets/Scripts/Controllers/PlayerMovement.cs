@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour {
     private GameObject[] abilitiesUI;
     private Sprite[] abilityIcons;
     public GameObject theFloorMaker;
+    public GameObject myLantern;
 
 
     // Use this for initialization
@@ -44,7 +45,7 @@ public class PlayerMovement : MonoBehaviour {
         abilitiesUI[0] = abil1UI;
         abilitiesUI[1] = abil2UI;
         abilitiesUI[2] = abil3UI;
-        exploreMode = true;
+        exploreMode = false;
      
     }
 
@@ -189,6 +190,7 @@ public class PlayerMovement : MonoBehaviour {
     public void EnterExplorationMode()
     {
         exploreMode = true;
+        myLantern.SetActive(true);
         cam.GetComponent<CameraFollow>().SetCameraFollow(this.gameObject);
         Debug.Log(this.gameObject.name + ": I'm party lead, and exploring!");
         attackController.allowAttack = false;
@@ -200,41 +202,41 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (exploreMode)
         {
-            Debug.Log("Hit an encounter tile");
+           // Debug.Log("Hit an encounter tile");
             int myX =(int) pos.x;
             int myY = (int)pos.y;
             TileType returned = theFloorMaker.GetComponent<floorMaker>().getTileAt(myX,myY);
 
             if(returned == TileType.floor){
-                Debug.Log(gameObject.name + "I'm exiting a room, no fight yet :" + returned);
+                //Debug.Log(gameObject.name + "I'm exiting a room, no fight yet :" + returned);
             }
             else if (returned == TileType.hallFloor)
             {
                 exploreMode = false;
-                Debug.Log(this.gameObject.name +" I though I was facing:" + this.gameObject.transform.eulerAngles.z);
+              //  Debug.Log(this.gameObject.name +" I though I was facing:" + this.gameObject.transform.eulerAngles.z);
 
                 if (this.gameObject.transform.eulerAngles.z == 270)//if facing right
                 {
-                    Debug.Log("```````I wanted to go right");
+                   // Debug.Log("```````I wanted to go right");
                     pos += Vector2.right;
                 }
                 if (this.gameObject.transform.eulerAngles.z == 180) //if facing down
                 {
-                    Debug.Log("```````I wanted to go down");
+                   // Debug.Log("```````I wanted to go down");
                     pos += Vector2.down;
                 }
                 if (this.gameObject.transform.eulerAngles.z == 90)  //if facing left
                 {
-                    Debug.Log("```````I wanted to go left");
+                  //  Debug.Log("```````I wanted to go left");
                     pos += Vector2.left;
                 }
                 if (this.gameObject.transform.eulerAngles.z == 0) //if facing up
                 {
-                    Debug.Log("```````I wanted to go up");
+                   // Debug.Log("```````I wanted to go up");
                     pos += Vector2.up;
                 }
 
-                Debug.Log(gameObject.name + "I kick down the door :" + returned);
+                //Debug.Log(gameObject.name + "I kick down the door :" + returned);
                 Invoke("surveyRoomEntered", 1f);
 
                 
@@ -248,14 +250,17 @@ public class PlayerMovement : MonoBehaviour {
     public void CollapseForExploration()
     {
         Debug.Log(this.gameObject.name + ": That was a hard fight, I'm taking a break.");
-       // this.gameObject.SetActive(false);
-       //disable collider
+        // this.gameObject.SetActive(false);
+        //disable collider
+         myLantern.SetActive(false);
+
+    GetComponent<Collider2D>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
     }
 
     public void EnterCombat(Vector2 spawnPos)
     {
-
+        myLantern.SetActive(true);
         GetComponent<SpriteRenderer>().enabled = true;
         this.transform.position = spawnPos;
         Debug.Log(this.gameObject.name + ": Ready for combat!");

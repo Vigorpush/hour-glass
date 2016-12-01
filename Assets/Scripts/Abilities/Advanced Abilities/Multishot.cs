@@ -65,8 +65,12 @@ public class Multishot : AttackTemplate
                     RaycastHit2D rayHit = Physics2D.Raycast((Vector2)myHero.transform.position, (Vector2)tar.GetComponent<Transform>().position - (Vector2)myHero.transform.position);
                     // Debug.DrawRay((Vector2)myHero.transform.position, (Vector2)theSelectedTarget.GetComponent<Transform>().position - (Vector2)myHero.transform.position, Color.cyan, 3f);
                     // Debug.Log("Mage ray targetting: " + rayHit.collider.gameObject.name);
+
                     // cam.GetComponent<CameraFollow>().UnsetTargettingCam();
-                    toRet.Add(rayHit.collider.gameObject);
+
+                    if (rayHit.collider.tag.Equals("Baddy")){ 
+                        toRet.Add(rayHit.collider.gameObject);
+                    }
                 }
                 ArrowTargetLock = true;
                 thePlayer.GetComponent<PlayerAttackController>().setAttackTargets(toRet);

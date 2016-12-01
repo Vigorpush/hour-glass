@@ -3,17 +3,15 @@ using System.Collections;
 
 public class HeroUnit :  Unit, IButtonMap  {
 
-    //remove the start method to avoid override stats
-	/*Todo  list of  skill points / maybe seperate passives
-	 * mapping of active abilities public to allow drag drop prefabs
-	 * 
-	 * 
-	 */
-
     /**
      * The players experience
      */
     public float myExperience;
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     public void lvlUp(){
 
@@ -35,7 +33,39 @@ public class HeroUnit :  Unit, IButtonMap  {
         myExperience += ExperienceToAdd;
     }
 
-   // @override
+    
+    public override void takeDamage(int attackAmount, GameObject damageDealer)
+    {
+        anim.SetTrigger("GotHit");
+        unitThatHitMeThisTurn = damageDealer;
+        int result = CalculateDamageReduction(attackAmount);
+        curhp -= result;
+        GetComponent<SpawnTextBubble>().gotHit(result);
+        AnnounceDamage(result, damageDealer);
+        InitCBT(result.ToString());
+        if (curhp <= 0)
+        {
+            Die();
+        }
+    }
+
+    public override void takeCriticalDamage(int critAmount, GameObject damageDealer)
+    {
+        anim.SetTrigger("GotHit");
+        unitThatHitMeThisTurn = damageDealer;
+        int result = CalculateDamageReduction(critAmount);
+        curhp -= result;
+        GetComponent<SpawnTextBubble>().gotHit(result);
+        AnnounceDamage(result, damageDealer);
+        InitCBT(result.ToString());
+        if (curhp <= 0)
+        {
+            Die();
+        }
+    }
+
+
+    // @override
     private void Die(){
         GameObject.FindGameObjectWithTag("Manager").GetComponent<TurnManager>().removeFromInitiativeQueue(this.gameObject);
         Debug.Log("A hero unit has died");
@@ -43,8 +73,7 @@ public class HeroUnit :  Unit, IButtonMap  {
     }
 
     private void ActuallyDie()
-    {
-        
+    {  
         this.gameObject.SetActive(false);
     }
 

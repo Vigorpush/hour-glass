@@ -22,7 +22,7 @@ public class EnemyUnitFactory : MonoBehaviour
     {
         this.transform.position = new Vector3(xIn,yIn, 0);
 
-        Debug.Log("Spawner moving to :"+ xIn + ", " + yIn);
+        //Debug.Log("Spawner moving to :"+ xIn + ", " + yIn);
         PlaceSomeZombies();
     }
 
@@ -32,7 +32,7 @@ public class EnemyUnitFactory : MonoBehaviour
             Vector3 change = new Vector3(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2), 0);
             this.transform.position += change;
 
-            Debug.Log("Position on loop "+ i + " location is " + this.transform.position);
+           // Debug.Log("Position on loop "+ i + " location is " + this.transform.position);
 
             CreateZombie();
             //Invoke("CreateZombie",0.1f);

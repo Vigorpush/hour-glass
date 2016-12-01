@@ -400,7 +400,6 @@ public class ZombieAI : MonoBehaviour {
 
     private void FaceTarget()
     {
-
         Vector3 theDirection = attackTarget.transform.position - this.gameObject.transform.position ;
         int xDiff = (int)theDirection.x;
         int yDiff = (int)theDirection.y;
@@ -409,8 +408,7 @@ public class ZombieAI : MonoBehaviour {
             Debug.Log("bad programming");
 
         }
-        
-        
+
         if(xDiff>=yDiff){
             if (xDiff > 0)
             {
@@ -422,8 +420,7 @@ public class ZombieAI : MonoBehaviour {
             {
                 //Face left
                 myTf.rotation = DOWN;
-            }
-            
+            }          
         }
         else //yDiff was greater than xDiff
         {
@@ -475,13 +472,15 @@ public class ZombieAI : MonoBehaviour {
 		}
 		GameObject closest = null;
 		float closestDist = float.MaxValue;
-		foreach(GameObject p in players){
-			float dist = Vector2.Distance (desiredCoord, p.transform.position);
-			Debug.Log ("Distance between me and cur player: " + dist);
-			if (dist<closestDist) {
-				closestDist = dist;
-				closest = p;
-			}
+        foreach (GameObject p in players) {
+            if (p.activeSelf) { 
+            float dist = Vector2.Distance(desiredCoord, p.transform.position);
+            Debug.Log("Distance between me and cur player: " + dist);
+            if (dist < closestDist) {
+                closestDist = dist;
+                closest = p;
+            }
+        }
 		}
 		return closest;
 

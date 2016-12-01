@@ -72,7 +72,8 @@ public class Whirlwind : AttackTemplate
         {
             RaycastHit2D rayHit;
             foreach (GameObject tar in enemiesInRange)
-            {              
+            {
+                Debug.DrawRay((Vector2)myHero.transform.position, (Vector2)tar.GetComponent<Transform>().position - (Vector2)myHero.transform.position, Color.cyan, 20f);
                 rayHit = Physics2D.Raycast((Vector2)myHero.transform.position, (Vector2)tar.GetComponent<Transform>().position - (Vector2)myHero.transform.position,1f);
                 if (rayHit.collider != null)
                 {

@@ -24,7 +24,7 @@ public class Unit : MonoBehaviour {
     public GameObject HealFXPrefab;
     private Collider2D col;
 
-    private Animator anim;
+    public Animator anim;
 
     public GameObject unitThatHitMeThisTurn;
 
@@ -161,7 +161,7 @@ public class Unit : MonoBehaviour {
         anim.SetBool("isATarget", false);
     }
 
-    private int CalculateDamageReduction(int preMitigatedDamage) {
+    public int CalculateDamageReduction(int preMitigatedDamage) {
       //  Debug.Log("-----------------------------------------------------------preMitigatedDamage = "+ preMitigatedDamage);
         float damagePercentage = 0;
         float f = (float)preMitigatedDamage;    //this was needed to clarify arg to Mathf
@@ -177,31 +177,40 @@ public class Unit : MonoBehaviour {
 
     }
 
-    public void takeDamage(int attackAmount, GameObject damageDealer){
+ 
+    public virtual void takeDamage(int attackAmount, GameObject damageDealer){
         anim.SetTrigger("GotHit");
         unitThatHitMeThisTurn = damageDealer;
-        int result = CalculateDamageReduction(attackAmount);
-        curhp -= result;
-        GetComponent<SpawnTextBubble>().gotHit(result);
-        AnnounceDamage(result, damageDealer);
-		InitCBT (result.ToString ());
-			if (curhp <= 0) {
-				Die ();
+        if (!dying)
+        {
+            int result = CalculateDamageReduction(attackAmount);
+            InitCBT(result.ToString());
+            AnnounceDamage(result, damageDealer);
+            curhp -= result;
+            GetComponent<SpawnTextBubble>().gotHit(result);
+        }
+        if (curhp <= 0) {
+               // damageDealer.SendMessage("removeFromComboTargets", this.gameObject);
+                Die ();
 			}
     }
 
-    public void takeCriticalDamage(int critAmount, GameObject damageDealer)
+    public virtual void takeCriticalDamage(int critAmount, GameObject damageDealer)
     {
-        critShaker.DoShake();
+        //critShaker.DoShake();
         anim.SetTrigger("GotHit");
         unitThatHitMeThisTurn = damageDealer;
-        int result = CalculateDamageReduction(critAmount);
-        curhp -= result;
-        GetComponent<SpawnTextBubble>().gotHit(result);
-        AnnounceDamage(result, damageDealer);
-        InitCBT(result.ToString());
+        if (!dying)
+        {
+            int result = CalculateDamageReduction(critAmount);
+            InitCBT(result.ToString());
+            AnnounceDamage(result, damageDealer);
+            curhp -= result;
+            GetComponent<SpawnTextBubble>().gotHit(result);
+        }
         if (curhp <= 0)
         {
+            //damageDealer.SendMessage("removeFromComboTargets", this.gameObject);
             Die();
         }
 		
@@ -221,28 +230,31 @@ public class Unit : MonoBehaviour {
         col.enabled = false;
     }
 
-    void Die(){
+   private void Die(){
+        setDying();
         LayerMask.NameToLayer("Ignore Raycast");
         anim.SetBool("Dead", true);
        // Debug.Log(gameObject.name + " says: \"Woe, for I am slain!\n ");
         this.SendMessage("playDeathCry");      
         theTurnManager.SendMessage("removeFromInitiativeQueue", this.gameObject);   
         disableCollider();
-        setDying();
+        
         //This used to sort of work but stuff targetted dying units
-        //Invoke("DieAfterDeathEffects",3f);
-        DieAfterDeathEffects();
+        Invoke("DieAfterDeathEffects",3f);
+       // DieAfterDeathEffects();
     }
 
    private void DieAfterDeathEffects()
     {
-        
-       // Debug.Log("I died");
-       //TODO: handle player death/res
-       
-           
-           //This blows up the player pretty bad, can they be resurected?
-        Destroy(gameObject);
+
+        // Debug.Log("I died");
+        //TODO: handle player death/res
+
+
+        //This blows up the player pretty bad, can they be resurected?
+        // Destroy(gameObject);
+        this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+       // this.gameObject.GetComponent<Collider2D>().enabled = false;
 
        //the resurect friendly version
        // this.gameObject.SetActive(false);
@@ -288,7 +300,7 @@ public class Unit : MonoBehaviour {
       }
 
 
-    void InitCBT(string textIn)
+    public void InitCBT(string textIn)
     {
         GameObject temp = Instantiate(CBTprefab) as GameObject;
         temp.GetComponent<Animator>().SetTrigger("Hit");
@@ -307,7 +319,7 @@ public class Unit : MonoBehaviour {
         Destroy(temp.gameObject,2);
     }
 
-    void InitCBTCrit(string critIn){
+    public void InitCBTCrit(string critIn){
         GameObject temp = Instantiate(CBTprefab) as GameObject;
         temp.GetComponent<Animator>().SetTrigger("Hit");
         RectTransform tempRect = temp.GetComponent<RectTransform>();
@@ -328,7 +340,7 @@ public class Unit : MonoBehaviour {
     }
     
 
-    void InitHealCBT(string textIn)
+    public void InitHealCBT(string textIn)
     {
         GameObject healFX = Instantiate(HealFXPrefab) as GameObject;
         RectTransform tempRect = healFX.GetComponent<RectTransform>();

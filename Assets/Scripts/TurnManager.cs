@@ -12,6 +12,7 @@ public class TurnManager : MonoBehaviour
     public GameObject[] units;
     public GameObject theExplorer;
     GameObject theMaestro;
+    private bool combatIsEnded;
 
     //Holds the pairs
     [System.Serializable]
@@ -77,6 +78,7 @@ public class TurnManager : MonoBehaviour
 
 	public void Start()
 	{
+        combatIsEnded = false;
         theMaestro = GameObject.FindGameObjectWithTag("Maestro");
         cam = GameObject.FindGameObjectWithTag("MainCamera");
 	}
@@ -99,25 +101,30 @@ public class TurnManager : MonoBehaviour
         addEnemiesToTable();
 		currentInitiatives.Sort ();
         Debug.Log("==== Begin Encounter ====");
-		Invoke("CalculateTurn",3f);
+        combatIsEnded = false;
+
+        Invoke("CalculateTurn",3f);
 	}
 
 
 
 	void addPlayersToTable ()
 	{
-		
+        if (player1 != null) { 
 		currentInitiatives.Add (new UnitInitiativeP (player1.GetComponent<HeroUnit> (), player1.GetComponent<HeroUnit> ().initiative));
 		baseInitiativeTable.Add (player1.GetComponent<HeroUnit>(), player1.GetComponent<HeroUnit> ().initiative);
+        }
 
+        if (player2 != null) {
+            currentInitiatives.Add(new UnitInitiativeP(player2.GetComponent<HeroUnit>(), player2.GetComponent<HeroUnit>().initiative));
+            baseInitiativeTable.Add(player2.GetComponent<HeroUnit>(), player2.GetComponent<HeroUnit>().initiative);
+        }
 
-		currentInitiatives.Add (new UnitInitiativeP (player2.GetComponent<HeroUnit> (), player2.GetComponent<HeroUnit> ().initiative));
-		baseInitiativeTable.Add (player2.GetComponent<HeroUnit> (), player2.GetComponent<HeroUnit> ().initiative);
-
-
-		currentInitiatives.Add (new UnitInitiativeP (player3.GetComponent<HeroUnit> (), player3.GetComponent<HeroUnit> ().initiative));
-		baseInitiativeTable.Add (player3.GetComponent<HeroUnit> (), player3.GetComponent<HeroUnit> ().initiative);
-  
+        if (player3 != null)
+        {
+            currentInitiatives.Add(new UnitInitiativeP(player3.GetComponent<HeroUnit>(), player3.GetComponent<HeroUnit>().initiative));
+            baseInitiativeTable.Add(player3.GetComponent<HeroUnit>(), player3.GetComponent<HeroUnit>().initiative);
+        }
     }
     private void addEnemiesToTable(){
         GetAllUnits();
@@ -141,14 +148,14 @@ public class TurnManager : MonoBehaviour
 		player1 = GameObject.FindGameObjectWithTag ("Player1");
 		player2 = GameObject.FindGameObjectWithTag ("Player2");
 		player3 = GameObject.FindGameObjectWithTag ("Player3");
-		if(player1.gameObject.activeSelf){
+		if(player1 !=null){
             players.Add (player1);
         }
-        if (player2.gameObject.activeSelf)
+        if (player2 != null)
         {
             players.Add(player2);
         }
-        if (player3.gameObject.activeSelf)
+        if (player3 != null)
         {
             players.Add(player3);
         }
@@ -210,6 +217,11 @@ public class TurnManager : MonoBehaviour
         }
         bool done = CheckCombatOver();
     }
+
+    public bool isCombatEnded()
+    {
+        return combatIsEnded;
+    }
 		
 	
 	void MakeTurn ()
@@ -239,11 +251,17 @@ public class TurnManager : MonoBehaviour
                 return false;
             }
         }
-        if (!atleastOneEnemyAlive)
+        if (!atleastOneEnemyAlive && !combatIsEnded)
         {
+            combatIsEnded = true;
             Debug.Log("==== End of Encounter ====");
             enterExplorationMode();
             theMaestro.SendMessage("EndCombat");
+            foreach(GameObject enemyToClear in units)
+            {
+                //Spawn loot at enemy location
+                Destroy(enemyToClear);  //cleanup
+            }
             return true;
         }
         return false; //should not happen
@@ -257,7 +275,7 @@ public class TurnManager : MonoBehaviour
         foreach (GameObject player in players)
         {
             Debug.Log("Selecting "+player.gameObject.name + " to think about exploring");
-            if (firstPlayerInList)
+            if (firstPlayerInList && player.activeSelf)
             {
                 //player.GetComponent<PlayerMovement>().EnterExplorationMode();
                 theExplorer = player;
@@ -286,6 +304,7 @@ public class TurnManager : MonoBehaviour
             if(player != theExplorer && !buddy1Spawned){
                 player.GetComponent<PlayerMovement>().SetStartingPosition(buddy1);
                 player.GetComponent<PlayerMovement>().EnterCombat(buddy1);
+                buddy1Spawned = true;
             }
             else if (player != theExplorer && buddy1Spawned){
                 player.GetComponent<PlayerMovement>().SetStartingPosition(buddy2);
