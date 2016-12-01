@@ -83,8 +83,28 @@ public class BasicArrowAttack : AttackTemplate
     public override void CheckLine()
     {
         theMaestro.SendMessage("TargetPing");
-        enemiesInRange = null;
-        enemiesInRange = GameObject.FindGameObjectsWithTag("Baddy");
+        
+        allEnemies = GameObject.FindGameObjectsWithTag("Baddy");       
+        int i = 0;
+        foreach (GameObject tar in allEnemies)
+        {
+            if (!tar.GetComponent<EnemyUnit>().getDying())
+            {
+                i++;
+            }
+        }
+        enemiesInRange = new GameObject[i];
+        int j = 0;
+        foreach (GameObject tar in allEnemies)
+        {
+            if (!tar.GetComponent<EnemyUnit>().getDying())
+            {
+                enemiesInRange[j] = tar;
+                j++;
+            }
+        }
+
+
         //All enemies on board
         //All eneimes in range      
         toRet.Clear();

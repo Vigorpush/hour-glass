@@ -6,23 +6,23 @@ using UnityEngine.UI;
 [System.Serializable]
 public class PlayerAttackController : MonoBehaviour {
 
-	private const int NUMBER_OF_ABILITIES = 4;
+    private const int NUMBER_OF_ABILITIES = 4;
 
-	public bool[] emptySlots = new bool[NUMBER_OF_ABILITIES]; 
+    public bool[] emptySlots = new bool[NUMBER_OF_ABILITIES];
 
-	public List<AttackTemplate> activeAbilities;
-	public bool allowAttack;
+    public List<AttackTemplate> activeAbilities;
+    public bool allowAttack;
 
-	public HeroUnit myHero;
-	// Use this for initialization
+    public HeroUnit myHero;
+    // Use this for initialization
     public Animator anim;
-  public  List<GameObject> thisAttackTargets;
-  public List<KeyCode> theInputButtons;
-  public int[] damageValues;
-  private bool inputActivated;
-  public bool abilityIsASpell;
-  public bool rangerAbility;
-  public GameObject cam;
+    public List<GameObject> thisAttackTargets;
+    public List<KeyCode> theInputButtons;
+    public int[] damageValues;
+    private bool inputActivated;
+    public bool abilityIsASpell;
+    public bool rangerAbility;
+    public GameObject cam;
     public bool showHelpText;
 
     //Known abilities
@@ -53,7 +53,7 @@ public class PlayerAttackController : MonoBehaviour {
 
     //bools to determine what buttons can be pressed on interface
     private bool baseButtons;
-	private bool hasBaseAttack;
+    private bool hasBaseAttack;
 
     private string spellName;
 
@@ -63,9 +63,9 @@ public class PlayerAttackController : MonoBehaviour {
     public void setAttackTargets(List<GameObject> listIn)
     {
         this.gameObject.GetComponent<ComboController>().setAbilityActivator(this.gameObject);
-        if (listIn ==null)
+        if (listIn == null)
         {
-           // Debug.Log(this.gameObject.name + "'s Attack controller told no targets");
+            // Debug.Log(this.gameObject.name + "'s Attack controller told no targets");
             anim.SetTrigger("Attack1");
             anim.SetTrigger("ComboFail");
             this.gameObject.GetComponent<PlayerMovement>().EndTurn();
@@ -78,17 +78,17 @@ public class PlayerAttackController : MonoBehaviour {
             if (abilityIsASpell)
             {
                 this.gameObject.GetComponent<ComboController>().setThisSpellName(spellName);
-               // Debug.Log("Casting: " + spellName);
+                // Debug.Log("Casting: " + spellName);
             }
-            
+
             //Debug.Log("params: " +thisAttackTargets.Count+" "+abilityIsASpell+" " + rangerAbility + theInputButtons + thisAttackTargets[0].collider.gameObject.name + damageValues+ this.gameObject.name);
-            this.gameObject.GetComponent<ComboController>().BeginComboInput(theInputButtons, thisAttackTargets, damageValues, abilityIsASpell, rangerAbility);          
+            this.gameObject.GetComponent<ComboController>().BeginComboInput(theInputButtons, thisAttackTargets, damageValues, abilityIsASpell, rangerAbility);
         }
     }
 
     public void setHealTarget(GameObject theTarget, int healAmount)
     {
-        if (theTarget ==null )
+        if (theTarget == null)
         {
             // Debug.Log(this.gameObject.name + "'s Attack controller told no targets");
             anim.SetTrigger("Attack1");
@@ -118,37 +118,37 @@ public class PlayerAttackController : MonoBehaviour {
     }
 
 
-    void Start () {
+    void Start() {
         myAbilityIcons = new Sprite[3];
-        unitSounds=GetComponents<AudioSource>();
+        unitSounds = GetComponents<AudioSource>();
 
         showHelpText = true;
         cam = GameObject.FindGameObjectWithTag("MainCamera");
-		myHero = GetComponent<HeroUnit> (); //!
-		anim = GetComponent<Animator> ();
-       // CharacterBuilder charBuilder = GetComponent<CharacterBuilder>();
-        abilityIsASpell =false;
+        myHero = GetComponent<HeroUnit>(); //!
+        anim = GetComponent<Animator>();
+        // CharacterBuilder charBuilder = GetComponent<CharacterBuilder>();
+        abilityIsASpell = false;
         rangerAbility = false;
-        if (emptySlots [0] == true) {
-			hasBaseAttack=false;
-		}
+        if (emptySlots[0] == true) {
+            hasBaseAttack = false;
+        }
         thisAttackTargets = new List<GameObject>();
 
-		//On build get 3 active abilities and 1 basic attack   //Implies that wait, defend are the same all the time
-		baseButtons = true;
+        //On build get 3 active abilities and 1 basic attack   //Implies that wait, defend are the same all the time
+        baseButtons = true;
     }
 
 
     public void buildActiveAbilites(List<GameObject> abilitiesIn)
     {
-        List<AttackTemplate> toRet =  new List<AttackTemplate>();
+        List<AttackTemplate> toRet = new List<AttackTemplate>();
 
         for (int i = 0; i < 3; i++)
-        {      
+        {
             if (abilitiesIn[i] != null)
             {
-               // Debug.Log(abilitiesIn[i].name);
-               // Debug.Log(this.gameObject.name + " working with " + abilitiesIn[i]);
+                // Debug.Log(abilitiesIn[i].name);
+                // Debug.Log(this.gameObject.name + " working with " + abilitiesIn[i]);
                 emptySlots[i] = true;
                 GameObject tempAbil;
                 switch (abilitiesIn[i].gameObject.name)
@@ -158,33 +158,33 @@ public class PlayerAttackController : MonoBehaviour {
                         tempAbil = Instantiate(meleePrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
-                       // Debug.Log(myAbilityIcons[i].name);
+                        // Debug.Log(myAbilityIcons[i].name);
                         myAbilityIcons[i] = meleeIcon;
-                        
+
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "BasicArrowKey":
-                       // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
+                        // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(arrowPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
-                       // Debug.Log(myAbilityIcons[i].name);
+                        // Debug.Log(myAbilityIcons[i].name);
                         myAbilityIcons[i] = arrowIcon;
-                        
+
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "BasicRayKey":
-                       // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
+                        // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(rayPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
-                       // Debug.Log(myAbilityIcons[i].name);
+                        // Debug.Log(myAbilityIcons[i].name);
                         myAbilityIcons[i] = rayIcon;
-                        
+
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "BasicHealKey":
-                       // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
+                        // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(healPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
@@ -192,7 +192,7 @@ public class PlayerAttackController : MonoBehaviour {
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "LightningStormKey":
-                       // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
+                        // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(LightningStormPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
@@ -200,7 +200,7 @@ public class PlayerAttackController : MonoBehaviour {
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "MageMissileBarrageKey":
-                       // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
+                        // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(MageMissileBarragePrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
@@ -208,7 +208,7 @@ public class PlayerAttackController : MonoBehaviour {
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "MultishotKey":
-                       // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
+                        // Debug.Log("Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(MultishotPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
@@ -216,7 +216,7 @@ public class PlayerAttackController : MonoBehaviour {
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
                     case "WhirlwindKey":
-                      // Debug.Log(i+"Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
+                        // Debug.Log(i+"Player: " + this.gameObject.name + " gets a(n): " + abilitiesIn[i].gameObject.name);
                         tempAbil = Instantiate(WhirlwindPrefab) as GameObject;
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
@@ -230,16 +230,25 @@ public class PlayerAttackController : MonoBehaviour {
             {
                 emptySlots[i] = false;
                 myAbilityIcons[i] = noAbilityIcon;
-               // Debug.Log(this.gameObject.name + " setting icon to empty for slot: "+i);
+                // Debug.Log(this.gameObject.name + " setting icon to empty for slot: "+i);
             }
         }
-       // Debug.Log("Abilities for "+this.gameObject.name + " was this long: "+toRet.Count);
+        // Debug.Log("Abilities for "+this.gameObject.name + " was this long: "+toRet.Count);
         activeAbilities = toRet;
     }
 
     public Sprite[] getMyAbilityIcons()
     {
         return myAbilityIcons;
+    }
+
+    public Sprite[] hiddenAbilityIcons()
+    {
+        Sprite[] blank = new Sprite[3];
+        blank[0] = noAbilityIcon;
+        blank[1] = noAbilityIcon;
+        blank[2] = noAbilityIcon;
+        return blank;
     }
 
 	void Update (){

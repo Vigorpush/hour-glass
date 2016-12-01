@@ -71,20 +71,41 @@ public class BasicRayAttack : AttackTemplate {
     public override void CheckLine()
     {
         theMaestro.SendMessage("TargetPing");
-        enemiesInRange = null;
-        enemiesInRange = GameObject.FindGameObjectsWithTag("Baddy");
+
+        allEnemies = GameObject.FindGameObjectsWithTag("Baddy");
+        int i = 0;
+        foreach (GameObject tar in allEnemies)
+        {
+            if (!tar.GetComponent<EnemyUnit>().getDying())
+            {
+                i++;
+            }
+        }
+        enemiesInRange = new GameObject[i];
+        int j = 0;
+        foreach (GameObject tar in allEnemies)
+        {
+            if (!tar.GetComponent<EnemyUnit>().getDying())
+            {
+                enemiesInRange[j] = tar;
+                j++;
+            }
+        }
+
+
         //All enemies on board
-        //All eneimes in range
+        //All eneimes in range      
+        toRet.Clear();
         sizeOfTargetArray = enemiesInRange.Length;
 
         if (sizeOfTargetArray <= 0)
         {
-            thePlayer.gameObject.GetComponent<PlayerAttackController>().setAttackTargets(null);
+            thePlayer.GetComponent<PlayerAttackController>().setAttackTargets(toRet);
         }
-        else { 
+        else
+        {
             currentSelectedIndex = 0;
-            theSelectedTarget = enemiesInRange[currentSelectedIndex];
-           // Debug.Log("Mage ray targetting: " + theSelectedTarget.gameObject.name);
+            theSelectedTarget = enemiesInRange[0];
             theSelectedTarget.SendMessage("BeingTargetted");
             cycleTargetLock = false;
         }

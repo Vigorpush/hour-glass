@@ -74,13 +74,21 @@ public class Whirlwind : AttackTemplate
             foreach (GameObject tar in enemiesInRange)
             {
                 Debug.DrawRay((Vector2)myHero.transform.position, (Vector2)tar.GetComponent<Transform>().position - (Vector2)myHero.transform.position, Color.cyan, 20f);
-                rayHit = Physics2D.Raycast((Vector2)myHero.transform.position, (Vector2)tar.GetComponent<Transform>().position - (Vector2)myHero.transform.position,1f);
-                if (rayHit.collider != null)
+                rayHit = Physics2D.Raycast((Vector2)myHero.transform.position, (Vector2)tar.GetComponent<Transform>().position - (Vector2)myHero.transform.position);
+                if (rayHit.collider != null) //alive enemies 1 tile away
+                    Debug.Log("Distance to ww tar: " +rayHit.collider.name +  " this far away: "+ rayHit.distance);
+                    var distance =Vector3.Distance(myHero.transform.position, tar.transform.position);
+                Debug.Log("Maybe bettwer distance is:  "+distance);
                 {
-                    tar.SendMessage("BeingTargetted");
-                    toRet.Add(tar);
-                    thereWasATarget = true;
+                    if (distance <= 1f)
+                    {
+                        
+                        tar.SendMessage("BeingTargetted");
+                        toRet.Add(tar);
+                        thereWasATarget = true;
+                    }
                 }
+                   
             }
 
             if (!thereWasATarget)

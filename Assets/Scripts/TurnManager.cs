@@ -178,34 +178,38 @@ public class TurnManager : MonoBehaviour
 	}
 	public void CalculateTurn ()
 	{
-        CheckCombatOver();
-        //TODO needs to tell current player to end turn, and next player to make turn.  Curren't doesn't end turn for active player when button pressed
-		currentInitiatives.Sort ();
-		UnitInitiativeP curPair = currentInitiatives [0];
-		currentUnit = curPair.u;
-		currentInitiatives.RemoveAt(0);
-		curPair.updateInit (currentUnit.initiative);
-		currentInitiatives.Add (new UnitInitiativeP(curPair.u,curPair.initiative));
-		currentInitiatives.Sort ();
-		currentUnit = curPair.u;
-
-        numTurns++;
-
-        if (currentUnit != null )
+        if (!CheckCombatOver())
         {
-            if(!curPair.u.getDying()){            
-                //The unit died, do next turn;
-               // Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Current unit is " + curPair.u.name);
-                MakeTurn();
-			
-            }
-            else
+
+
+            //TODO needs to tell current player to end turn, and next player to make turn.  Curren't doesn't end turn for active player when button pressed
+            currentInitiatives.Sort();
+            UnitInitiativeP curPair = currentInitiatives[0];
+            currentUnit = curPair.u;
+            currentInitiatives.RemoveAt(0);
+            curPair.updateInit(currentUnit.initiative);
+            currentInitiatives.Add(new UnitInitiativeP(curPair.u, curPair.initiative));
+            currentInitiatives.Sort();
+            currentUnit = curPair.u;
+
+            numTurns++;
+
+            if (currentUnit != null)
             {
-                Debug.Log("Turn " + numTurns + "  will begin for " + curPair.u.gameObject.name);
-                CalculateTurn();
+                if (!curPair.u.getDying())
+                {
+                    //The unit died, do next turn;
+                    // Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Current unit is " + curPair.u.name);
+                    MakeTurn();
+
+                }
+                else
+                {
+                    Debug.Log("Turn " + numTurns + "  will begin for " + curPair.u.gameObject.name);
+                    CalculateTurn();
+                }
             }
         }
-       
     }
 
     public void removeFromInitiativeQueue(GameObject unit){
@@ -228,13 +232,18 @@ public class TurnManager : MonoBehaviour
 		
 	
 	void MakeTurn ()
-	{	
-		if (currentUnit.tag.Equals ("Baddy")) {
-			Debug.Log ("Current unit is a baddy");
-			currentUnit.GetComponent<ZombieAI> ().enabled = true;
+	{
+        if (currentUnit.tag.Equals("Baddy"))
+        {
+            Debug.Log("Current unit is a baddy");
+            currentUnit.GetComponent<ZombieAI>().enabled = true;
 
-		} else {
-			currentUnit.SendMessage ("StartTurn");
+        }
+        else
+        {
+            if (!isCombatEnded()) { 
+            currentUnit.SendMessage("StartTurn");
+        }
 
 		}
 		cam.SendMessage ("SetCameraFollow", currentUnit.gameObject);
@@ -261,7 +270,7 @@ public class TurnManager : MonoBehaviour
             combatIsEnded = true;
             Debug.Log("==== End of Encounter ====");
             UnityEngine.Object.Instantiate(lootPrefab, lootSpawnLoc, Quaternion.identity);
-            enterExplorationMode();
+            Invoke("enterExplorationMode",1f);  //give combat a second to resolve
             theMaestro.SendMessage("EndCombat");
             foreach(GameObject enemyToClear in units)
             {

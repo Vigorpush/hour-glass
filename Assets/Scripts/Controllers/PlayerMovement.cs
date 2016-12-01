@@ -149,6 +149,7 @@ public class PlayerMovement : MonoBehaviour {
 	//Turn Management
 	public void EndTurn(){
 		if(endTurnBuffer){
+            Debug.Log("I was told to end turn!");
 		    isTurn = false;
 		    //Debug.Log("endingturn");
 		    if (turnManager != null) {
@@ -190,11 +191,20 @@ public class PlayerMovement : MonoBehaviour {
     public void EnterExplorationMode()
     {
         exploreMode = true;
+        abilityIcons = attackController.hiddenAbilityIcons();
+        UIportrait.GetComponent<Image>().overrideSprite = myPortrait;
+        for (int i = 0; i < 3; i++)
+        {
+            // Debug.Log(this.gameObject.name + " setting ability "+ i + " sprite to " + abilityIcons[i].name);
+            abilitiesUI[i].GetComponent<Image>().overrideSprite = abilityIcons[i];
+        }
         myLantern.SetActive(true);
         cam.GetComponent<CameraFollow>().SetCameraFollow(this.gameObject);
         Debug.Log(this.gameObject.name + ": I'm party lead, and exploring!");
         attackController.allowAttack = false;
-        SendMessage("AllowMovement");
+       // SendMessage("AllowMovement");
+        AllowMovement();
+        isTurn = true;
     }
 
     //Invokable method to begin calculating intiaties and first turn;
@@ -202,6 +212,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (exploreMode)
         {
+            
            // Debug.Log("Hit an encounter tile");
             int myX =(int) pos.x;
             int myY = (int)pos.y;
@@ -236,7 +247,7 @@ public class PlayerMovement : MonoBehaviour {
                    // Debug.Log("```````I wanted to go up");
                     pos += Vector2.up;
                 }
-
+                Invoke("UnAllowMovement",1f); //allow time to walk into room
                 //Debug.Log(gameObject.name + "I kick down the door :" + returned);
                 Invoke("surveyRoomEntered", 1f);
 
