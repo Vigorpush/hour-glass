@@ -30,7 +30,7 @@ public class stat_player : MonoBehaviour {
 
         HP1.text = "HP: " + myStats.getcurhp() + " / " + myStats.getmaxhp();
         Attack1.text = "Attack: " + myStats.getattack();
-        Speed1.text = "Speed;: " +myStats.getspeed();
+        Speed1.text = "Speed: " +myStats.getspeed();
 	}
 	void Update(){
 		if(Input.GetKeyUp(KeyCode.LeftShift)){
@@ -51,7 +51,7 @@ public class stat_player : MonoBehaviour {
 	void refreshStat(){
         HP1.text = "HP: " + myStats.getcurhp() + " / " + myStats.getmaxhp();
         Attack1.text = "Attack: " + myStats.getattack();
-        Speed1.text = "Speed;: " + myStats.getspeed();
+        Speed1.text = "Speed: " + myStats.getspeed();
 
 		/*Debug.Log("Refresh Player Stat");
 		HP1.text = "Player 1 HP : ";

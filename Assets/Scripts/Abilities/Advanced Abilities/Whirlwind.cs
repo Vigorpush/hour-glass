@@ -80,7 +80,7 @@ public class Whirlwind : AttackTemplate
                     var distance =Vector3.Distance(myHero.transform.position, tar.transform.position);
                 Debug.Log("Maybe bettwer distance is:  "+distance);
                 {
-                    if (distance <= 1f)
+                    if (distance <= 1.9f)
                     {
                         
                         tar.SendMessage("BeingTargetted");

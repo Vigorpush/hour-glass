@@ -208,7 +208,7 @@ public class TurnManager : MonoBehaviour
                     Debug.Log("Turn " + numTurns + "  will begin for " + curPair.u.gameObject.name);
                     CalculateTurn();
                 }
-            }
+           }
         }
     }
 

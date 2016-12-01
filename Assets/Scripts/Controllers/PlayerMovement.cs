@@ -63,7 +63,14 @@ public class PlayerMovement : MonoBehaviour {
 			checkPlayerMovement ();  //listen for WASD movement input
 			checkEndTurn ();    //listen for endturn button
 			tf.position = Vector3.MoveTowards (tf.position, pos, Time.deltaTime * speed);   //animate movement
-			//Debug.DrawRay (pos,(Vector2)(tf.up), Color.blue);
+			
+            //Debug.DrawRay (pos,(Vector2)(tf.up), Color.blue);
+        }
+        if(exploreMode){
+            if (!isTurn) { 
+             isTurn = true;
+             cam.GetComponent<CameraFollow>().SetCameraFollow(this.gameObject);
+            }
         }
     
 	}
