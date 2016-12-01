@@ -7,16 +7,20 @@ public class Weapon : Equipment {
     public int damageMin;
     public int damageMax;
 
+   // private Unit myUnit;
+
 
     public void upgradeDamageByAmount(int amount){
         damageMin += amount;
         damageMax  +=amount;
+       // myUnit.InitCBT(this.gameObject.name + ": upgraded weapon by: "+amount);
     }
 
     void Start()
     {
         damageMin = 5;
         damageMax = 10;
+       // myUnit = this.gameObject.GetComponent<Unit>();
     }
 
 

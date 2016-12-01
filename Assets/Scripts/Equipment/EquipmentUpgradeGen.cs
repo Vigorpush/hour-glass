@@ -30,6 +30,7 @@ public class EquipmentUpgradeGen : MonoBehaviour {
     {
         if(!triggered)
         {
+            triggered = true;
             UpgradeEquipment();
             Invoke("Consumed",0.1f);
         }
@@ -64,16 +65,16 @@ public class EquipmentUpgradeGen : MonoBehaviour {
         switch (classNum)        // Set heroToUpgrade to the randomized or selected class
         {
             case 1:
-                heroToUpgrade = Fighter;
+                heroToUpgrade = GameObject.FindGameObjectWithTag("Player1").GetComponent<HeroUnit>();
                // Debug.Log("Upgrading Fighter");
                 break;
             case 2:
-                heroToUpgrade = Caster;
-               // Debug.Log("Upgrading Caster");
+                heroToUpgrade = GameObject.FindGameObjectWithTag("Player2").GetComponent<HeroUnit>();
+                // Debug.Log("Upgrading Caster");
                 break;
             case 3:
-                heroToUpgrade = Archer;
-               // Debug.Log("Upgrading Archer");
+                heroToUpgrade = GameObject.FindGameObjectWithTag("Player3").GetComponent<HeroUnit>();
+                // Debug.Log("Upgrading Archer");
                 break;
         }
 
@@ -124,10 +125,12 @@ public class EquipmentUpgradeGen : MonoBehaviour {
                 Weapon weaponToUpgrade = equipmentToUpgrade as Weapon;
                 weaponToUpgrade.damageMin += upgradeAmount;
                 weaponToUpgrade.damageMax += upgradeAmount;
+                heroToUpgrade.GetComponent<Unit>().InitCBT(heroToUpgrade.name+" ATK Up +"+upgradeAmount);
                 break;
             case 2:
                 Armour armourToUpgrade = equipmentToUpgrade as Armour;
                 armourToUpgrade.armour += upgradeAmount;
+                heroToUpgrade.GetComponent<Unit>().InitCBT(heroToUpgrade.name + " DEF Up +" + upgradeAmount);
                 break;
         }
     }
