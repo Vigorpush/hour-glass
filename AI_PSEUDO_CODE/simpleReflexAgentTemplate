@@ -1,9 +1,0 @@
-The format of a simple reflex based agent without any internal model of the world
-
-function SIMPLE_RELFEX_AGENT(percept) returns an action
-persistent: rules, a set of condition-action rules
-state <-- INTERPRET-INPUT(percept)
-rule <-- RULE_MATCH(state,rules)   //A function that matches a matches the state of the board to the rules of the unit      (THIS IS ESSENTIALLY THE CONDITIONAL NEST ALGORITHM)
-action <-- rule.Action
-return action
-
