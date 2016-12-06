@@ -227,7 +227,8 @@ public class ComboController : MonoBehaviour {
                 if(timerWindow > (totalStepWindow - flubWindow) || timerWindow < flubWindow)// if  within window
                 {
 
-                    inputAnim.SetTrigger("InputWindowOpen");
+                   // inputAnim.SetTrigger("InputWindowOpen");
+                    inputAnim.SetBool("InputIsOk",true);
 
                     //  Debug.Log(flubWindow + "-flub " + totalStepWindow+"-total.  Input Window closed! "+ timerWindow);
                     if (Input.GetKeyDown(validInputButton) && discreteInputWindow)
