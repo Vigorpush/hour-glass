@@ -28,9 +28,6 @@ public class stat_player : MonoBehaviour {
         
         myStats = this.gameObject.GetComponent<Unit>();
 
-        HP1.text = "HP: " + myStats.getcurhp() + " / " + myStats.getmaxhp();
-        Attack1.text = "Attack: " + myStats.getattack();
-        Speed1.text = "Speed: " +myStats.getspeed();
 	}
 	void Update(){
 		if(Input.GetKeyUp(KeyCode.LeftShift)){
@@ -50,8 +47,9 @@ public class stat_player : MonoBehaviour {
 	//this is function will set the HP, attack and defense values into table
 	void refreshStat(){
         HP1.text = "HP: " + myStats.getcurhp() + " / " + myStats.getmaxhp();
-        Attack1.text = "Attack: " + myStats.getattack();
-        Speed1.text = "Speed: " + myStats.getspeed();
+        Attack1.text = "ATK: " + (myStats.getDamageMin() + myStats.getattack())+ "-"
+         + (myStats.getDamageMax()+ myStats.getattack());
+        Speed1.text = "DEF: " + myStats.getArmour();
 
 		/*Debug.Log("Refresh Player Stat");
 		HP1.text = "Player 1 HP : ";

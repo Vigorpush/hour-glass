@@ -51,7 +51,7 @@ public class DecisionTree {
             Action doAction = node.getAction();
             doAction();
 
-            Debug.Log("Decided to "+doAction.Method);
+         //   Debug.Log("Decided to "+doAction.Method);
             return;
 		
         }
@@ -59,7 +59,7 @@ public class DecisionTree {
 
 		Decision d =node.getDecision();
 		int result = d (); 
-		Debug.Log("d is"+ d);
+		//Debug.Log("d is"+ d);
 
 
 

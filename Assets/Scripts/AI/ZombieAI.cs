@@ -221,9 +221,9 @@ public class ZombieAI : MonoBehaviour {
 		DecideOnTargetTile ();
 		ChooseTree ();
 		NavigateTree ();
-		Debug.Log(this.gameObject.name + "Finished Turn");
+		//Debug.Log(this.gameObject.name + "Finished Turn");
 		if((Vector2)myTf.position != desiredCoord){
-			Debug.Log("not where I want to be");
+			//Debug.Log("not where I want to be");
 		}
 
 
@@ -267,7 +267,7 @@ public class ZombieAI : MonoBehaviour {
             //can make a move
         else 
         {
-			Debug.Log(this.gameObject.name + " I have this many moves left: " + movesLeft);
+			//Debug.Log(this.gameObject.name + " I have this many moves left: " + movesLeft);
 
 			UnsetMovementCooldown ();
             //Decide on a target and set myDecidedTarget
@@ -277,7 +277,7 @@ public class ZombieAI : MonoBehaviour {
 
 			int distanceToMoveX = (int)(tarTf.position.x - myTf.position.x);
 			int distanceToMoveY = (int)(tarTf.position.y - myTf.position.y);
-            Debug.Log("Dist to move :" + distanceToMoveX + "," + distanceToMoveY);
+          //  Debug.Log("Dist to move :" + distanceToMoveX + "," + distanceToMoveY);
             bool Right = distanceToMoveX > 0f;
             bool Down = distanceToMoveY > 0f;
         
@@ -299,17 +299,17 @@ public class ZombieAI : MonoBehaviour {
                         {
                             MoveX(1);
                             distanceToMoveX--;
-                            Debug.Log(movesLeft + "/"+ myMovement + " making a move!");
+                          //  Debug.Log(movesLeft + "/"+ myMovement + " making a move!");
        
                           //  movementCooldown = true;
                             //Invoke("MoveBuffer", BUFFER_TIME);
                         }
                         else
                         {
-                            Debug.Log("Trying to  go left");
+                           // Debug.Log("Trying to  go left");
                             MoveX(-1);
                             distanceToMoveX++;
-                            Debug.Log(movesLeft + "/" + myMovement + " making a move!");
+                         //   Debug.Log(movesLeft + "/" + myMovement + " making a move!");
                             // movementCooldown = true;
 							
                             //Invoke("MoveBuffer", BUFFER_TIME);
@@ -323,7 +323,7 @@ public class ZombieAI : MonoBehaviour {
                         {
                             MoveY(1);
                             distanceToMoveY--;
-                           Debug.Log(movesLeft + "/" + myMovement + " making a move!");
+                         //  Debug.Log(movesLeft + "/" + myMovement + " making a move!");
                             //movementCooldown = true;
                             //Invoke("MoveBuffer", BUFFER_TIME);
                         }
@@ -332,7 +332,7 @@ public class ZombieAI : MonoBehaviour {
 
                             MoveY(-1);
                             distanceToMoveY++;
-                          Debug.Log(movesLeft + "/" + myMovement + " making a move!");
+                        //  Debug.Log(movesLeft + "/" + myMovement + " making a move!");
                             // movementCooldown = true;
                             //Invoke("MoveBuffer", BUFFER_TIME);
                         }
@@ -345,7 +345,7 @@ public class ZombieAI : MonoBehaviour {
                     {
                         MoveX(1);
                         distanceToMoveX--;
-                       Debug.Log(movesLeft + "/" + myMovement + " making a move!");
+                     //  Debug.Log(movesLeft + "/" + myMovement + " making a move!");
                        //  movementCooldown = true;
                         //Invoke("MoveBuffer", BUFFER_TIME);
                     }
@@ -364,7 +364,7 @@ public class ZombieAI : MonoBehaviour {
                     {
                         MoveY(1);
                         distanceToMoveY--;
-                       Debug.Log(movesLeft + "/" + myMovement + " making a move!");
+                     //  Debug.Log(movesLeft + "/" + myMovement + " making a move!");
                         // movementCooldown = true;
                         //Invoke("MoveBuffer", BUFFER_TIME);
                     }
@@ -372,7 +372,7 @@ public class ZombieAI : MonoBehaviour {
                     {
                         MoveY(-1);
                         distanceToMoveY++;
-                        Debug.Log(movesLeft + "/" + myMovement + " making a move!");
+                      //  Debug.Log(movesLeft + "/" + myMovement + " making a move!");
                       //  movementCooldown = true;
                        // Invoke("MoveBuffer", BUFFER_TIME);
                     }
@@ -444,7 +444,7 @@ public class ZombieAI : MonoBehaviour {
         FaceTarget();
 
 		if (attackTarget == null) {
-			Debug.Log ("NO TARGET");
+			//Debug.Log ("NO TARGET");
 			return;
 		}
         //Attack Target. magic number 1 for combat text
@@ -463,7 +463,7 @@ public class ZombieAI : MonoBehaviour {
         
         //MAKE SURE YOU FACE THE TARGET FIRST, maybe looktowards
         
-		Debug.DrawLine(myTf.position,(Vector2)(desiredCoord+(Vector2)(myTf.up)));
+	//	Debug.DrawLine(myTf.position,(Vector2)(desiredCoord+(Vector2)(myTf.up)));
         return Physics2D.Linecast(myTf.position,(Vector2)(desiredCoord+(Vector2)(myTf.up)),L);
     }
 	private GameObject getClosestPlayer(){
@@ -475,7 +475,7 @@ public class ZombieAI : MonoBehaviour {
         foreach (GameObject p in players) {
             if (p.activeSelf) { 
             float dist = Vector2.Distance(desiredCoord, p.transform.position);
-            Debug.Log("Distance between me and cur player: " + dist);
+          //  Debug.Log("Distance between me and cur player: " + dist);
             if (dist < closestDist) {
                 closestDist = dist;
                 closest = p;
@@ -501,7 +501,7 @@ public class ZombieAI : MonoBehaviour {
     private void DecideOnTargetTile()
     {
 		if (attackTarget == null) {
-			Debug.Log("NO TARGET SO NO PLACE TO MOVE!!!!!");
+			//Debug.Log("NO TARGET SO NO PLACE TO MOVE!!!!!");
 			return;
 		}
 		//TEMP SOLUTION CAUSE NO MAP...

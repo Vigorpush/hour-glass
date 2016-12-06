@@ -235,7 +235,7 @@ public class TurnManager : MonoBehaviour
 	{
         if (currentUnit.tag.Equals("Baddy"))
         {
-            Debug.Log("Current unit is a baddy");
+           // Debug.Log("Current unit is a baddy");
             currentUnit.GetComponent<ZombieAI>().enabled = true;
 
         }
@@ -250,8 +250,14 @@ public class TurnManager : MonoBehaviour
 
 	}
 
-    //If all enemies are dead, award XP, check for level up, and enter exploration mode
    
+    //Log damage for room AI
+    public void logDamage(GameObject playerAttacked, int damageTaken, GameObject damageDealer)
+    {
+        Debug.Log("TURN MANAGER: "+ playerAttacked +" took "+ damageTaken +" from "+damageDealer.name);
+    }
+
+    //If all enemies are dead, award XP, check for level up, and enter exploration mode
    public bool CheckCombatOver()
    {
         bool atleastOneEnemyAlive=false;
@@ -306,6 +312,8 @@ public class TurnManager : MonoBehaviour
     //Fan out players along the Y axis
     public void Begin(int spawnerX,int spawnerY, Vector2 buddy1, Vector2 buddy2)
     { 
+
+        //GET ENCOUNTER FROM ROOMBUILDER
         GetAllPlayers();
         Invoke("initializeTables",0.5f);
         Transform explorerTf = theExplorer.transform;
@@ -334,5 +342,8 @@ public class TurnManager : MonoBehaviour
  
         theMaestro.SendMessage("BeginCombat");
     }
+
+
+
 
 }

@@ -156,7 +156,7 @@ public class PlayerMovement : MonoBehaviour {
 	//Turn Management
 	public void EndTurn(){
 		if(endTurnBuffer){
-            Debug.Log("I was told to end turn!");
+           // Debug.Log("I was told to end turn!");
 		    isTurn = false;
 		    //Debug.Log("endingturn");
 		    if (turnManager != null) {
@@ -297,7 +297,7 @@ public class PlayerMovement : MonoBehaviour {
         {
            if (rayHit.collider.gameObject.tag.Equals("Loot"))
             {
-                Debug.Log("Found some loot!");
+               // Debug.Log("Found some loot!");
                 rayHit.collider.gameObject.SendMessage("rollAnUpgrade");
             }
             else if (rayHit.collider.gameObject.tag.Equals("Encounter"))

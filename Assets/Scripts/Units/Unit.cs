@@ -113,12 +113,22 @@ public class Unit : MonoBehaviour {
     {
         return curhp;
     }
+
+    public int getDamageMin()
+    {
+        return weap.damageMin;
+    }
+    public int getDamageMax()
+    {
+        return weap.damageMax;
+    }
+    public int getArmour()
+    {
+        return armr.armour;
+    }
+
     //End of Getter methods
 
-	// Update is called once per frame
-	void Update () {
-
-	}
 
     public bool WillDieFromDamage(int attackAmount)
     {
@@ -294,8 +304,8 @@ public class Unit : MonoBehaviour {
       {
           //TODO inform game master
           Debug.Log(theAggressor.name + "Dealing " + this.gameObject.name + " " + damageDealt + " damage.  Remaining HP: " +
-                                  this.GetComponent<Unit>().getcurhp() + "/" +
-                                  this.GetComponent<Unit>().getmaxhp() + "."
+                                  getcurhp() + "/" +
+                                  getmaxhp() + "."
                                   );
       }
 
@@ -308,7 +318,7 @@ public class Unit : MonoBehaviour {
         tempRect.transform.SetParent(transform.FindChild("EnemyCanvas"));
         tempRect.transform.localPosition = CBTprefab.transform.localPosition;
         tempRect.transform.localScale = CBTprefab.transform.localScale;
-       
+        temp.transform.rotation = Quaternion.identity;
 
         if (dying)
         {
@@ -326,7 +336,7 @@ public class Unit : MonoBehaviour {
         tempRect.transform.SetParent(transform.FindChild("EnemyCanvas"));
         tempRect.transform.localPosition = CBTprefab.transform.localPosition;
         tempRect.transform.localScale = CBTprefab.transform.localScale;
-
+        temp.transform.rotation = Quaternion.identity;
 
         if (dying)
         {
@@ -355,6 +365,8 @@ public class Unit : MonoBehaviour {
         tempRect.transform.SetParent(transform.FindChild("EnemyCanvas"));
         tempRect.transform.localPosition = CBTprefab.transform.localPosition;
         tempRect.transform.localScale = CBTprefab.transform.localScale;
+
+        temp.transform.rotation = Quaternion.identity;
         temp.GetComponent<Text>().fontSize += 5;
         temp.GetComponent<Text>().color = Color.cyan;
         temp.GetComponent<Text>().text = textIn;

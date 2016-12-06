@@ -111,9 +111,16 @@ public class ComboController : MonoBehaviour {
     public GameObject MageFX2;
     public GameObject MageFX3;
 
+    //new ability timing
+    public float totalStepWindow;
+    public float flubWindow;
+
     public GameObject theHourGlass;
 
+    private bool perfectWindow;
+
     void Start () {
+        perfectWindow = false;
         buttonMash = 0;
         spellName = "";
         showHelpText = true;
@@ -145,6 +152,7 @@ public class ComboController : MonoBehaviour {
         if (!pauseHourglass)    //This is to pause for fancy animations during combat
         {
             timerWindow -= Time.deltaTime;  //this is the input timer for combo buttons
+            inputAnim.SetBool("InputListening", false);
         }
 
         if (listenForComboInput)    //While listening for the correct button, won't listen if in some sort of transition
@@ -158,10 +166,8 @@ public class ComboController : MonoBehaviour {
             }
             else
             {
-
                 //Update UI timer
                 updateTimer();
-
                 //temp button masher spell
                 /*
                 if (playSpellAnimation && Input.GetKeyDown(validInputButton))
@@ -211,15 +217,20 @@ public class ComboController : MonoBehaviour {
                         }
                         
                     }
-
                 }
                 else
                 {*/
             
-                    if (timerWindow > waitTimeBeforeInput) //if button was pressed before wait Time
-                    {
-                        // Debug.Log("Input is NOT valid yet!");
-                        if (Input.GetKeyDown(validInputButton) && discreteInputWindow)
+                   // if (timerWindow > waitTimeBeforeInput) //if button was pressed before wait Time
+                   
+                
+                if(timerWindow > (totalStepWindow - flubWindow) || timerWindow < flubWindow)// if  within window
+                {
+
+                    inputAnim.SetBool("InputListening",true);
+
+                    //  Debug.Log(flubWindow + "-flub " + totalStepWindow+"-total.  Input Window closed! "+ timerWindow);
+                    if (Input.GetKeyDown(validInputButton) && discreteInputWindow)
                         {
                             inputAnim.SetTrigger("InputFail");
                             discreteInputWindow = false;
@@ -230,15 +241,36 @@ public class ComboController : MonoBehaviour {
                     }
                     else
                     {
-                        // Debug.Log("InputNowValid!");
-                        inputAnim.SetTrigger("InputWindowOpen");
+                    //     Debug.Log("Input Window Open!" + timerWindow);
+                        
+
+
+                                                             //UI STUFF shows window gradient
+                        if (timerWindow < (totalStepWindow / 2) + 0.3f && timerWindow > (totalStepWindow / 2) - 0.2f && !perfectWindow)
+                        {
+                            perfectWindow = true;
+                            Debug.Log("Perfect window");
+                            inputAnim.SetTrigger("InputPeaked");
+                        }
+
+                        if (timerWindow < (totalStepWindow / 2) - 0.2f && perfectWindow)
+                        {
+                            perfectWindow = false;
+                            inputAnim.ResetTrigger("InputPeaked");
+                            inputAnim.SetTrigger("PeakMissed");
+                            Debug.Log("Perfect window closed");
+                        }
+                    //END UI STUFF, shows window gradient
+                    
+
                     }
                     //inputInstruction.text = "Press: " + validInputButton.ToString();
 
 
                     if (Input.GetKeyDown(validInputButton) && discreteInputWindow)  //If the correct button is pressed (only pressed once!)
                     {
-                        discreteInputWindow = false;
+                    inputAnim.SetBool("InputListening", false);
+                    discreteInputWindow = false;
                         castFirstFail = false;  //made atleast one success
                         listenForComboInput = false;
                         Destroy(theFloatingInputText);
@@ -263,27 +295,13 @@ public class ComboController : MonoBehaviour {
                         if (!pauseHourglass && stepsIntoCombo < totalStepsForCombo) //If there is more to the combo, go to the next part
                         {
                             pauseHourglass = true;
-                            setCombo(theInputButtons[stepsIntoCombo], stepsIntoCombo);
+                            setCombo(theInputButtons[stepsIntoCombo], stepsIntoCombo, totalStepWindow);
                         }
                     }
                 }
             }
         
 	}
-
-    private bool rollCritChance()
-    {
-        int chance = Random.Range(0, 11);
-        if (chance > CRIT_THRESHOLD)
-        {
-            Debug.Log(chance + " Attack Critical Hit!");
-            return true;
-        }
-        else {
-            Debug.Log(chance+ " Attack normal Hit.");
-            return false;
-        }
-    }
 
     private void updateTimer()
     {
@@ -305,9 +323,27 @@ public class ComboController : MonoBehaviour {
         turnTimeElapsed.text = "Time left: " + System.Math.Round(timerWindow, 2);
     }
 
+
+    //Crit chance deprecated, now a function of player precision
+  /*  private bool rollCritChance()
+    {
+        int chance = Random.Range(0, 11);
+        if (chance > CRIT_THRESHOLD)
+        {
+            Debug.Log(chance + " Attack Critical Hit!");
+            return true;
+        }
+        else {
+            Debug.Log(chance+ " Attack normal Hit.");
+            return false;
+        }
+    }*/
+
+
+
     private void AttackTarget()
     {
-        bool criticalHit = false;
+       // bool criticalHit = false;
         //For each target when attack queued up
         foreach (GameObject target in thisAttackTargets)
         {
@@ -319,30 +355,28 @@ public class ComboController : MonoBehaviour {
                 {
                     case 0:
                         anim.SetTrigger("Attack1");
-                        if (!rangedAbilityFlag && !playSpellAnimation) { swing1.Play(); }
-                        if (playSpellAnimation)
+                        if (!rangedAbilityFlag && !playSpellAnimation) { 
+                            swing1.Play();
+                            attackDamage = getDamageAtTime(timerWindow, step1Damage);
+                        }
+                        else if (playSpellAnimation)
                         {
                             spellDamageToDeal += step1Damage;
                             MageFX1.gameObject.SetActive(true);
                         }
                         else
                         {
-                            if (rollCritChance())
-                            {
-                                attackDamage = step1Damage * 2;
-                                criticalHit = true;
-                            }
-                            else
-                            {
-                                attackDamage = step1Damage / thisAttackTargets.Count;
-                                criticalHit = false;
-                            }
+                               // attackDamage = step1Damage / thisAttackTargets.Count;
+                            attackDamage = getDamageAtTime(timerWindow,step1Damage);
                         }
                         break;
                     case 1:
                         anim.SetTrigger("Attack2");
-                        if (!rangedAbilityFlag && !playSpellAnimation) { swing2.Play(); }
-                        if (playSpellAnimation)
+                        if (!rangedAbilityFlag && !playSpellAnimation) { 
+                            swing2.Play();
+                            attackDamage = getDamageAtTime(timerWindow, step1Damage);
+                        }
+                        else if (playSpellAnimation)
                         {
                             spellDamageToDeal += step2Damage;
                             //MageFX1.gameObject.SetActive(false);
@@ -350,22 +384,17 @@ public class ComboController : MonoBehaviour {
                         }
                         else
                         {
-                            if (rollCritChance())
-                            {
-                                attackDamage = step1Damage * 2;
-                                criticalHit = true;
-                            }
-                            else
-                            {
-                                attackDamage = step1Damage / thisAttackTargets.Count;
-                                criticalHit = false;
-                            }
+                           // attackDamage = step1Damage / thisAttackTargets.Count;
+                            attackDamage = getDamageAtTime(timerWindow, step2Damage);
                         }
                         break;
                     case 2:
                         anim.SetTrigger("Attack3");
-                        if (!rangedAbilityFlag && !playSpellAnimation) { swing3.Play(); }
-                        if (playSpellAnimation)
+                        if (!rangedAbilityFlag && !playSpellAnimation) { 
+                            swing3.Play();
+                            attackDamage = getDamageAtTime(timerWindow, step1Damage);
+                        }
+                        else if (playSpellAnimation)
                         {
                             spellDamageToDeal += step3Damage;
                             //MageFX2.gameObject.SetActive(false);
@@ -373,16 +402,9 @@ public class ComboController : MonoBehaviour {
                         }
                         else
                         {
-                            if (rollCritChance())
-                            {
-                                attackDamage = step1Damage * 2;
-                                criticalHit = true;
-                            }
-                            else
-                            {
-                                attackDamage = step1Damage;
-                                criticalHit = false;
-                            }
+                               // attackDamage = step1Damage;
+                            attackDamage = getDamageAtTime(timerWindow, step3Damage);
+
                         }
                         break;
                 }
@@ -404,7 +426,7 @@ public class ComboController : MonoBehaviour {
                     {
                         if (rangedAbilityFlag) //ranged
                         {
-                            GameObject arrow = RangerArrowFactory.CreateArrow(attackDamage / thisAttackTargets.Count, tar, this.gameObject, criticalHit);
+                            GameObject arrow = RangerArrowFactory.CreateArrow(attackDamage / thisAttackTargets.Count, tar, this.gameObject, false);
                             // Debug.Log("Final blow to  " + tar.gameObject.name + "dealing " + attackDamage);
                             if (thisAttackTargets.Count == 1)
                             {
@@ -418,14 +440,8 @@ public class ComboController : MonoBehaviour {
                         }
                         else //melee
                         {
-                            if (criticalHit)
-                            {
-                                tar.GetComponent<Unit>().takeCriticalDamage(attackDamage, aggressor);
-                            }
-                            else
-                            {
+ 
                                 tar.GetComponent<Unit>().takeDamage(attackDamage, aggressor);
-                            }
 
                             // Debug.Log("Final blow to  " + tar.gameObject.name + "dealing " + attackDamage);
                             if (thisAttackTargets.Count == 1)
@@ -452,7 +468,7 @@ public class ComboController : MonoBehaviour {
                     {
                         if (rangedAbilityFlag && tar != null)   //ranged
                         {
-                            GameObject arrow = RangerArrowFactory.CreateArrow(attackDamage, tar, this.gameObject, criticalHit);
+                            GameObject arrow = RangerArrowFactory.CreateArrow(attackDamage, tar, this.gameObject, false);
                         }
                         else                                    //melee
                         {
@@ -462,14 +478,7 @@ public class ComboController : MonoBehaviour {
                             }
                             else
                             {
-                                if (criticalHit)
-                                {
-                                    tar.GetComponent<Unit>().takeCriticalDamage(attackDamage, aggressor);
-                                }
-                                else
-                                {
-                                    tar.GetComponent<Unit>().takeDamage(attackDamage, aggressor);
-                                }
+                                    tar.GetComponent<Unit>().takeDamage(attackDamage, aggressor);                               
 
                             }
                         }
@@ -503,7 +512,7 @@ public class ComboController : MonoBehaviour {
         anim.ResetTrigger("Attack3");
         anim.ResetTrigger("ComboFail");
         //Debug.Log(tar.name);
-        spellDamageToDeal = 3;
+       // spellDamageToDeal = 3;
         turnTimeElapsed.enabled = true;
         playSpellAnimation = hasCastingExitAnimation;
         stepsIntoCombo = 0;
@@ -517,9 +526,9 @@ public class ComboController : MonoBehaviour {
         else
         {
             
-            foreach(GameObject tar in thisAttackTargetsIn){
+          /*  foreach(GameObject tar in thisAttackTargetsIn){
                 Debug.Log("ability targetted: "+ tar.gameObject.name);
-            }
+            }*/
 
             cam.GetComponent<CameraFollow>().SetCameraFollow(this.gameObject);
 //          cam.SendMessage("SetCombatZoom");
@@ -529,37 +538,56 @@ public class ComboController : MonoBehaviour {
             step1Damage = damageSteps[0];
             step2Damage = damageSteps[1];
             step3Damage = damageSteps[2];
-            setCombo(validInputButton, stepsIntoCombo);
+
+
+            float flubWin = 0.2f;
+            float fakeDuration  =2f;
+            float fakeMinDmgScaler = 0.7f;
+            float fakeMaxDmgScaler = 2f;
+
+            setCombo(validInputButton, stepsIntoCombo, flubWin, fakeDuration, fakeMinDmgScaler, fakeMaxDmgScaler);
             //theHourGlass.SendMessage("PlayerTurnStarted");
         }
     }
 
-    //Default combo windows are a generous 3 seconds
-    public void setCombo(KeyCode targetButton, int comboStep)
+    //Default next step combo keys
+    public void setCombo(KeyCode targetButton, int comboStep, float stepWindow)
     {
+        perfectWindow = false;
         // Debug.Log(targetButton + "set as target button as targetButton:"+comboStep);
         validInputButton = targetButton;
         InitInputText(validInputButton.ToString());
         // baseDamage =  myHero.weap.getDamage() +myHero.attack;
         stepsIntoCombo = comboStep;
-        timerWindow = 3f;
-        waitTimeBeforeInput = 2.9f;
+        timerWindow = stepWindow;
+       // waitTimeBeforeInput = 1.8f;
         pauseHourglass = false;
-        Invoke("EnableInput",.5f);
+        Invoke("EnableInput",.1f);
     }
 
     //Combo with modified start/end windows
-    //The closer to 0 wait this long is, the smaller the window, max 2f
-    public void setCombo(KeyCode targetButton, int comboStep, float totalInputWindow, float waitThisLong)
+    //flubWindow is window that attack can fail if button pressed too soon or too late
+    public void setCombo(KeyCode targetButton, int comboStep, float flubWindowIn, float stepWindow, float minDmgMult, float maxDmgMult)
     {
+        perfectWindow = false;
         // Debug.Log(targetButton + "set as target button as targetButton:"+comboStep);
         validInputButton = targetButton;
+        InitInputText(validInputButton.ToString());
         // baseDamage =  myHero.weap.getDamage() +myHero.attack;
         stepsIntoCombo = comboStep;
-        timerWindow = totalInputWindow;
-        waitTimeBeforeInput = waitThisLong;
+
+        //old working values, deprecated
+       // timerWindow = totalInputWindow;
+       // waitTimeBeforeInput = waitThisLong;
+
+        //New ability windows
+        totalStepWindow = stepWindow;
+        flubWindow = flubWindowIn;
+        timerWindow = stepWindow;
+
         pauseHourglass = false;
-        Invoke("EnableInput", .5f);
+       // Invoke("EnableInput", .5f); //was for camera zoom wait
+        EnableInput();
     }
 
     public void setThisSpellName(string spellNameIn)
@@ -567,11 +595,17 @@ public class ComboController : MonoBehaviour {
         spellName = spellNameIn;
     }
 
-    /*public void removeFromComboTargets(GameObject deadTarget)
-    {
-        thisAttackTargets.Remove(deadTarget);
-    }*/
 
+    private int getDamageAtTime(float timeButtonPressed,int baseDamage){
+        float middle = totalStepWindow/2f;
+        float min = flubWindow;
+        float max = timerWindow - flubWindow;
+        float slope = (max - min) / (middle - flubWindow);
+        int scaledDamage =baseDamage+ (int)System.Math.Ceiling((attackDamage * min) +  System.Math.Abs(middle-timeButtonPressed) ) ;
+
+        Debug.Log("Base damage: "+ attackDamage+" scaled up to:" + scaledDamage);
+        return scaledDamage;
+    }
 
     public void EnableInput()
     {
@@ -579,11 +613,6 @@ public class ComboController : MonoBehaviour {
         discreteInputWindow = true;
         //Debug.Log("Enabling INput");
     }
-
-  /*  public void TargetDiedMidCombo()
-    {
-        targetIsDead = true;
-    }*/
 
     public void EndCombat()
     {
@@ -673,6 +702,7 @@ public class ComboController : MonoBehaviour {
 
     public void EndTurn()  
     {
+       // inputAnim.SetBool("InputListening", false);
         anim.SetTrigger("ComboFail");
         // this.gameObject.GetComponent<BasicRayAttack>().clearTarget();
       //  theHourGlass.SendMessage("PlayerTurnStopped");

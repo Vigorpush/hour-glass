@@ -3,6 +3,7 @@ using System.Collections;
 
 public class HeroUnit :  Unit, IButtonMap  {
 
+    private TurnManager turnScript;
     /**
      * The players experience
      */
@@ -11,6 +12,8 @@ public class HeroUnit :  Unit, IButtonMap  {
     void Start()
     {
         anim = GetComponent<Animator>();
+        theTurnManager = GameObject.FindGameObjectWithTag("Manager");
+        turnScript = theTurnManager.GetComponent<TurnManager>();
     }
 
     public void lvlUp(){
@@ -43,6 +46,7 @@ public class HeroUnit :  Unit, IButtonMap  {
         GetComponent<SpawnTextBubble>().gotHit(result);
         AnnounceDamage(result, damageDealer);
         InitCBT(result.ToString());
+        logDamageToBattleMaster(result,damageDealer);
         if (curhp <= 0)
         {
             Die();
@@ -58,16 +62,22 @@ public class HeroUnit :  Unit, IButtonMap  {
         GetComponent<SpawnTextBubble>().gotHit(result);
         AnnounceDamage(result, damageDealer);
         InitCBT(result.ToString());
+        logDamageToBattleMaster(result, damageDealer);
         if (curhp <= 0)
         {
             Die();
         }
     }
 
+    public void logDamageToBattleMaster(int damageTaken, GameObject damageDealer)
+    {
+        turnScript.logDamage(this.gameObject, damageTaken, damageDealer);
+    }
+
 
     // @override
     private void Die(){
-        GameObject.FindGameObjectWithTag("Manager").GetComponent<TurnManager>().removeFromInitiativeQueue(this.gameObject);
+        turnScript.removeFromInitiativeQueue(this.gameObject);
         Debug.Log("A hero unit has died");
         Invoke("ActuallyDie",1.5f);
     }
