@@ -115,12 +115,14 @@ public class ComboController : MonoBehaviour {
     public float totalStepWindow;
     public float flubWindow;
 
-    public GameObject theHourGlass;
-
     private bool perfectWindow;
 
-    void Start () {
+    public GameObject theHourglass;
+    private TheHourglass hourglassControls;
 
+    void Start () {
+        theHourglass = GameObject.FindGameObjectWithTag("OfficialHourGlass");
+        hourglassControls = theHourglass.GetComponent<TheHourglass>();
         perfectWindow = false;
         buttonMash = 0;
         spellName = "";
@@ -265,7 +267,11 @@ public class ComboController : MonoBehaviour {
 
                     if (Input.GetKeyDown(validInputButton) && discreteInputWindow)  //If the correct button is pressed (only pressed once!)
                     {
-                    inputAnim.SetBool("InputIsOk", false);
+                         inputAnim.SetBool("InputIsOk", false);
+                        if (perfectWindow)
+                        {
+                             hourglassControls.add1Second();
+                        }
                     discreteInputWindow = false;
                         castFirstFail = false;  //made atleast one success
                         listenForComboInput = false;

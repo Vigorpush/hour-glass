@@ -15,6 +15,8 @@ public class TurnManager : MonoBehaviour
     private bool combatIsEnded;
     public GameObject lootPrefab;
     private Vector2 lootSpawnLoc;
+    public GameObject theHourglass;
+    private TheHourglass hourglassControls;
 
     //Holds the pairs
     [System.Serializable]
@@ -80,6 +82,8 @@ public class TurnManager : MonoBehaviour
 
 	public void Start()
 	{
+        theHourglass = GameObject.FindGameObjectWithTag("OfficialHourGlass");
+        hourglassControls = theHourglass.GetComponent<TheHourglass>();
         lootSpawnLoc = new Vector2(0,0);
         combatIsEnded = false;
         theMaestro = GameObject.FindGameObjectWithTag("Maestro");
@@ -235,13 +239,15 @@ public class TurnManager : MonoBehaviour
 	{
         if (currentUnit.tag.Equals("Baddy"))
         {
-           // Debug.Log("Current unit is a baddy");
+            // Debug.Log("Current unit is a baddy");
+            hourglassControls.pause();
             currentUnit.GetComponent<ZombieAI>().enabled = true;
 
         }
         else
         {
-            if (!isCombatEnded()) { 
+            if (!isCombatEnded()) {
+             hourglassControls.resume();
             currentUnit.SendMessage("StartTurn");
         }
 
@@ -307,12 +313,15 @@ public class TurnManager : MonoBehaviour
         }
         theExplorer.GetComponent<PlayerMovement>().EnterExplorationMode();
         cam.SendMessage("SetCameraFollow", theExplorer);
+        hourglassControls.resume();
+
+
     }
 
     //Fan out players along the Y axis
     public void Begin(int spawnerX,int spawnerY, Vector2 buddy1, Vector2 buddy2)
-    { 
-
+    {
+        hourglassControls.pause();
         //GET ENCOUNTER FROM ROOMBUILDER
         GetAllPlayers();
         Invoke("initializeTables",0.5f);
