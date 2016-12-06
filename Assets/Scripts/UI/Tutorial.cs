@@ -67,6 +67,7 @@ public class Tutorial : MonoBehaviour {
 
 
         info.text = tutorialText[index].ToString();
+        index++;
     }
 	
 	// Update is called once per frame
