@@ -46,7 +46,12 @@ public class BasicAttack : AttackTemplate {
 				toRet.Add (hit.collider.gameObject);
 			}
 		}
-		thePlayer.GetComponent<PlayerAttackController>().setAttackTargets( toRet);
+        Invoke("setTarget", 0.5f);
+    }
+
+    private void setTarget()
+    {
+        thePlayer.GetComponent<PlayerAttackController>().setAttackTargets(toRet);
     }
 
 
@@ -87,7 +92,7 @@ public class BasicAttack : AttackTemplate {
     public override List<KeyCode> GetComboInputSequence()
     {
         theCombo = new List<KeyCode>();
-        theCombo.Add(KeyCode.Alpha1);
+        theCombo.Add(KeyCode.Alpha2);
         theCombo.Add(KeyCode.Alpha2);
         theCombo.Add(KeyCode.Alpha3);
         Debug.Log("Basic attack generated a combo list for "+ this.gameObject.name);
