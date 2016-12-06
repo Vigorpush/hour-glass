@@ -678,7 +678,7 @@ public class ComboController : MonoBehaviour {
     {
         theFloatingInputText = Instantiate(InputUIPrefab) as GameObject;
         inputAnim = theFloatingInputText.GetComponent<Animator>();
-        
+        inputAnim.SetBool("InputIsOk", true);
         RectTransform tempRect = theFloatingInputText.GetComponent<RectTransform>();
         tempRect.transform.SetParent(cam.transform.FindChild("MainCanvas"));
         tempRect.transform.localPosition = InputUIPrefab.transform.localPosition;
