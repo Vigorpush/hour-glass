@@ -4,11 +4,13 @@ using UnityEngine.UI;
 
 public class TheHourglass : MonoBehaviour
 {
-
+    public GameObject tutorialHelper;
     public GameObject officialImage;
     public Text theCountdownText;
     private ParticleSystem partEffects;
     private AudioSource timeAddSound;
+    private GameObject cam;
+    
 
     private Animator effects;
 
@@ -28,12 +30,15 @@ public class TheHourglass : MonoBehaviour
         effects = officialImage.GetComponent<Animator>();
         partEffects = GetComponent<ParticleSystem>();
 
+        cam = GameObject.FindGameObjectWithTag("MainCamera");
         //Show tutorial
-
-        Invoke("tellPlayerToStart", 2f);  //begin exploring
+        cam.GetComponent<CameraFollow>().SetCameraFollow(theExplorer);
+        // Invoke("tellPlayerToStart", 2f);  //begin exploring
     }
 
-    private void tellPlayerToStart()
+    
+
+    public void tutorialFinished()
     {
         paused = false;
         theExplorer.SendMessage("EnterExplorationMode");

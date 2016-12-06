@@ -50,7 +50,7 @@ public class BasicArrowAttack : AttackTemplate
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (!ArrowTargetLock)
         {

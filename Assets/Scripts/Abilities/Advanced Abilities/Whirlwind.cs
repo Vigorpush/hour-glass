@@ -45,7 +45,7 @@ public class Whirlwind : AttackTemplate
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (!whirlTarLock)
         {

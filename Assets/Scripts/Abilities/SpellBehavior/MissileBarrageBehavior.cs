@@ -52,7 +52,12 @@ public class MissileBarrageBehavior : MonoBehaviour {
             hangPosition = PointOnCurve(P0, P1, P2, P3, t);
             transform.position = Vector3.MoveTowards(this.transform.position, hangPosition,MISSILE_INITIAL_VELOCITY);
         }
-        else if(!delay)
+        else if (theTarget==null)
+        {
+            MissileHit();
+        }
+
+        else if(!delay && theTarget!=null)
         {
            // Debug.Log("GO!");
             transform.position = Vector3.MoveTowards(this.transform.position, theTarget.GetComponent<Transform>().position, MISSILE_INITIAL_VELOCITY+=0.3f);
