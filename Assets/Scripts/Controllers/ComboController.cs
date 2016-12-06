@@ -265,6 +265,7 @@ public class ComboController : MonoBehaviour {
 
                     if (Input.GetKeyDown(validInputButton) && discreteInputWindow)  //If the correct button is pressed (only pressed once!)
                     {
+                    inputAnim.SetBool("InputIsOk", false);
                     discreteInputWindow = false;
                         castFirstFail = false;  //made atleast one success
                         listenForComboInput = false;
@@ -678,7 +679,7 @@ public class ComboController : MonoBehaviour {
         tempRect.transform.localScale = InputUIPrefab.transform.localScale;
         tempRect.transform.localRotation = InputUIPrefab.transform.localRotation;
         // Debug.Log("!!!tried to UI " + inputAnim.gameObject.name);
-        inputAnim.SetTrigger("ShowInput");
+       // inputAnim.SetTrigger("ShowInput");
         //theFloatingInputText.GetComponent<Text>().enabled = true;
         theFloatingInputText.GetComponent<Text>().text = textIn;
        // Destroy(theFloatingInputText.gameObject,3);

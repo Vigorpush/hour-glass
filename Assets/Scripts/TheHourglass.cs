@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TheHourglass : MonoBehaviour {
+public class TheHourglass : MonoBehaviour
+{
 
-   // public ArrayList spawners = new ArrayList();
+    // public ArrayList spawners = new ArrayList();
     public GameObject theExplorer;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         Invoke("tellPlayerToStart", 2f);  //begin exploring
-	}
+    }
+
     void GetSpawners()
     {
-       // spawners.Clear();
-       // spawners.AddRange(GameObject.FindGameObjectsWithTag("Spawner"));
+        // spawners.Clear();
+        // spawners.AddRange(GameObject.FindGameObjectsWithTag("Spawner"));
 
     }
 
@@ -23,9 +26,5 @@ public class TheHourglass : MonoBehaviour {
         theExplorer.SendMessage("EnterExplorationMode");
     }
 
- /*   public void SpawnEncounter()
-    {
-
-
-    }*/
 }
+
