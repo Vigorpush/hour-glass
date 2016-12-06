@@ -49,7 +49,8 @@ public class MaestroScript : MonoBehaviour {
         }
         if (!Combat && battleVolume > 0)
         {
-            battleVolume -= (float)0.9 * Time.deltaTime;
+           // Debug.Log("Battle end");
+            battleVolume -= (float)2 * Time.deltaTime;
             battleMusic.volume = battleVolume;
         }
     }

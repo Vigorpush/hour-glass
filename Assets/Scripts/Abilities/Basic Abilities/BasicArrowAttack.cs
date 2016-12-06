@@ -62,7 +62,11 @@ public class BasicArrowAttack : AttackTemplate
                 //Debug.DrawRay((Vector2)myHero.transform.position, (Vector2)theSelectedTarget.GetComponent<Transform>().position - (Vector2)myHero.transform.position, Color.cyan, 3f);
                 // Debug.Log("Mage ray targetting: " + rayHit.collider.gameObject.name);
                 // cam.GetComponent<CameraFollow>().UnsetTargettingCam();
-                toRet.Add(rayHit.collider.gameObject);
+                if (rayHit.collider.tag.Equals("Baddy"))
+                {
+                    toRet.Add(rayHit.collider.gameObject);
+                }
+                
                 thePlayer.gameObject.GetComponent<PlayerAttackController>().setAttackTargets(toRet);
             }
 
