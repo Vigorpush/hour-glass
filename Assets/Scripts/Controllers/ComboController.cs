@@ -153,14 +153,13 @@ public class ComboController : MonoBehaviour {
         if (!pauseHourglass)    //This is to pause for fancy animations during combat
         {
             timerWindow -= Time.deltaTime;  //this is the input timer for combo buttons
-            inputAnim.SetBool("InputListening", false);
         }
 
         if (listenForComboInput)    //While listening for the correct button, won't listen if in some sort of transition
         {
             if (timerWindow < 0)            //If player took too long pressing correct button
             {
-                Destroy(theFloatingInputText.gameObject, 3);
+                Destroy(theFloatingInputText.gameObject, 1);
                 anim.SetTrigger("ComboFail");
                 listenForComboInput = false;
                 Invoke("EndCombat", 0.5f);
@@ -228,7 +227,7 @@ public class ComboController : MonoBehaviour {
                 if(timerWindow > (totalStepWindow - flubWindow) || timerWindow < flubWindow)// if  within window
                 {
 
-                    inputAnim.SetBool("InputListening",true);
+                    inputAnim.SetTrigger("InputWindowOpen");
 
                     //  Debug.Log(flubWindow + "-flub " + totalStepWindow+"-total.  Input Window closed! "+ timerWindow);
                     if (Input.GetKeyDown(validInputButton) && discreteInputWindow)
@@ -243,18 +242,15 @@ public class ComboController : MonoBehaviour {
                     else
                     {
                     //     Debug.Log("Input Window Open!" + timerWindow);
-                        
-
-
                                                              //UI STUFF shows window gradient
-                        if (timerWindow < (totalStepWindow / 2) + 0.3f && timerWindow > (totalStepWindow / 2) - 0.2f && !perfectWindow)
+                        if (timerWindow < (totalStepWindow / 2) + 0.2f && timerWindow > (totalStepWindow / 2) - 0.2f && !perfectWindow)
                         {
                             perfectWindow = true;
                             Debug.Log("Perfect window");
                             inputAnim.SetTrigger("InputPeaked");
                         }
 
-                        if (timerWindow < (totalStepWindow / 2) - 0.2f && perfectWindow)
+                        if (timerWindow < (totalStepWindow / 2) - 0.1f && perfectWindow)
                         {
                             perfectWindow = false;
                             inputAnim.ResetTrigger("InputPeaked");
@@ -262,15 +258,12 @@ public class ComboController : MonoBehaviour {
                             Debug.Log("Perfect window closed");
                         }
                     //END UI STUFF, shows window gradient
-                    
 
                     }
                     //inputInstruction.text = "Press: " + validInputButton.ToString();
 
-
                     if (Input.GetKeyDown(validInputButton) && discreteInputWindow)  //If the correct button is pressed (only pressed once!)
                     {
-                    inputAnim.SetBool("InputListening", false);
                     discreteInputWindow = false;
                         castFirstFail = false;  //made atleast one success
                         listenForComboInput = false;

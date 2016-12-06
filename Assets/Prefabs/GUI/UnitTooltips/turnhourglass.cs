@@ -29,6 +29,7 @@ public class turnhourglass : MonoBehaviour {
 	bool turnisover;//check the current turn is over
 
 	void Start(){
+       // this.transform.SetParent("MainCanvas");
         //glass = this.gameObject.GetComponent<Transform>();
 		//setting the turnbase hourglass
 		turnbased_hourglass.maxValue = turnbased_startingTime;

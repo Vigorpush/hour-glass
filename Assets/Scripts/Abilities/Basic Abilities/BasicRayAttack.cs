@@ -48,9 +48,12 @@ public class BasicRayAttack : AttackTemplate {
                 theSelectedTarget.SendMessage("Untargetted");
                 RaycastHit2D rayHit = Physics2D.Raycast((Vector2)myHero.transform.position, (Vector2)theSelectedTarget.GetComponent<Transform>().position - (Vector2)myHero.transform.position);
                 //Debug.DrawRay((Vector2)myHero.transform.position, (Vector2)theSelectedTarget.GetComponent<Transform>().position - (Vector2)myHero.transform.position, Color.cyan, 3f);
-               // Debug.Log("Mage ray targetting: " + rayHit.collider.gameObject.name);
-               // cam.GetComponent<CameraFollow>().UnsetTargettingCam();
-                toRet.Add(rayHit.collider.gameObject);
+                // Debug.Log("Mage ray targetting: " + rayHit.collider.gameObject.name);
+                // cam.GetComponent<CameraFollow>().UnsetTargettingCam();
+
+                if (rayHit.collider.gameObject.tag.Equals("Baddy")){
+                    toRet.Add(rayHit.collider.gameObject);
+                }                
                 thePlayer.gameObject.GetComponent<PlayerAttackController>().setAttackTargets(toRet);
             }
 
