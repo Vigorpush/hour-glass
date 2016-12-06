@@ -120,6 +120,7 @@ public class ComboController : MonoBehaviour {
     private bool perfectWindow;
 
     void Start () {
+
         perfectWindow = false;
         buttonMash = 0;
         spellName = "";
@@ -148,7 +149,7 @@ public class ComboController : MonoBehaviour {
         showHelpText = false;
     }
 
-    void FixedUpdate () {
+    void Update () {
         if (!pauseHourglass)    //This is to pause for fancy animations during combat
         {
             timerWindow -= Time.deltaTime;  //this is the input timer for combo buttons

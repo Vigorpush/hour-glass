@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour {
     public bool exploreMode;
     public GameObject cam;  //the main camera
 
+    private ComboController comboController;
+
     //For UI building on turn
     public GameObject abil1UI;
     public GameObject abil2UI;
@@ -35,8 +37,10 @@ public class PlayerMovement : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {	
-		Invoke("initializeController",1f); //allows player time to teleport to start
+    void Start () {
+        comboController = this.gameObject.GetComponent<ComboController>();
+        comboController.enabled = false;
+        Invoke("initializeController",1f); //allows player time to teleport to start
         
         cam = GameObject.FindGameObjectWithTag("MainCamera");
         attackController = this.gameObject.GetComponent<PlayerAttackController>();
@@ -158,8 +162,9 @@ public class PlayerMovement : MonoBehaviour {
 		if(endTurnBuffer){
            // Debug.Log("I was told to end turn!");
 		    isTurn = false;
-		    //Debug.Log("endingturn");
-		    if (turnManager != null) {
+            comboController.enabled = false;
+            //Debug.Log("endingturn");
+            if (turnManager != null) {
 			    endTurnBuffer = false;
              attackController.allowAttack = false;
             // this.gameObject.GetComponent<BasicRayAttack>().clearTarget();
@@ -175,7 +180,7 @@ public class PlayerMovement : MonoBehaviour {
 	//Starts turn which allows movement and attack controls
 	void StartTurn(){
         //inputInstruction.text = "";
-
+        comboController.enabled = true;
         UIportrait.GetComponent<Image>().overrideSprite = myPortrait;
 
         abilityIcons = attackController.getMyAbilityIcons();
