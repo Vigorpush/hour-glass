@@ -60,7 +60,7 @@ public class CameraFollow : MonoBehaviour
 
     public void StartHere(int xIn, int yIn)
     {
-        this.gameObject.transform.position = new Vector3(xIn,yIn,0);
+        this.gameObject.transform.position = new Vector3(xIn,yIn,-1);
     }
 
     public void UnsetCombatZoom()
