@@ -301,6 +301,7 @@ public class TurnManager : MonoBehaviour
         bool firstPlayerInList = true;
         foreach (GameObject player in players)
         {
+            player.SendMessage("resetBuffs");
             Debug.Log("Selecting "+player.gameObject.name + " to think about exploring");
             if (firstPlayerInList && player.activeSelf)
             {

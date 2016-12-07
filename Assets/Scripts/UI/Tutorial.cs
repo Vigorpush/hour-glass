@@ -30,8 +30,8 @@ public class Tutorial : MonoBehaviour {
         string eight = "While exploring the dungeon, entering rooms or triggering traps will begin an encounter.";
         string nine = "During an encounter, the party and enemies take turns acting, based on their initiative.";
         string ten = "During enemy turns the hourglass does not tick down, but during party member turns it does!";
-        string eleven = "The Fighter possesses 2 abilities, [1] is a devastating single target attack, and [2] is"+
-            " a whirlwind that attacks all adjacent enemies.";
+        string eleven = "The Fighter possesses 3 abilities, [1] is a devastating single target attack, [2] is"+
+            " a whirlwind that attacks all adjacent enemies and [3] is an Enrage, which increases damage but costs health.";
         string twelve = "The Mage possesses [1] a single target fireball [2] a wide area "+
            "lightning storm, and [3] a room-wide AOE.";
         string thirteen = "The Ranger possesses [1] a single target ranged attack, and [2] is an area of affect" +

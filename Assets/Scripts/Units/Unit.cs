@@ -15,6 +15,9 @@ public class Unit : MonoBehaviour {
 	public string Name;//{ get; set; }
 	public int curhp;//{ get; set; }
     private bool dying;
+    public int tempAttackMod;
+    public int tempDefenseMod;
+    public int tempHPMod;
 
 	public Weapon weap;//{ get; set; }
 	public Armour armr;//{ get; set; }
@@ -22,6 +25,7 @@ public class Unit : MonoBehaviour {
     public GameObject theTurnManager;
     public GameObject CBTprefab;
     public GameObject HealFXPrefab;
+    public GameObject BuffFXPrefab;
     private Collider2D col;
 
     public Animator anim;
@@ -39,6 +43,9 @@ public class Unit : MonoBehaviour {
 	}
     void Start()
     {
+        tempAttackMod = 0;
+        tempDefenseMod = 0;
+        tempHPMod = 0;
         transformForText = this.gameObject.transform;
         theMainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         critShaker = theMainCamera.GetComponent<CameraShake>();
@@ -101,7 +108,7 @@ public class Unit : MonoBehaviour {
 
     public int getattack()
     {
-        return attack;
+        return attack+tempAttackMod;
     }
     public string getName()
     {
@@ -111,7 +118,7 @@ public class Unit : MonoBehaviour {
 
     public int getcurhp()
     {
-        return curhp;
+        return curhp+tempHPMod;
     }
 
     public int getDamageMin()
@@ -124,7 +131,7 @@ public class Unit : MonoBehaviour {
     }
     public int getArmour()
     {
-        return armr.armour;
+        return armr.armour+tempDefenseMod;
     }
 
     //End of Getter methods
@@ -170,6 +177,27 @@ public class Unit : MonoBehaviour {
     {
         anim.SetBool("isATarget", false);
     }
+
+    public void resetBuffs()
+    {
+        tempAttackMod = 0;
+        tempDefenseMod = 0;
+        tempHPMod = 0;
+    }
+
+    public void Buff(string stat)
+    {
+        switch (stat)
+        {
+            case "Attack": tempAttackMod = attack * 2;
+                InitBuffCBT("ATK UP");
+                break;
+            case "Defense": break;
+            case "HP": break;
+        }
+    }
+
+
 
     public int CalculateDamageReduction(int preMitigatedDamage) {
       //  Debug.Log("-----------------------------------------------------------preMitigatedDamage = "+ preMitigatedDamage);
@@ -226,14 +254,6 @@ public class Unit : MonoBehaviour {
 		
 
     }
-
-   /* public void DoDamage()
-    {
-        //need a way to dynamically target a GameObject, currently manually assigned
-        targ.SendMessage("takeDamage", weap.getDamage() + getattack());//testing gameobject for damage
-
-     }
-    */
 
     public void disableCollider()
     {
@@ -370,6 +390,29 @@ public class Unit : MonoBehaviour {
         temp.GetComponent<Text>().fontSize += 5;
         temp.GetComponent<Text>().color = Color.cyan;
         temp.GetComponent<Text>().text = textIn;
+        Destroy(temp.gameObject, 2);
+    }
+
+    public void InitBuffCBT(string StatText)
+    {
+        GameObject buffFX = Instantiate(BuffFXPrefab) as GameObject;
+        RectTransform tempRect = buffFX.GetComponent<RectTransform>();
+        tempRect.transform.SetParent(transform.FindChild("EnemyCanvas"));
+        tempRect.transform.localPosition = CBTprefab.transform.localPosition;
+        tempRect.transform.localScale = new Vector3(0.6f, 1, 1);
+        //Destroy(healFX,3);
+
+        GameObject temp = Instantiate(CBTprefab) as GameObject;
+        temp.GetComponent<Animator>().SetTrigger("Hit");
+        tempRect = temp.GetComponent<RectTransform>();
+        tempRect.transform.SetParent(transform.FindChild("EnemyCanvas"));
+        tempRect.transform.localPosition = CBTprefab.transform.localPosition;
+        tempRect.transform.localScale = CBTprefab.transform.localScale;
+
+        temp.transform.rotation = Quaternion.identity;
+        temp.GetComponent<Text>().fontSize += 5;
+        temp.GetComponent<Text>().color = Color.green;
+        temp.GetComponent<Text>().text = StatText;
         Destroy(temp.gameObject, 2);
     }
 

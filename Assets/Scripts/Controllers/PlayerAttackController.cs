@@ -34,6 +34,7 @@ public class PlayerAttackController : MonoBehaviour {
     public GameObject MageMissileBarragePrefab;
     public GameObject MultishotPrefab;
     public GameObject WhirlwindPrefab;
+    public GameObject EnragePrefab;
 
     //Ability icons
     public Sprite meleeIcon;
@@ -44,7 +45,9 @@ public class PlayerAttackController : MonoBehaviour {
     public Sprite MissileStormIcon;
     public Sprite MultishotIcon;
     public Sprite whirlwindIcon;
+    public Sprite enrageIcon;
     public Sprite noAbilityIcon;
+    
 
     public Sprite[] myAbilityIcons;
 
@@ -105,6 +108,15 @@ public class PlayerAttackController : MonoBehaviour {
             theTarget.GetComponent<Unit>().Heal(healAmount);
             Invoke("endTurnWithBuffer", 1f);
         }
+    }
+
+    public void setBuffTarget(GameObject theTarget, string stat)
+    {
+        unitSounds[3].Play();
+        enableAfterBuffer();
+        inputActivated = true;
+        SendMessage("AllowMovement");
+        theTarget.GetComponent<Unit>().Buff(stat);
     }
 
     private void endTurnWithBuffer()
@@ -221,6 +233,13 @@ public class PlayerAttackController : MonoBehaviour {
                         tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
                         emptySlots[i] = true;
                         myAbilityIcons[i] = whirlwindIcon;
+                        toRet.Add(tempAbil.GetComponent<AttackTemplate>());
+                        break;
+                    case "EnrageKey":
+                        tempAbil = Instantiate(EnragePrefab) as GameObject;
+                        tempAbil.GetComponent<AttackTemplate>().informOfParent(gameObject);
+                        emptySlots[i] = true;
+                        myAbilityIcons[i] = enrageIcon;
                         toRet.Add(tempAbil.GetComponent<AttackTemplate>());
                         break;
 
