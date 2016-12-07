@@ -56,8 +56,11 @@ public class LightningBehavior : AttackTemplate
             {
                 foreach (GameObject tar in enemiesInRange)
                 {
-                    tar.SendMessage("Untargetted");
-                    toRet.Add(tar);
+                    if (!tar.GetComponent<Unit>().getDying())
+                    {
+                        tar.SendMessage("Untargetted");
+                        toRet.Add(tar);
+                    }     
                 }
                 LightningTargetLock = true;
                 thePlayer.GetComponent<PlayerAttackController>().setAttackTargets(toRet);
