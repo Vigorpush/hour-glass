@@ -18,15 +18,13 @@ public class VoidEaterAI : ZombieAI {
 
 	new void FixedUpdate()
 	{   
-		
-
 		//   root.Search(root);
 		//Debug.Log ("Movvement cd : " +movementCooldown.ToString());
-		Debug.Log ("Void eater move target : " +moveTarget.ToString());
+		//Debug.Log ("Void eater move target : " +moveTarget.ToString());
 		//  Debug.Log(this.gameObject.name + " I have this many moves left: " + movesLeft);
 		//Debug.Log(desiredCoord.ToString());
 		if(isStillTurn && !base.movementCooldown){
-			Debug.Log ("I want to go to " + desiredCoord.ToString ());
+			//Debug.Log ("I want to go to " + desiredCoord.ToString ());
 			//Debug.Log ("I am at: " + myTf.position);
 			myTf.position = Vector2.MoveTowards(myTf.position, desiredCoord, Time.fixedDeltaTime * speed);
 
@@ -57,13 +55,13 @@ public class VoidEaterAI : ZombieAI {
 	}
 
 	protected void Suicide(){
-		Debug.Log ("Killing myself for a greater cause.");
+		//Debug.Log ("Killing myself for a greater cause.");
 		isStillTurn = false;
 		myStats.takeDamage (int.MaxValue, this.gameObject);
+        base.EndMyTurn();
 
 
-
-	}
+    }
 	new protected void DecideMoveTarget (){
 		moveTarget = attackTarget.transform.position;
 

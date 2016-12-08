@@ -494,7 +494,7 @@ public class ZombieAI : MonoBehaviour {
         foreach (GameObject p in players) {
 			if (p.activeSelf && p.GetComponent<HeroUnit>().curhp > 0 ) { 
             float dist = Vector2.Distance(desiredCoord, p.transform.position);
-            Debug.Log("Distance between me and cur player: " + dist);
+           // Debug.Log("Distance between me and cur player: " + dist);
             if (dist < closestDist) {
                 closestDist = dist;
                 closest = p;
@@ -527,7 +527,7 @@ public class ZombieAI : MonoBehaviour {
 			//			return;
 			//		}
 			if (Vector2.Distance (myTf.position, attackTarget.transform.position) < 1.1f) {
-				Debug.Log ("My target is adjacent to me!");
+				//Debug.Log ("My target is adjacent to me!");
 				return true;
 			}
 			return false;
@@ -674,7 +674,7 @@ public class ZombieAI : MonoBehaviour {
 		//if no closes
 		if (attackTarget == null) {
 			attackTarget = (GameObject)players [Random.Range (0, 2)];
-			Debug.Log ("-----------------------Choosing a random target");
+			//Debug.Log ("-----------------------Choosing a random target");
 		}
 
 

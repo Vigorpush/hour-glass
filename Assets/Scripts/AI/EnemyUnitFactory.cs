@@ -5,7 +5,7 @@ using System;
 
 public class EnemyUnitFactory : MonoBehaviour
 {
-    public int AMT = 1;
+    public int AMT = 2;
     protected static EnemyUnitFactory instance;
 
     public GameObject ZombiePrefab;
@@ -25,35 +25,74 @@ public class EnemyUnitFactory : MonoBehaviour
         this.transform.position = new Vector3(xIn,yIn, 0);
 
         //Debug.Log("Spawner moving to :"+ xIn + ", " + yIn);
-		if (UnityEngine.Random.Range (0f, 1f) > .5f) {
-			//PlaceSomeZombies ();
-			oneVoid ();
+		if (UnityEngine.Random.Range (0f, 1f) > 0.3f) {     //70% chance of normal encounter
+			PlaceSomeZombies ();
 		} else {
-			oneVoid ();
+            hardEncounter();
+
 		}
 			
     }
 
+    private void hardEncounter()
+    {
+        Debug.Log("Hard Encounter");
+        AMT = 8;
+        for (int i = 0; i < AMT; i++)
+        {
+            Vector3 hardChange = new Vector3(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2), 0);
+            this.transform.position += hardChange;
+
+            // Debug.Log("Position on loop "+ i + " location is " + this.transform.position);
+            float rand = UnityEngine.Random.Range(0f, 1f);
+            if (rand < .1f)
+            {
+                CreateZombie();
+                
+
+            }
+            else if( rand < .3f)
+            {
+
+                PlaceTanker();
+            }
+            else if (rand < .7f)
+            {
+                CreateVoidEater();
+                
+
+            }
+
+            //Invoke("CreateZombie",0.1f);
+        }
+
+    }
     private void PlaceSomeZombies()
     {
+        AMT = 4 + (UnityEngine.Random.Range(-2,2));
         for(int i =0;i<AMT;i++){
             Vector3 change = new Vector3(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2), 0);
             this.transform.position += change;
 
            // Debug.Log("Position on loop "+ i + " location is " + this.transform.position);
-			if (UnityEngine.Random.Range (0f, 1f) > .5f) {
+			if (UnityEngine.Random.Range (0f, 1f) > .3f) {
 				CreateZombie ();
-				CreateVoidEater ();
+				
 
 			} else {
 				
 				PlaceTanker ();
 			}
+
             
             //Invoke("CreateZombie",0.1f);
         }
+        Vector3 change3 = new Vector3(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2), 0);
+        this.transform.position += change3;
+        CreateVoidEater();
     //Debug.Log("ding done");
     }
+
 	private void oneVoid(){
 		CreateVoidEater ();
 	}

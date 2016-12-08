@@ -56,7 +56,7 @@ public class BasicHeal : AttackTemplate
                 // Debug.Log("Mage ray targetting: " + rayHit.collider.gameObject.name);
                 // cam.GetComponent<CameraFollow>().UnsetTargettingCam();
                // toRet.Add(rayHit.collider.gameObject);
-                thePlayer.gameObject.GetComponent<PlayerAttackController>().setHealTarget(theSelectedTarget,damageSteps[0]);
+                thePlayer.gameObject.GetComponent<PlayerAttackController>().setHealTarget(theSelectedTarget,damageSteps[0]*2);
             }
 
             if (Input.GetKeyDown(KeyCode.Tab))
