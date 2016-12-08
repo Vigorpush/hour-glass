@@ -314,11 +314,11 @@ public class TurnManager : MonoBehaviour
 		for (int i = 0; i < 3; i++) {
 
 			UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc + new Vector2(i,-i), Quaternion.identity);
-            /*
+            /* 
 			UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc + new Vector2(-i,-i), Quaternion.identity);
 			UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc + new Vector2(i,i), Quaternion.identity);
 			UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc + new Vector2(-i,i), Quaternion.identity);
-             * */
+             */
 		}
 
 	}
