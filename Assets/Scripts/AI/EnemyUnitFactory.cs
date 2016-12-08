@@ -5,12 +5,14 @@ using System;
 
 public class EnemyUnitFactory : MonoBehaviour
 {
-    public int AMT = 5;
+    public int AMT = 1;
     protected static EnemyUnitFactory instance;
 
     public GameObject ZombiePrefab;
+	public GameObject TankyGhostPrefab;
     public GameObject GoblinPrefab;
     public GameObject SkeletonPrefab;
+	public GameObject VoidEaterPrefab;
 
     // Use this for initialization
     void Start()
@@ -23,7 +25,13 @@ public class EnemyUnitFactory : MonoBehaviour
         this.transform.position = new Vector3(xIn,yIn, 0);
 
         //Debug.Log("Spawner moving to :"+ xIn + ", " + yIn);
-        PlaceSomeZombies();
+		if (UnityEngine.Random.Range (0f, 1f) > .5f) {
+			//PlaceSomeZombies ();
+			oneVoid ();
+		} else {
+			oneVoid ();
+		}
+			
     }
 
     private void PlaceSomeZombies()
@@ -33,12 +41,31 @@ public class EnemyUnitFactory : MonoBehaviour
             this.transform.position += change;
 
            // Debug.Log("Position on loop "+ i + " location is " + this.transform.position);
+			if (UnityEngine.Random.Range (0f, 1f) > .5f) {
+				CreateZombie ();
+				CreateVoidEater ();
 
-            CreateZombie();
+			} else {
+				
+				PlaceTanker ();
+			}
+            
             //Invoke("CreateZombie",0.1f);
         }
     //Debug.Log("ding done");
     }
+	private void oneVoid(){
+		CreateVoidEater ();
+	}
+	public GameObject CreateVoidEater()
+	{
+		GameObject zombie = (GameObject)UnityEngine.Object.Instantiate(instance.VoidEaterPrefab, this.transform.position, Quaternion.identity);
+		return zombie;
+	}
+	private GameObject PlaceTanker(){
+		GameObject TankyGhost = (GameObject)UnityEngine.Object.Instantiate(instance.TankyGhostPrefab, this.transform.position, Quaternion.identity);
+		return TankyGhost;
+	}
 
 
     public GameObject CreateZombie()

@@ -9,6 +9,7 @@ public class TurnManager : MonoBehaviour
 {
     //The main Camera!
     GameObject cam;
+    public GameObject theVictoryPanel;
     public GameObject[] units;
     public GameObject theExplorer;
     GameObject theMaestro;
@@ -17,7 +18,7 @@ public class TurnManager : MonoBehaviour
     private Vector2 lootSpawnLoc;
     public GameObject theHourglass;
     private TheHourglass hourglassControls;
-
+	public float rareLootChance = 0.01f;
     //Holds the pairs
     [System.Serializable]
 	public class UnitInitiativeP : IComparable
@@ -172,19 +173,21 @@ public class TurnManager : MonoBehaviour
     int numTurns = 0;
 	public void AIDisableThenCalcTurn(){
       //  Debug.Log("Msg");
-
-		if (currentUnit.GetComponent<ZombieAI> () != null) {
+		if (currentUnit != null) {
+			if (currentUnit.GetComponent<ZombieAI> () != null) {
 			
-			currentUnit.GetComponent<ZombieAI> ().enabled = false;
+				currentUnit.GetComponent<ZombieAI> ().enabled = false;
+			}
+			CalculateTurn();
 		}
 		//Invoke("CalculateTurn",.5f);
-        CalculateTurn();
+        
 	}
 	public void CalculateTurn ()
 	{
+        
         if (!CheckCombatOver())
         {
-
 
             //TODO needs to tell current player to end turn, and next player to make turn.  Curren't doesn't end turn for active player when button pressed
             currentInitiatives.Sort();
@@ -244,10 +247,11 @@ public class TurnManager : MonoBehaviour
             currentUnit.GetComponent<ZombieAI>().enabled = true;
 
         }
-        else
+        else  //current unit is a player
         {
             if (!isCombatEnded()) {
              hourglassControls.resume();
+             hourglassControls.SendMessage("PlayerTurnStart");
             currentUnit.SendMessage("StartTurn");
         }
 
@@ -267,7 +271,6 @@ public class TurnManager : MonoBehaviour
    public bool CheckCombatOver()
    {
         bool atleastOneEnemyAlive=false;
-       
         foreach(UnitInitiativeP curPair in currentInitiatives)
         {
             if (curPair.u.tag.Equals("Baddy"))
@@ -281,8 +284,13 @@ public class TurnManager : MonoBehaviour
         {
             combatIsEnded = true;
             Debug.Log("==== End of Encounter ====");
-            UnityEngine.Object.Instantiate(lootPrefab, lootSpawnLoc, Quaternion.identity);
-            Invoke("enterExplorationMode",1f);  //give combat a second to resolve
+			if (UnityEngine.Random.Range (0f, 1f) <= rareLootChance) {
+				UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc, Quaternion.identity);
+			} else {
+               // UnityEngine.Object.Instantiate(lootPrefab, lootSpawnLoc, Quaternion.identity);
+                spawnLootExplosion ();
+			}
+            Invoke("enterExplorationMode",3f);  //give combat a moment to resolve
             theMaestro.SendMessage("EndCombat");
             foreach(GameObject enemyToClear in units)
             {
@@ -294,6 +302,26 @@ public class TurnManager : MonoBehaviour
         return false; //should not happen
    }
 
+    public void FloorCleared()
+    {
+        theVictoryPanel.SetActive(true);
+        theMaestro.SendMessage("FloorCleared");
+    }
+
+
+
+	public void spawnLootExplosion(){
+		for (int i = 0; i < 3; i++) {
+
+			UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc + new Vector2(i,-i), Quaternion.identity);
+            /*
+			UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc + new Vector2(-i,-i), Quaternion.identity);
+			UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc + new Vector2(i,i), Quaternion.identity);
+			UnityEngine.Object.Instantiate (lootPrefab, lootSpawnLoc + new Vector2(-i,i), Quaternion.identity);
+             * */
+		}
+
+	}
     //Need to decide on one player as main, other 2 to collapse
     private void enterExplorationMode()
     {
@@ -322,6 +350,7 @@ public class TurnManager : MonoBehaviour
     //Fan out players along the Y axis
     public void Begin(int spawnerX,int spawnerY, Vector2 buddy1, Vector2 buddy2)
     {
+        
         hourglassControls.pause();
         //GET ENCOUNTER FROM ROOMBUILDER
         GetAllPlayers();

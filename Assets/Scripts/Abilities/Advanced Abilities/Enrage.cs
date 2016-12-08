@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 public class Enrage : AttackTemplate {
 
-    private Transform startTransform;
-    // private GameObject[] enemiesInRange;
-    private GameObject theSelectedTarget;
-    private HeroUnit myHero;
-   // private List<KeyCode> theCombo;
-    private bool cycleTargetLock;
-    private int sizeOfTargetArray;
-    private int currentSelectedIndex;
-    private GameObject thePlayer;
+    protected Transform startTransform;
+    // protected GameObject[] enemiesInRange;
+    protected GameObject theSelectedTarget;
+    protected HeroUnit myHero;
+   // protected List<KeyCode> theCombo;
+    protected bool cycleTargetLock;
+    protected int sizeOfTargetArray;
+    protected int currentSelectedIndex;
+    protected GameObject thePlayer;
     public AudioSource tarSound;
     public GameObject theMaestro;
 

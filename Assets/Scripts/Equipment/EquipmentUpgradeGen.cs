@@ -66,15 +66,15 @@ public class EquipmentUpgradeGen : MonoBehaviour {
         {
             case 1:
                 heroToUpgrade = GameObject.FindGameObjectWithTag("Player1").GetComponent<HeroUnit>();
-               // Debug.Log("Upgrading Fighter");
+               Debug.Log("Upgrading Fighter");
                 break;
             case 2:
                 heroToUpgrade = GameObject.FindGameObjectWithTag("Player2").GetComponent<HeroUnit>();
-                // Debug.Log("Upgrading Caster");
+                 Debug.Log("Upgrading Caster");
                 break;
             case 3:
                 heroToUpgrade = GameObject.FindGameObjectWithTag("Player3").GetComponent<HeroUnit>();
-                // Debug.Log("Upgrading Archer");
+                 Debug.Log("Upgrading Archer");
                 break;
         }
 

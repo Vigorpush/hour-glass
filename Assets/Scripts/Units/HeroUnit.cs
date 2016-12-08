@@ -3,7 +3,7 @@ using System.Collections;
 
 public class HeroUnit :  Unit, IButtonMap  {
 
-    private TurnManager turnScript;
+    protected TurnManager turnScript;
     /**
      * The players experience
      */
@@ -76,13 +76,13 @@ public class HeroUnit :  Unit, IButtonMap  {
 
 
     // @override
-    private void Die(){
+    protected void Die(){
         turnScript.removeFromInitiativeQueue(this.gameObject);
         Debug.Log("A hero unit has died");
         Invoke("ActuallyDie",1.5f);
     }
 
-    private void ActuallyDie()
+    protected void ActuallyDie()
     {  
         this.gameObject.SetActive(false);
     }

@@ -24,7 +24,7 @@ public class turnhourglass : MonoBehaviour {
 	GameObject timeleftObejct;
 	Text timeleft;
 
-    //private Transform glass;
+    //protected Transform glass;
 
 	bool turnisover;//check the current turn is over
 

@@ -191,14 +191,14 @@ public class FearMap
 
 
 	//Returns the number of times the inner loop for,adding sources, will run.
-	private int jLoopCount (int r, int i)
+	protected int jLoopCount (int r, int i)
 	{
 		//return 2 + 2 * r - Math.Abs (r - (2 * i - 3 - r) - 1);
 		return 2 + 2 * r - Math.Abs (r - (2 * i  - r)+2);
 
 	}
 	//Returns the number of times the outer loop for,adding sources, will run.
-	private int iLoopCount (int r)
+	protected int iLoopCount (int r)
 	{
 		return r * 2 + 2;
 

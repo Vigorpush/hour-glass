@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [System.Serializable]
 public class PlayerAttackController : MonoBehaviour {
 
-    private const int NUMBER_OF_ABILITIES = 4;
+    protected const int NUMBER_OF_ABILITIES = 4;
 
     public bool[] emptySlots = new bool[NUMBER_OF_ABILITIES];
 
@@ -19,7 +19,7 @@ public class PlayerAttackController : MonoBehaviour {
     public List<GameObject> thisAttackTargets;
     public List<KeyCode> theInputButtons;
     public int[] damageValues;
-    private bool inputActivated;
+    protected bool inputActivated;
     public bool abilityIsASpell;
     public bool rangerAbility;
     public GameObject cam;
@@ -55,13 +55,13 @@ public class PlayerAttackController : MonoBehaviour {
     public Text inputInstruction;
 
     //bools to determine what buttons can be pressed on interface
-    private bool baseButtons;
-    private bool hasBaseAttack;
+    protected bool baseButtons;
+    protected bool hasBaseAttack;
 
-    private string spellName;
+    protected string spellName;
 
     public AudioSource abilitySound;
-    private AudioSource[] unitSounds;
+    protected AudioSource[] unitSounds;
 
     public void setAttackTargets(List<GameObject> listIn)
     {
@@ -119,7 +119,7 @@ public class PlayerAttackController : MonoBehaviour {
         theTarget.GetComponent<Unit>().Buff(stat);
     }
 
-    private void endTurnWithBuffer()
+    protected void endTurnWithBuffer()
     {
         this.gameObject.GetComponent<PlayerMovement>().EndTurn();
     }

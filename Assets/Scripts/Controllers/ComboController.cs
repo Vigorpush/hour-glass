@@ -26,19 +26,19 @@ public class ComboController : MonoBehaviour {
     public int totalStepsForCombo;
 
     //the list of correct buttons in order
-    private List<KeyCode> theInputButtons;
+    protected List<KeyCode> theInputButtons;
 
     //the current correct button
     public KeyCode validInputButton;
 
     //the controller that invoked the combo
-    private PlayerAttackController attackController;
+    protected PlayerAttackController attackController;
 
     //Targets that will be hit as combo stepped through
     List<GameObject> thisAttackTargets;
 
     //The player animator, to trigger frames in the combo
-    private Animator anim;
+    protected Animator anim;
 
     //If the target dies mid combo, we should stop 
     //hitting it, flag this bool
@@ -49,34 +49,34 @@ public class ComboController : MonoBehaviour {
     public bool discreteInputWindow;
 
     //The camera, used for zoom in/out and targetting effects
-    private GameObject cam;
+    protected GameObject cam;
 
     //Is the ability a spell
     bool playSpellAnimation;
 
     //Is the ability a ranged attack
-    private bool rangedAbilityFlag;
+    protected bool rangedAbilityFlag;
 
     //The current target
-    private GameObject tar;
+    protected GameObject tar;
 
     //Catch special case of no correct input at all
-    private bool castFirstFail;
+    protected bool castFirstFail;
 
     //The spell damage to accumulate
-    private int spellDamageToDeal;
+    protected int spellDamageToDeal;
 
     //The damage at step 1/3
-    private int step1Damage;  
+    protected int step1Damage;  
 
     //The damage at step 2/3
-    private int step2Damage; 
+    protected int step2Damage; 
 
     //The damage at step 3/3
-    private  int step3Damage;
+    protected  int step3Damage;
 
     //Special damage scaler
-    private int attackDamage;
+    protected int attackDamage;
    
     //Sounds to play at each step in hit
     public AudioSource[] hitSounds;
@@ -100,12 +100,12 @@ public class ComboController : MonoBehaviour {
     public Text floatingCombatText;
 
     public GameObject InputUIPrefab;
-    private GameObject theFloatingInputText;
-    private Animator inputAnim;
+    protected GameObject theFloatingInputText;
+    protected Animator inputAnim;
 
     public GameObject aggressor;
 
-    private int buttonMash;
+    protected int buttonMash;
 
     public GameObject MageFX1;
     public GameObject MageFX2;
@@ -115,10 +115,10 @@ public class ComboController : MonoBehaviour {
     public float totalStepWindow;
     public float flubWindow;
 
-    private bool perfectWindow;
+    protected bool perfectWindow;
 
     public GameObject theHourglass;
-    private TheHourglass hourglassControls;
+    protected TheHourglass hourglassControls;
 
     void Start () {
         theHourglass = GameObject.FindGameObjectWithTag("OfficialHourGlass");
@@ -246,7 +246,7 @@ public class ComboController : MonoBehaviour {
                     {
                     //     Debug.Log("Input Window Open!" + timerWindow);
                                                              //UI STUFF shows window gradient
-                        if (timerWindow < (totalStepWindow / 2) + 0.2f && timerWindow > (totalStepWindow / 2) - 0.2f && !perfectWindow)
+                        if (timerWindow < (totalStepWindow / 2) + 0.1f && timerWindow > (totalStepWindow / 2) - 0.1f && !perfectWindow)
                         {
                             perfectWindow = true;
                             Debug.Log("Perfect window");
@@ -305,7 +305,7 @@ public class ComboController : MonoBehaviour {
         
 	}
 
-    private void updateTimer()
+    protected void updateTimer()
     {
         if (System.Math.Round(timerWindow, 2) > 2)
         {
@@ -327,7 +327,7 @@ public class ComboController : MonoBehaviour {
 
 
     //Crit chance deprecated, now a function of player precision
-  /*  private bool rollCritChance()
+  /*  protected bool rollCritChance()
     {
         int chance = Random.Range(0, 11);
         if (chance > CRIT_THRESHOLD)
@@ -343,7 +343,7 @@ public class ComboController : MonoBehaviour {
 
 
 
-    private void AttackTarget()
+    protected void AttackTarget()
     {
        // bool criticalHit = false;
         //For each target when attack queued up
@@ -542,8 +542,8 @@ public class ComboController : MonoBehaviour {
             step3Damage = damageSteps[2];
 
 
-            float flubWin = 0.2f;
-            float fakeDuration  =2f;
+            float flubWin = 0.1f;
+            float fakeDuration  =1f;
             float fakeMinDmgScaler = 0.7f;
             float fakeMaxDmgScaler = 2f;
 
@@ -598,7 +598,7 @@ public class ComboController : MonoBehaviour {
     }
 
 
-    private int getDamageAtTime(float timeButtonPressed,int baseDamage){
+    protected int getDamageAtTime(float timeButtonPressed,int baseDamage){
         float middle = totalStepWindow/2f;
         float min = flubWindow;
         float max = timerWindow - flubWindow;
@@ -674,7 +674,7 @@ public class ComboController : MonoBehaviour {
         }
     }
 
-    private void InitInputText(string textIn)
+    protected void InitInputText(string textIn)
     {
         theFloatingInputText = Instantiate(InputUIPrefab) as GameObject;
         inputAnim = theFloatingInputText.GetComponent<Animator>();
@@ -693,7 +693,7 @@ public class ComboController : MonoBehaviour {
 
 
 
-    private int splitDamageBetweenTargets()
+    protected int splitDamageBetweenTargets()
     {
 		if (thisAttackTargets.Count==0) {
 			return spellDamageToDeal;

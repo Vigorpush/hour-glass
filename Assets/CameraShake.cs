@@ -2,10 +2,10 @@
 using System.Collections;
 public class CameraShake : MonoBehaviour {
 public bool Shaking;
-private float ShakeDecay;
-private float ShakeIntensity;
-private Vector3 OriginalPos;
-private Quaternion OriginalRot;
+protected float ShakeDecay;
+protected float ShakeIntensity;
+protected Vector3 OriginalPos;
+protected Quaternion OriginalRot;
 void Start()
 {
         OriginalRot = transform.rotation;

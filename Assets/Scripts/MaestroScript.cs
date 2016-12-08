@@ -9,6 +9,7 @@ public class MaestroScript : MonoBehaviour {
     private AudioSource battleMusic;
     private AudioSource doorOpen;
     private AudioSource combatOver;
+    private AudioSource levelComplete;
 
     private bool Combat;
     private bool Explore;
@@ -24,6 +25,7 @@ public class MaestroScript : MonoBehaviour {
         exploreMusic = theSoundtrack[2];
         doorOpen = theSoundtrack[3];
         combatOver = theSoundtrack[4];
+        levelComplete = theSoundtrack[5];
         Combat = false;
         Explore = true;
         exploreMusic.Play();
@@ -63,6 +65,11 @@ public class MaestroScript : MonoBehaviour {
     private void StopExploreMusic()
     {
         exploreMusic.Stop();
+    }
+
+    public void FloorCleared()
+    {
+        levelComplete.Play();
     }
 
     public void BeginCombat()

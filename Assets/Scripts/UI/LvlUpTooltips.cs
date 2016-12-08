@@ -22,15 +22,15 @@ public class LvlUpTooltips : MonoBehaviour {
 
     public Text stats;
 
-    private HeroUnit heroSheet;
+    protected HeroUnit heroSheet;
 
-    private int hpToAdd;
-    private int attackToAdd;
-    private int speedToAdd;
+    protected int hpToAdd;
+    protected int attackToAdd;
+    protected int speedToAdd;
 
-    private string improvedStatAttack;
-    private string improvedStatDefense;
-    private string improvedStatSpeed;
+    protected string improvedStatAttack;
+    protected string improvedStatDefense;
+    protected string improvedStatSpeed;
 
 
 	// Use this for initialization
@@ -52,7 +52,7 @@ public class LvlUpTooltips : MonoBehaviour {
         updateText();
 	}
 
-    private void updateText()
+    protected void updateText()
     {
         stats.text = "Max Hp : " + heroSheet.getmaxhp() + " -> " +
             "\nAttack : " + heroSheet.getattack() + " -> " +

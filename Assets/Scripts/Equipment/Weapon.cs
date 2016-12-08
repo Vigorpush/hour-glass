@@ -7,7 +7,7 @@ public class Weapon : Equipment {
     public int damageMin;
     public int damageMax;
 
-   // private Unit myUnit;
+   // protected Unit myUnit;
 
 
     public void upgradeDamageByAmount(int amount){

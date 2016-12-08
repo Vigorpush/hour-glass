@@ -29,9 +29,9 @@ public class Tile : MonoBehaviour {
         ;//Does nothing
     }
 
-	private ArrayList adj;
+	protected ArrayList adj;
 
-	private bool occupied;
+	protected bool occupied;
 
 	void Start(){
 		

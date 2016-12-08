@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class stat_enermy : MonoBehaviour {
-	private GameObject enermystatPanel;//accessing the Game object of the panel
+	protected GameObject enermystatPanel;//accessing the Game object of the panel
 	void Start(){
 		enermystatPanel = GameObject.FindGameObjectWithTag("enermystat");
 		enermystatPanel.gameObject.SetActive(false);

@@ -5,7 +5,7 @@ public class FearSource : MonoBehaviour{
 	public int radius{get; set;}
 	public int strength{ get; set;}
    // public int defaultRange();
-    private HeroUnit reference; 
+    protected HeroUnit reference; 
 	// Use this for initialization
     /*
 	public FearSource(int rad, int str){

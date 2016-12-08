@@ -83,9 +83,7 @@ public class RoomBuilderAI : MonoBehaviour {
 
 	bool modRoll(){
 		return MOD_ROLL_CHANCE > Random.Range (0f, 1f);
-
-
-
+	
 	}
 	float calculateBudget(){
 		float depthCredits = dungeonDepth * depthFactor;
@@ -148,7 +146,7 @@ public class RoomBuilderAI : MonoBehaviour {
 		}
 		Debug.Log ("Can't afford unit.");
 	}
-	private bool canPurchaseUnit(EnemyUnit chosen){
+	protected bool canPurchaseUnit(EnemyUnit chosen){
 
 		return curCredits > cTable.lookUp (chosen.name);
 	}
@@ -333,7 +331,7 @@ public class RoomBuilderAI : MonoBehaviour {
 
 
 	}
-	private void rollEncounterType(){
+	protected void rollEncounterType(){
 		
 
 		//currentEncounterType = (encounterType)UnityEngine.Random.Range (1, NUM_ENCOUNTER_TYPES);

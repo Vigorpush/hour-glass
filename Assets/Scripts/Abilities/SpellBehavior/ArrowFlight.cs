@@ -3,17 +3,17 @@ using System.Collections;
 
 public class ArrowFlight : MonoBehaviour {
 
-    private float ARROW_VELOCITY=1.5f;
-    private GameObject theTarget;
-    private GameObject cam;
-    private bool enableProjectile;
-    private SpriteRenderer sprite;
-   // private Animator anim;
-    private bool impactingTarget;
-    // private Rigidbody2D rb;
-    private int damageToDeal;
-    private GameObject theCaster;
-    private bool crit;
+    protected float ARROW_VELOCITY=1.5f;
+    protected GameObject theTarget;
+    protected GameObject cam;
+    protected bool enableProjectile;
+    protected SpriteRenderer sprite;
+   // protected Animator anim;
+    protected bool impactingTarget;
+    // protected Rigidbody2D rb;
+    protected int damageToDeal;
+    protected GameObject theCaster;
+    protected bool crit;
 
 	// Use this for initialization
 	void Start () {
@@ -85,7 +85,7 @@ public class ArrowFlight : MonoBehaviour {
         }
 	}
 
-    private void hit()
+    protected void hit()
     {
         impactingTarget = true;
         if (crit)
@@ -103,13 +103,13 @@ public class ArrowFlight : MonoBehaviour {
         Invoke("BreakArrow", 0.1f);
     }
 
-    private void DelayTravel()
+    protected void DelayTravel()
     {
         sprite.enabled = true;
         enableProjectile = true;
     }
 
-    private void BreakArrow()
+    protected void BreakArrow()
     {
         Destroy(this.gameObject);
     }

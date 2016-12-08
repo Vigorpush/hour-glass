@@ -7,7 +7,7 @@ using System.Collections;
 
 
 /// <summary>
-/// WHAT AIs need to know... threat list of targets, concernList of 
+/// WHAT AIs need to know... threat list of targets, concernList 
 /// 
 /// </summary>
 /// 
@@ -70,7 +70,8 @@ public class BattleMasterAI : MonoBehaviour {
 
 	}
 	//Send a message here?? 
-	void checkFightOver(){
+	public void FightOver(){
+		
 	}
 	void logMonsterDamage(EnemyUnit u,int amount){
 		damageDone [enemies.IndexOf (u)] += amount;

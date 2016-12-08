@@ -2,39 +2,41 @@
 using System.Collections;
 
 public class ZombieAI : MonoBehaviour {
-    Quaternion UP = Quaternion.AngleAxis(0, Vector3.forward);
-    Quaternion RIGHT = Quaternion.AngleAxis(270, Vector3.forward);
-    Quaternion DOWN = Quaternion.AngleAxis(180, Vector3.forward);
-    Quaternion LEFT = Quaternion.AngleAxis(90, Vector3.forward);
+	protected Quaternion UP = Quaternion.AngleAxis(0, Vector3.forward);
+	protected Quaternion RIGHT = Quaternion.AngleAxis(270, Vector3.forward);
+	protected Quaternion DOWN = Quaternion.AngleAxis(180, Vector3.forward);
+	protected Quaternion LEFT = Quaternion.AngleAxis(90, Vector3.forward);
 
     //The zombies transform
 	public bool firstMove=true;
-	private float END_TURN_BUFFER= 0.3f;
+	protected float END_TURN_BUFFER= 0.3f;
 	public float SPEED_COEF = .1f;
-    private Transform myTf;
+	protected Transform myTf;
     RaycastHit2D rayCast;
     const int BUMP_DIST = 1; // The range that will check for movement collisions
-    private Vector2 desiredCoord;
-	public GameObject moveTarget;
+	protected Vector2 desiredCoord;
+	public Vector3 moveTarget;
     public GameObject attackTarget;
-    private EnemyUnit myStats;
-    private int myMovement;
+
+	protected EnemyUnit myStats;
+	protected int myMovement;
 	public float speed;
-    private int movesLeft;
+	protected int movesLeft;
     public bool isStillTurn = true;
-	private DecisionTree currentBehaviour;
-    private bool dying;
+	protected DecisionTree currentBehaviour;
+	protected bool dying;
     //public float BUFFER_TIME = 0.5f;
     GameObject turnManager;
     Collider2D myTarget;
-	private bool movementCooldown = false;
-	private ArrayList players;
+	protected bool movementCooldown = false;
+	protected ArrayList players;
 	public int attacksLeft;
-	private DecisionTree mostBasicTree; // Tree is saved to save time
-    
+	protected DecisionTree mostBasicTree; // Tree is saved to save time
+	protected AudioSource[] sources;
 
     // Use this for initialization
 	void Awake(){
+		sources = gameObject.GetComponents<AudioSource> ();
 		GetAllPlayers ();
 		turnManager = GameObject.Find ("Manager");
 		myTf = GetComponent<Transform>();
@@ -68,6 +70,7 @@ public class ZombieAI : MonoBehaviour {
         
         isStillTurn = true;
 		attacksLeft = 1; 
+		desiredCoord = myTf.position;
 		MakeMove();
 		Debug.Log (this.gameObject.name + ": Beginning turn");
 	}
@@ -122,18 +125,24 @@ public class ZombieAI : MonoBehaviour {
            myTf.rotation = DOWN;
         }
     }
-	private void MoveBuffer()
+	protected void MoveBuffer()
 	{    
 		Debug.Log("mvoe buffer was invoked and "+movesLeft+" moves are left, and it is still turn: "+isStillTurn + "I am" + gameObject.name);
 		StepTowardsTarget();      
 	}
-
-	private void UnsetMovementCooldown(){
+	protected bool atMoveTarget (){
+		if (moveTarget == null) {
+			Debug.Log ("oh no don't know what move target is so cannot say im there or not. true i guess....");
+			return true;
+		}
+		return myTf.position == moveTarget;
+	} 
+	protected void UnsetMovementCooldown(){
 		movementCooldown = false;
 	}
 		
     //Random
-    private bool CoinFlip()
+    protected bool CoinFlip()
     {
          int coinFlip = UnityEngine.Random.Range(0, 3);
          if (coinFlip == 1)
@@ -143,18 +152,18 @@ public class ZombieAI : MonoBehaviour {
          else return false;
      }
 	//TREE STUFF
-	private void NavigateTree(){
+	protected void NavigateTree(){
 		currentBehaviour.Search(currentBehaviour);
 
 	}
 
-	private void ChooseTree(){
+	protected void ChooseTree(){
 		currentBehaviour = BuildZombieTree ();
 	     
 	}
 	//ALL TREES
 
-	private DecisionTree BuildZombieTree()
+	protected DecisionTree BuildZombieTree()
 	{  //save cycMles if ya can
 		if (mostBasicTree != null) {
 			return mostBasicTree;
@@ -193,7 +202,7 @@ public class ZombieAI : MonoBehaviour {
 			//Debug.Log ("GOOOOOOOOOOOOOOOOOOOD");
 			if (movesLeft > 0) {
 				StepTowardsTarget ();
-			} else if (attacksLeft > 0 && targetIsAdjacent()) {
+			} else if (attacksLeft > 0 && targetIsAdjacent() && atMoveTarget()) {
 				
 					ExecuteMeleeAttackOnTarget();
 
@@ -218,7 +227,7 @@ public class ZombieAI : MonoBehaviour {
 
         resetMovement();
 		DecideAttackTarget ();
-		DecideOnTargetTile ();
+		DecideTileTarget ();
 		ChooseTree ();
 		NavigateTree ();
 		//Debug.Log(this.gameObject.name + "Finished Turn");
@@ -255,9 +264,12 @@ public class ZombieAI : MonoBehaviour {
 
 	}
 
-    private void StepTowardsTarget()
+    protected void StepTowardsTarget()
         
     {
+		if (moveTarget == null) {
+			DecideTileTarget ();
+		}
         //isStillTurn = true;
         if (movesLeft<=0)
         {
@@ -272,16 +284,17 @@ public class ZombieAI : MonoBehaviour {
 			UnsetMovementCooldown ();
             //Decide on a target and set myDecidedTarget
             //myDecidedTarget = someSmartmethod()....
-            Transform tarTf = moveTarget.GetComponent<Transform>();
+            
            
 
-			int distanceToMoveX = (int)(tarTf.position.x - myTf.position.x);
-			int distanceToMoveY = (int)(tarTf.position.y - myTf.position.y);
+			int distanceToMoveX = (int)(moveTarget.x - myTf.position.x);
+			int distanceToMoveY = (int)(moveTarget.y - myTf.position.y);
           //  Debug.Log("Dist to move :" + distanceToMoveX + "," + distanceToMoveY);
             bool Right = distanceToMoveX > 0f;
             bool Down = distanceToMoveY > 0f;
         
                 movesLeft--;
+			/*
                 if (ScanNearbyForTarget())
                 {
                     //A target
@@ -289,6 +302,7 @@ public class ZombieAI : MonoBehaviour {
                     ExecuteMeleeAttackOnTarget();
                     return;
                 }
+			*/
                 if (System.Math.Abs(distanceToMoveX) >0 && System.Math.Abs(distanceToMoveY) > 0)
                 {
                     //50%/50% roll for direction
@@ -398,14 +412,14 @@ public class ZombieAI : MonoBehaviour {
 
     //Look at target
 
-    private void FaceTarget()
+    protected void FaceTarget()
     {
         Vector3 theDirection = attackTarget.transform.position - this.gameObject.transform.position ;
         int xDiff = (int)theDirection.x;
         int yDiff = (int)theDirection.y;
         if (xDiff == 0 && yDiff == 0)
         {
-            Debug.Log("bad programming");
+            Debug.Log("bad programming, inside a guy lol");
 
         }
 
@@ -438,44 +452,49 @@ public class ZombieAI : MonoBehaviour {
         
     }
 
-	void ExecuteMeleeAttackOnTarget(){
+	protected void ExecuteMeleeAttackOnTarget(){
         /*myTf.LookAt(attackTarget.transform);
         myTf.RotateAround(transform.position, new Vector3 (0,0,1), 90);*/
         FaceTarget();
 
 		if (attackTarget == null) {
-			//Debug.Log ("NO TARGET");
+			Debug.Log ("NO TARGET");
 			return;
 		}
         //Attack Target. magic number 1 for combat text
-        attackTarget.GetComponent<HeroUnit>().takeDamage(myStats.attack+1, this.gameObject);
+        attackTarget.GetComponent<HeroUnit>().takeDamage(myStats.attack, this.gameObject);
+		playAttackAudio ();
 		attacksLeft--;
+	}
+	void playAttackAudio(){
+		//PLAY ATTACK AUDIO
+		sources [1].Play ();
 	}
 	void tryMeleeAttackDumb(){
 		StepTowardsTarget ();
 	}
-    private void resetMovement()
+    protected void resetMovement()
     {
         movesLeft = GetComponent<EnemyUnit>().speed;
     }
 
-    private RaycastHit2D ScanLineFacing(int L){
+    protected RaycastHit2D ScanLineFacing(int L){
         
         //MAKE SURE YOU FACE THE TARGET FIRST, maybe looktowards
         
 	//	Debug.DrawLine(myTf.position,(Vector2)(desiredCoord+(Vector2)(myTf.up)));
         return Physics2D.Linecast(myTf.position,(Vector2)(desiredCoord+(Vector2)(myTf.up)),L);
     }
-	private GameObject getClosestPlayer(){
+	protected GameObject getClosestPlayer(){
 		if (players == null) {
 			GetAllPlayers ();
 		}
 		GameObject closest = null;
 		float closestDist = float.MaxValue;
         foreach (GameObject p in players) {
-            if (p.activeSelf) { 
+			if (p.activeSelf && p.GetComponent<HeroUnit>().curhp > 0 ) { 
             float dist = Vector2.Distance(desiredCoord, p.transform.position);
-          //  Debug.Log("Distance between me and cur player: " + dist);
+            Debug.Log("Distance between me and cur player: " + dist);
             if (dist < closestDist) {
                 closestDist = dist;
                 closest = p;
@@ -485,52 +504,186 @@ public class ZombieAI : MonoBehaviour {
 		return closest;
 
 	}
-	private bool targetIsAdjacent (){
+	protected bool targetIsAdjacent (){
 		if (attackTarget == null) {
-			throw new UnityException ("Don't know target!");
+			//throw new UnityException ("Don't know target!");
 			return false;
+
 		}
-		if(Vector2.Distance (myTf.position,attackTarget.transform.position) <1f){
-			//Debug.Log("My target is adjacent to me!");
-		return true;
-		}
-	return false;
+		//if (tileEmpty (tar + new Vector3 (-1, 0, 0))) {
+			//			moveTarget = tar + new Vector3 (-1,0 , 0);
+			//			return;
+			//		}
+			//		if (tileEmpty(tar + new Vector3 (0, 1, 0))) {
+			//			moveTarget = tar + new Vector3 (0, 1, 0);
+			//			return;
+			//		}
+			//		if (tileEmpty(tar + new Vector3 (0, -1, 0))) {
+			//			moveTarget = tar + new Vector3 (0, -1, 0);
+			//			return;
+			//		}
+			//		if (tileEmpty (tar + new Vector3 (1, 0, 0))) {
+			//			moveTarget = tar + new Vector3 (1, 0, 0);
+			//			return;
+			//		}
+			if (Vector2.Distance (myTf.position, attackTarget.transform.position) < 1.1f) {
+				Debug.Log ("My target is adjacent to me!");
+				return true;
+			}
+			return false;
+
 
 	}
     // quasi delegate AI stubs
-    private void DecideOnTargetTile()
+    protected void DecideTileTarget()
     {
 		if (attackTarget == null) {
-			//Debug.Log("NO TARGET SO NO PLACE TO MOVE!!!!!");
+			Debug.Log("NO TARGET SO NO PLACE TO MOVE!!!!!");
 			return;
 		}
 		//TEMP SOLUTION CAUSE NO MAP...
-		//moveTarget =  attackTarget.transform.FindChild("tileSand").gameObject;
+
+		//moveTarget = 
 //		Debug.Log(attackTarget.transform.GetChild (0));
 //		moveTarget = attackTarget.transform.GetChild (0).gameObject;
 //
 //		Debug.Log (moveTarget.gameObject.name);
 //		//attackTarget
-		moveTarget = attackTarget;
-		//
+		//Look for an empty side
+		
+		//If no empty then change target or stack?
+		//switch statement producese more believable selection	
+		Vector3 tar =attackTarget.transform.position;
+		//Debug.Log("My target is at " + attackTarget.transform.position.ToString() );
+		//switch (Random.Range (1, 4)){
+
+		//case 1: 
+		if (tileEmpty (new Vector3 (tar.x + 1, tar.y, 0))) {
+			moveTarget = new Vector3 (tar.x + 1, tar.y, 0);
+			Debug.Log("Going to target's right");
+			return;
+		} else {
+			Debug.Log("The tile is occupied!");
+			moveTarget = attackTarget.transform.position;
+		}
+		/*
+		if (tileEmpty(tar + new Vector3 (-1, 0, 0))) {
+			moveTarget = tar + new Vector3 (-1,0 , 0);
+			return;
+		}
+		if (tileEmpty(tar + new Vector3 (0, 1, 0))) {
+			moveTarget = tar + new Vector3 (0, 1, 0);
+			return;
+		}
+		if (tileEmpty(tar + new Vector3 (0, -1, 0))) {
+			moveTarget = tar + new Vector3 (0, -1, 0);
+			return;
+		}
+//			break;
+//		*/
+//
+//		case 2: 
+//
+//
+//		if (tileEmpty(tar + new Vector3 (-1, 0, 0))) {
+//			moveTarget = tar + new Vector3 (-1,0 , 0);
+//			return;
+//		}
+//		if (tileEmpty(tar + new Vector3 (0, 1, 0))) {
+//			moveTarget = tar + new Vector3 (0, 1, 0);
+//			return;
+//		}
+//		if (tileEmpty(tar + new Vector3 (0, -1, 0))) {
+//			moveTarget = tar + new Vector3 (0, -1, 0);
+//			return;
+//		}
+//		if (tileEmpty (tar + new Vector3 (1, 0, 0))) {
+//			moveTarget = tar + new Vector3 (1, 0, 0);
+//			return;
+//		}
+//		break;
+//
+//		case 3: 
+//
+//
+//		
+//			if (tileEmpty(tar + new Vector3 (0, 1, 0))) {
+//				moveTarget = tar + new Vector3 (0, 1, 0);
+//				return;
+//			}
+//			if (tileEmpty(tar + new Vector3 (0, -1, 0))) {
+//				moveTarget = tar + new Vector3 (0, -1, 0);
+//				return;
+//			}
+//			if (tileEmpty(tar + new Vector3 (-1, 0, 0))) {
+//				moveTarget = tar + new Vector3 (-1,0 , 0);
+//				return;
+//			}
+//			if (tileEmpty (tar + new Vector3 (1, 0, 0))) {
+//				moveTarget = tar + new Vector3 (1, 0, 0);
+//				return;
+//			}
+//			break;
+//
+//		case 4: 
+//
+//
+//
+//			if (tileEmpty(tar + new Vector3 (0, -1, 0))) {
+//				moveTarget = tar + new Vector3 (0, -1, 0);
+//				return;
+//			}
+//			if (tileEmpty (tar + new Vector3 (1, 0, 0))) {
+//				moveTarget = tar + new Vector3 (1, 0, 0);
+//				return;
+//			}
+//			if (tileEmpty(tar + new Vector3 (0, 1, 0))) {
+//				moveTarget = tar + new Vector3 (0, 1, 0);
+//				return;
+//			}
+//			if (tileEmpty(tar + new Vector3 (-1, 0, 0))) {
+//				moveTarget = tar + new Vector3 (-1,0 , 0);
+//				return;
+//			}
+//
+//			break;
+
+
+	//}
 
     }
 	
+	protected bool tileEmpty(Vector3 target){
+		//new Vector3(0,0,1)
+		Debug.DrawRay(target,new Vector3(target.x,target.y,-1));
+		RaycastHit2D[]  hits= Physics2D.LinecastAll(target,new Vector3(target.x,target.y,-1));
+		for (int i = 0; i < hits.Length; i++) {
+			Debug.Log (hits [0].collider.gameObject.name);
 
-    private void  DecideAttackTarget()
+		}
+		if (hits.Length != 1) {
+			return false;
+		}
+		return true;
+	}
+
+    protected void  DecideAttackTarget()
     {
 		attackTarget =getClosestPlayer ();
 		//While cannot target unit
-		while(canMoveTowardTarget()!= 1){
-			//Try another
-
-			attackTarget = getClosestPlayer();
+		//if no closes
+		if (attackTarget == null) {
+			attackTarget = (GameObject)players [Random.Range (0, 2)];
+			Debug.Log ("-----------------------Choosing a random target");
 		}
+
 
 
     }
 
-	private void EndMyTurn(){
+
+
+	protected void EndMyTurn(){
         
         
 		//Debug.Log ("I want to end turn.");

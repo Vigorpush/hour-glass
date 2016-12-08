@@ -35,9 +35,14 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject theFloorMaker;
     public GameObject myLantern;
 
+    private GameObject theHourglass;
+    TheHourglass hourglassControls;
+
 
     // Use this for initialization
     void Start () {
+        theHourglass = GameObject.FindGameObjectWithTag("OfficialHourGlass");
+        hourglassControls = theHourglass.GetComponent<TheHourglass>(); 
         comboController = this.gameObject.GetComponent<ComboController>();
         comboController.enabled = false;
         Invoke("initializeController",1f); //allows player time to teleport to start
@@ -160,6 +165,7 @@ public class PlayerMovement : MonoBehaviour {
 	//Turn Management
 	public void EndTurn(){
 		if(endTurnBuffer){
+            hourglassControls.SendMessage("PlayerTurnEnded");
            // Debug.Log("I was told to end turn!");
 		    isTurn = false;
             comboController.enabled = false;
@@ -179,6 +185,9 @@ public class PlayerMovement : MonoBehaviour {
 	}
 	//Starts turn which allows movement and attack controls
 	void StartTurn(){
+
+            
+            hourglassControls.SendMessage("PlayerTurnStart");
         //inputInstruction.text = "";
         comboController.enabled = true;
         UIportrait.GetComponent<Image>().overrideSprite = myPortrait;
@@ -235,6 +244,7 @@ public class PlayerMovement : MonoBehaviour {
             }
             else if (returned == TileType.hallFloor)
             {
+
                 exploreMode = false;
               //  Debug.Log(this.gameObject.name +" I though I was facing:" + this.gameObject.transform.eulerAngles.z);
 
@@ -259,7 +269,8 @@ public class PlayerMovement : MonoBehaviour {
                    // Debug.Log("```````I wanted to go up");
                     pos += Vector2.up;
                 }
-                Invoke("UnAllowMovement",1f); //allow time to walk into room
+                
+                Invoke("UnAllowMovement",0.5f); //allow time to walk into room
                 //Debug.Log(gameObject.name + "I kick down the door :" + returned);
                 Invoke("surveyRoomEntered", 1f);
 
@@ -303,7 +314,7 @@ public class PlayerMovement : MonoBehaviour {
            if (rayHit.collider.gameObject.tag.Equals("Loot"))
             {
                // Debug.Log("Found some loot!");
-                rayHit.collider.gameObject.SendMessage("rollAnUpgrade");
+                //rayHit.collider.gameObject.SendMessage("rollAnUpgrade");
             }
             else if (rayHit.collider.gameObject.tag.Equals("Encounter"))
             {
@@ -316,6 +327,8 @@ public class PlayerMovement : MonoBehaviour {
           
             else if (rayHit.collider.gameObject.tag.Equals("LevelClear"))
             {
+                turnManager.SendMessage("FloorCleared");
+                UnAllowMovement();
                 Debug.Log("The Floor was cleared!");
             }
             return rayHit;
@@ -356,71 +369,47 @@ public class PlayerMovement : MonoBehaviour {
            // Debug.DrawRay(transform.position, (Vector2)transform.position - Vector2.down, Color.red, 20);
         }
         float roomSizeApprox = (rayHitLeft.distance + rayHitRight.distance) * (rayHitUp.distance + rayHitDown.distance);
+		//float diff = transform.position - rayHitLeft.distance;
+		int leftRightDiff =((int)( rayHitLeft.distance-rayHitRight.distance))/2 ;
+		int downUpDiff = (((int)(rayHitDown.distance - rayHitUp.distance)))/2;
 
-        int xSpawnOffset = ((int)rayHitUp.distance + (int)rayHitDown.distance) / 2;
-        int ySpawnOffset = ((int)rayHitLeft.distance + (int)rayHitRight.distance )/ 2;
-        
+
         int xToSpawn = (int) transform.position.x;
         int yToSpawn = (int)transform.position.y;
-
         //Figure out the likely center of the room by judging the greater of the returned distances in direction
         if (this.gameObject.transform.eulerAngles.z == 270)//if facing right
         {
             buddy1SpawnLocation += Vector2.left;
             buddy2SpawnLocation += Vector2.left * 2;
-            xToSpawn += xSpawnOffset;
+			xToSpawn -= leftRightDiff;
+			yToSpawn -= downUpDiff;
+			Debug.Log ("down : " + downUpDiff);
+			Debug.Log ("left : " + leftRightDiff);
+			//Middle minus the difference between right and left
+
             //Find the greater of y options, and take that y as positive or negative direction
-            if(rayHitUp.distance >= rayHitDown.distance){
-                yToSpawn += ySpawnOffset;
-               
-            }
-            else
-            {
-                yToSpawn -= ySpawnOffset;
-            }
+            
         }
         if (this.gameObject.transform.eulerAngles.z == 180) //if facing down
         {
             buddy1SpawnLocation += Vector2.up;
             buddy2SpawnLocation += Vector2.up * 2;
-            yToSpawn -= ySpawnOffset;
-            if(rayHitLeft.distance >= rayHitRight.distance){
-                xToSpawn -= xSpawnOffset;
-            }
-            else
-            {
-                //Vector2.left;
-                xToSpawn += xSpawnOffset;
-            }
+			xToSpawn -= leftRightDiff;
+			yToSpawn -= downUpDiff;
         }
         if (this.gameObject.transform.eulerAngles.z == 90) //if facing left
         {
             buddy1SpawnLocation += Vector2.right;
             buddy2SpawnLocation += Vector2.right * 2;
-            xToSpawn -= xSpawnOffset;
-            //Find the greater of y options, and take that y as positive or negative direction
-            if (rayHitUp.distance >= rayHitDown.distance)
-            {
-                yToSpawn += ySpawnOffset;
-            }
-            else
-            {
-                yToSpawn -= ySpawnOffset;
-            }
+			xToSpawn -= leftRightDiff;
+			yToSpawn -= downUpDiff;
         }
         if (this.gameObject.transform.eulerAngles.z == 0) //if facing up
         {
             buddy1SpawnLocation += Vector2.down;
             buddy2SpawnLocation += Vector2.down * 2;
-            yToSpawn += ySpawnOffset;
-            if (rayHitLeft.distance >= rayHitRight.distance)
-            {
-                xToSpawn -= xSpawnOffset;
-            }
-            else
-            {
-                xToSpawn += xSpawnOffset;
-            }
+			xToSpawn -= leftRightDiff;
+			yToSpawn -= downUpDiff;
         }
 
       //  Debug.Log("Player survey thought here was good"+xToSpawn + " " +yToSpawn);
@@ -444,7 +433,7 @@ public class PlayerMovement : MonoBehaviour {
 			if (h>0) {	
 				tf.localEulerAngles = new Vector3 (0, 0, 270);   // Always rotate the character even if you cannot move
 				rayCast = rayCheckLine (BUMP_DIST);
-				if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter")) {
+				if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter") || rayCast.collider.isTrigger) {
 					pos += Vector2.right;
 					startMoveCooldown ();
 				} else {
@@ -454,7 +443,7 @@ public class PlayerMovement : MonoBehaviour {
 				
 				tf.localEulerAngles = new Vector3 (0, 0, 90);
 				rayCast = rayCheckLine (BUMP_DIST);
-                if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter"))
+				if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter") || rayCast.collider.isTrigger)
                 {	
 					pos += Vector2.left;
 					//anim.SetTrigger ("Walking");
@@ -470,13 +459,13 @@ public class PlayerMovement : MonoBehaviour {
 			{	
 				tf.localEulerAngles = new Vector3 (0, 0, 0);
 				rayCast = rayCheckLine (BUMP_DIST);
-                if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter"))
+				if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter") || rayCast.collider.isTrigger)
                 {	
 					pos += Vector2.up;
 					//anim.SetTrigger("Walking");
 					startMoveCooldown ();
 				} else {
-				Debug.Log ("Move up failed:" + rayCast.collider.gameObject.name  + " in the way.");				
+				//Debug.Log ("Move up failed:" + rayCast.collider.gameObject.name  + " in the way.");				
 				}
 			}
 			else
@@ -484,7 +473,7 @@ public class PlayerMovement : MonoBehaviour {
 				
 				tf.localEulerAngles = new Vector3 (0, 0, 180);
 				rayCast = rayCheckLine (BUMP_DIST);
-                if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter"))
+				if (rayCast.collider == null || rayCast.collider.tag.Equals("Encounter") || rayCast.collider.isTrigger)
                 {	
 					pos += Vector2.down;
 					//anim.SetTrigger ("Walking");

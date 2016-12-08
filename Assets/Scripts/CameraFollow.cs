@@ -9,9 +9,9 @@ public class CameraFollow : MonoBehaviour
 	public bool turnActive;
     public bool inCombat;
     public bool endCombat;
-    private bool invokeBuffer;
-    private bool targettingCam;
-    private GameObject target;
+    protected bool invokeBuffer;
+    protected bool targettingCam;
+    protected GameObject target;
 
     // Use this for initialization
     void Start()
@@ -60,7 +60,7 @@ public class CameraFollow : MonoBehaviour
 
     public void StartHere(int xIn, int yIn)
     {
-        this.gameObject.transform.position = new Vector3(xIn,yIn,-1);
+        this.gameObject.transform.position = new Vector3(xIn,yIn,0);
     }
 
     public void UnsetCombatZoom()

@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class RaycastMask : MonoBehaviour {
 
-	private Slider mainhourglass;
-	private RectTransform fil;
+	protected Slider mainhourglass;
+	protected RectTransform fil;
 	// Use this for initialization
 	void Start () {
 		mainhourglass = this.gameObject.GetComponent<Slider> ();

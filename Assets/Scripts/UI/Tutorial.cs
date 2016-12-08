@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 public class Tutorial : MonoBehaviour {
 
-    private ArrayList tutorialText;
+    protected ArrayList tutorialText;
 
     public GameObject magePic;
     public GameObject rangerPic;
-    private GameObject theHourglass;
+    protected GameObject theHourglass;
 
     public Text info;
-    private int index;
+    protected int index;
 
 	// Use this for initialization
 	void Start () {
@@ -23,15 +23,17 @@ public class Tutorial : MonoBehaviour {
         string two = "The goal of the game is to explore a dungeon, "+
             "and to get as far as possible before the Hourglass runs out of time.";
         string three = "The hourglass is located in the top left of the screen, with the time remaining printed below it.";
-        string four = "The hourglass is currently paused, but will tick down while you explore and battle.";
+        string four = "The hourglass is currently paused, but will tick down while you explore and battle.  In battle, "+
+            "taking too long penalizes the hourglass, but timing abilities well inversely adds time to it.";
         string five = "Your party consists of a daring Fighter.";
         string six = "A cunning mage.";
         string seven ="And a wise Ranger.";
         string eight = "While exploring the dungeon, entering rooms or triggering traps will begin an encounter.";
-        string nine = "During an encounter, the party and enemies take turns acting, based on their initiative.";
+        string nine = "During an encounter, the party and enemies take turns acting, based on their initiative."+
+            "You will have 10 seconds during a turn.  If you take longer than 10 seconds, you borrow time, but at a cost...";
         string ten = "During enemy turns the hourglass does not tick down, but during party member turns it does!";
-        string eleven = "The Fighter possesses 3 abilities, [1] is a devastating single target attack, [2] is"+
-            " a whirlwind that attacks all adjacent enemies and [3] is an Enrage, which increases damage but costs health.";
+        string eleven = "The Fighter possesses 2 abilities, [1] is a devastating single target attack,  [2] is"+
+            " a whirlwind that attacks all adjacent enemies, and [3] is a dangerous enrage, which increases damage at the cost of health";
         string twelve = "The Mage possesses [1] a single target fireball [2] a wide area "+
            "lightning storm, and [3] a room-wide AOE.";
         string thirteen = "The Ranger possesses [1] a single target ranged attack, and [2] is an area of affect" +
@@ -73,7 +75,7 @@ public class Tutorial : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
             theHourglass.SendMessage("tutorialFinished");
             this.gameObject.SetActive(false);

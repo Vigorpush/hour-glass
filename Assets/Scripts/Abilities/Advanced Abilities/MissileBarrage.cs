@@ -5,21 +5,21 @@ using System.Collections.Generic;
 public class MissileBarrage : AttackTemplate
 {
 
-    // private Transform startTransform;
-    private GameObject[] allEnemies;
-    private GameObject[] enemiesInRange;
-    private GameObject theSelectedTarget;
-    private SpriteRenderer targetSprite;
-    private int[] damageSteps = new int[3];
-    private HeroUnit myHero;
+    // protected Transform startTransform;
+    protected GameObject[] allEnemies;
+    protected GameObject[] enemiesInRange;
+    protected GameObject theSelectedTarget;
+    protected SpriteRenderer targetSprite;
+    protected int[] damageSteps = new int[3];
+    protected HeroUnit myHero;
     public int attackDamageScaler;
-    private List<KeyCode> theCombo;
-    private bool missileTarLock;
-    private int sizeOfTargetArray;
-    private int currentSelectedIndex;
+    protected List<KeyCode> theCombo;
+    protected bool missileTarLock;
+    protected int sizeOfTargetArray;
+    protected int currentSelectedIndex;
     List<GameObject> toRet;
-    private GameObject cam;
-    private GameObject thePlayer;
+    protected GameObject cam;
+    protected GameObject thePlayer;
     public GameObject theMaestro;
 
     // Use this for initialization

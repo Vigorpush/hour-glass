@@ -8,7 +8,7 @@ public interface IMorale  {
 
 	/*
 	 * 
-	 *    private bool MakeMoraleCheck()
+	 *    protected bool MakeMoraleCheck()
     {
 		if (canFailMorale && underThreshold()) {
 			//Check if it's brave enough to pass check

@@ -35,13 +35,13 @@ public class floorMaker : MonoBehaviour {
 
 	public int obsticleDensity = 5;
 
-	private int actNumRooms;
+	protected int actNumRooms;
 
 	//arrays and board holder
-	private TileType[][] floorTiles;
-	private Room[] rooms;
-	private Hallway[] hallways;
-	private GameObject board;
+	protected TileType[][] floorTiles;
+	protected Room[] rooms;
+	protected Hallway[] hallways;
+	protected GameObject board;
 
 	//arrays of the prefabs
 	public GameObject[] fTiles;
@@ -310,7 +310,7 @@ public class floorMaker : MonoBehaviour {
 
 	}
 
-    private void setExplorerStart(){
+    protected void setExplorerStart(){
         int x = rooms[0].xPos;
         int y = rooms[0].yPos;
         
@@ -323,7 +323,7 @@ public class floorMaker : MonoBehaviour {
         Player1.GetComponent<PlayerMovement>().SetStartingPosition(toStart);
     }
  
-	private void setOuterBoundary(){
+	protected void setOuterBoundary(){
 
 		for (int i = 0; i < floorHight; i++) {
 			floorTiles[0][i] = TileType.wall;
@@ -337,7 +337,7 @@ public class floorMaker : MonoBehaviour {
 
 	}
 
-	private void setTilesValuesForEncounterTiles (){
+	protected void setTilesValuesForEncounterTiles (){
 
 		for (int i = 0; i < floorHight; i++) {
 			for (int j = 0; j < floorWidth; j++) {

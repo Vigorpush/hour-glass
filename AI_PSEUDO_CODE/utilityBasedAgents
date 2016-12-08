@@ -1,7 +1,0 @@
-A Utility based agent is an extension of goal-based agents with the addition of a section to judge the possile actions.
-
-This may be the architecture that we use for the Room Builder AI
-
-We will generate a utility function based on the FEAR that a unit recieves from a tile and the  THREAT each player imposes.
-
-

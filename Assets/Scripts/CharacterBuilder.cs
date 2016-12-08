@@ -13,7 +13,7 @@ public class CharacterBuilder : MonoBehaviour {
         Invoke("setAttackControls",1f);
 	}	 
 
-    private void setAttackControls(){
+    protected void setAttackControls(){
         attackCtrlr.buildActiveAbilites(activeAbilities);
 
    }

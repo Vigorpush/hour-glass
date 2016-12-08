@@ -7,14 +7,16 @@ public class SpawnTextBubble : MonoBehaviour
 
     public float curHP;
     public float maxHP;
-
+	public Unit myStats;
+	public string[] hitList = new string[6];
+	public string suicideText;
     // public Text[] bubbleTextArray;
     public Text bubbleText;
     public GameObject unit;
     public Transform bubbleTf;
 
     //put this into field
-    string crytext;
+    public string crytext;
 
 
 
@@ -23,8 +25,8 @@ public class SpawnTextBubble : MonoBehaviour
     void Start()
     {
         unit = gameObject.transform.root.gameObject;
-        curHP = unit.GetComponent<Unit>().getcurhp();
-        maxHP = unit.GetComponent<Unit>().getmaxhp();
+		myStats = unit.GetComponent<Unit> ();
+        
        
         bubbleText = transform.FindChild("EnemyCanvas/bubbleText").GetComponent<Text>();
        
@@ -38,41 +40,51 @@ public class SpawnTextBubble : MonoBehaviour
 
         //put this code in update
       //  Debug.Log(" I am " + unit.name + " and my hp is:" + curHP);
-        if ((curHP > 0) && (curHP < maxHP))
+		if ((curHP > 0) && (myStats.curhp < myStats.maxhp))
         {
-            int intelligence = Random.Range(1, 6);
-            switch (intelligence)
-            {
-                case 5:
-                    StartCoroutine(ShowMessage("Ow!", 2));
-                    break;
-                case 4:
-                    StartCoroutine(ShowMessage("Argh!", 2));
-                    break;
-                case 3:
-                    StartCoroutine(ShowMessage("Gah!", 2));
-                    break;
-                case 2:
-                    StartCoroutine(ShowMessage("*indistinguishable noises*", 2));
-                    break;
-                case 1:
-                    StartCoroutine(ShowMessage("Erk", 2));
-                    break;
-                default:
-                    StartCoroutine(ShowMessage("Ugh!", 2));
-                    break;
-            }
+            int intelligence = Random.Range(0, 5);
+//
+//            switch (intelligence)
+//            {
+//                case 5:
+//                    StartCoroutine(ShowMessage("Ow!", 2));
+//                    break;
+//                case 4:
+//                    StartCoroutine(ShowMessage("Argh!", 2));
+//                    break;
+//                case 3:
+//                    StartCoroutine(ShowMessage("Gah!", 2));
+//                    break;
+//                case 2:
+//                    StartCoroutine(ShowMessage("*indistinguishable noises*", 2));
+//                    break;
+//                case 1:
+//                    StartCoroutine(ShowMessage("Erk", 2));
+//                    break;
+//                default:
+//                    StartCoroutine(ShowMessage("Ugh!", 2));
+//                    break;
+//            }
 
-        }
-        if ((curHP < maxHP * 0.5) && (curHP >= maxHP * 0.2))
+
+			StartCoroutine(ShowMessage(hitList[intelligence], 2));
+
+			}
+
+        
+		else if ((curHP < maxHP * 0.3f) )
         {
-            StartCoroutine(ShowMessage("Oh, That was really hurt!", 2));
+			StartCoroutine(ShowMessage(crytext, 2));
         }
+
 
 
 
     }
 
+	public void suicide(){
+		ShowMessage(suicideText,3f);
+	}
 
     //put this into what ever
     IEnumerator ShowMessage(string message, float delay)

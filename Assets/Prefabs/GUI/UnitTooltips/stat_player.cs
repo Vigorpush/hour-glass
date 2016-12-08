@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class stat_player : MonoBehaviour {
 
-	private GameObject playerstatPanel;//accessing the Game object of the panel
+	protected GameObject playerstatPanel;//accessing the Game object of the panel
 	
 	//Using those to save times
 	public Text HP1;

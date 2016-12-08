@@ -5,27 +5,27 @@ using System.Collections.Generic;
 
 public class MissileBarrageBehavior : MonoBehaviour {
 
-    private GameObject theTarget;
-    private GameObject theCaster;
-    private float MISSILE_INITIAL_VELOCITY = 0.2f;
-    private float MISSILE_ACTUAL_VELOCITY = 1f;
-    private SpriteRenderer sprite;
-    private Animator anim;
-    private bool impacting;
-    private int damageToDeal;
-    private bool enableProjectile;
-    private bool delay;
+    protected GameObject theTarget;
+    protected GameObject theCaster;
+    protected float MISSILE_INITIAL_VELOCITY = 0.2f;
+    protected float MISSILE_ACTUAL_VELOCITY = 1f;
+    protected SpriteRenderer sprite;
+    protected Animator anim;
+    protected bool impacting;
+    protected int damageToDeal;
+    protected bool enableProjectile;
+    protected bool delay;
     Vector2 hangPosition;
-    private bool floatUp;
-    private ParticleSystem ps;
-    private AudioSource impactSound;
+    protected bool floatUp;
+    protected ParticleSystem ps;
+    protected AudioSource impactSound;
 
     Vector2 P0;
     Vector2 P1;
     Vector2 P2;
     Vector2 P3;
 
-    private float t;
+    protected float t;
 
 
     // Use this for initialization
@@ -69,7 +69,7 @@ public class MissileBarrageBehavior : MonoBehaviour {
        
     }
 
-    private void calculatePoints()
+    protected void calculatePoints()
     {
         P0 = (Vector2)theCaster.GetComponent<Transform>().position + new Vector2(3,-3);
         P1 = (Vector2)theCaster.GetComponent<Transform>().position; //Caster Position
@@ -96,7 +96,7 @@ public class MissileBarrageBehavior : MonoBehaviour {
         Invoke("unFreeze", 1.5f);
     }
 
-    private void LaunchUp()
+    protected void LaunchUp()
     {
         
         enableProjectile =true;
@@ -123,7 +123,7 @@ public class MissileBarrageBehavior : MonoBehaviour {
         return ret;
     }
 
-    private void hitTarget()
+    protected void hitTarget()
     {
         impactSound.Play();
        // ps.enableEmission = false;
@@ -134,7 +134,7 @@ public class MissileBarrageBehavior : MonoBehaviour {
         Invoke("MissileHit", 3f);
     }
 
-    private void MissileHit()
+    protected void MissileHit()
     {
         Destroy(this.gameObject);
     }

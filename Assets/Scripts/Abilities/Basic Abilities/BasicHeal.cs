@@ -5,22 +5,22 @@ using System.Collections.Generic;
 public class BasicHeal : AttackTemplate
 {
 
-    private Transform startTransform;
-    private GameObject[] allAllies;
-   // private GameObject[] enemiesInRange;
-    private GameObject theSelectedTarget;
-    private SpriteRenderer targetSprite;
-    private int[] damageSteps = new int[3];
-    private int healAmount;
-    private HeroUnit myHero;
+    protected Transform startTransform;
+    protected GameObject[] allAllies;
+   // protected GameObject[] enemiesInRange;
+    protected GameObject theSelectedTarget;
+    protected SpriteRenderer targetSprite;
+    protected int[] damageSteps = new int[3];
+    protected int healAmount;
+    protected HeroUnit myHero;
     public int attackDamageScaler;
-    private List<KeyCode> theCombo;
-    private bool cycleTargetLock;
-    private int sizeOfTargetArray;
-    private int currentSelectedIndex;
+    protected List<KeyCode> theCombo;
+    protected bool cycleTargetLock;
+    protected int sizeOfTargetArray;
+    protected int currentSelectedIndex;
     List<GameObject> toRet;
-    private GameObject cam;
-    private GameObject thePlayer;
+    protected GameObject cam;
+    protected GameObject thePlayer;
     public AudioSource tarSound;
     public GameObject theMaestro;
 
