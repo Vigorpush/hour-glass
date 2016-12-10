@@ -24,4 +24,6 @@ A Fast Paced Tactics Game
 # CMPT306-RPG-GAME-PROJECT
 RPG GAME Project
 
+Read me is coming up......
+
 
